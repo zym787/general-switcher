@@ -8,10 +8,11 @@
 #endif
 
 #define SOFT_VER        130
-#define SOFT_VER_C      "V1.3.0r1"
+#define SOFT_VER_C      "V1.3.0r2"
 // V1.2.9r7     2024.09.26  原点补偿做减速区间
 // V1.3.0r0     2025.01.14  修改通信丢包
 // V1.3.0r1     2025.03.05  修改序列号地址重复
+// V1.3.0r2     2025.05.19  应用方向补偿
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)

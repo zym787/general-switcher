@@ -197,7 +197,6 @@ void ProcessValve(void)
                     ftemp = (float)rdc.stepRound/valveFix.fix.portCnt;
                     if(valve.bNewInit)
                     {
-//                        valve.bNewInit = 0;
                         if(valve.bHalfSeal)
                             ftemp /= 2;
                     }
@@ -208,10 +207,10 @@ void ProcessValve(void)
                     }
                     else
                     {
+                        ftemp += (float)valveFix.fix.dirGap*rdc.stepP01dgr;
                         ftemp *= -1;
                     }
                     VALVE_ENA = ENABLE;
-    //                ISET(valve.iSet);
                     if(valve.bNewInit)
                     {
                         valve.bNewInit = 0;
@@ -226,7 +225,6 @@ void ProcessValve(void)
     				valve.status |= VALVE_RUNNING; 	    // 置位运行标志
                     valve.statusLast = VALVE_RUNNING;
                     syspara.protectTimeOut = 0;
-//                    DisableReceive();
                 }
         	}
             else if(valve.statusLast==VALVE_RUNNING)
