@@ -186,8 +186,8 @@ typedef union
         unsigned char port11Val;
         unsigned char port12Val;
 
-        unsigned char org;          //
-        unsigned char dirGap;          //
+        unsigned char org;              // 原点补偿 FIXO
+        unsigned char dirGap;           // 方向补偿 FIXG
         unsigned char portCnt;          //
     }fix;
 }_12VALVE_FIX;

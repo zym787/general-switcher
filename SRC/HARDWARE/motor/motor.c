@@ -207,7 +207,7 @@ void ProcessValve(void)
                     }
                     else
                     {
-                        ftemp += (float)valveFix.fix.dirGap*rdc.stepP01dgr;
+                        ftemp += (float)valveFix.fix.dirGap*rdc.stepP01dgr; // 方向补偿
                         ftemp *= -1;
                     }
                     VALVE_ENA = ENABLE;
@@ -260,7 +260,7 @@ void ValveOrg(void)
     if(VALVE_OPT && valve.optLast==1)
     {
         valve.optLast = 0;
-        position[AXSV] = -rdc.stepP1dgr*valveFix.fix.org;
+        position[AXSV] = -rdc.stepP1dgr*valveFix.fix.org;   // 原点补偿 FIXO
         srd[AXSV].accel_count = -rdc.stepP1dgr*valveFix.fix.org;
         srd[AXSV].run_state = DECEL;
         if(valve.status&VALVE_INITING && valve.initStep==4)

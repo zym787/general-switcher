@@ -147,7 +147,7 @@ void ParameterInit(void)
         printd("\r Addr:%d", ModbusPara.mAddrs);
 
         I2CPageRead_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
-        (valveFix.fix.portCnt&&valveFix.fix.portCnt>13)?(valveFix.fix.portCnt=10):(valveFix.fix.portCnt);
+        (valveFix.fix.portCnt&&valveFix.fix.portCnt>24)?(valveFix.fix.portCnt=10):(valveFix.fix.portCnt);
         printd("\r Port Cnt:%d", valveFix.fix.portCnt);
 
         I2CPageRead_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &valveFix.fix.org);
