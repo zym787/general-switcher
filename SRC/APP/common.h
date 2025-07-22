@@ -7,9 +7,9 @@ typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity    
 
 #define STM32_RC_C8             0       // 1-使用RC 0使用C8
 #define IOCTRL                          // 使用IO控制
-#define A12_901
+//#define A12_901
+#define A12_906
 //#define A12_909
-//#define A12_906
 
 #include <stm32f10x.h>
 #include "usinterface.h"

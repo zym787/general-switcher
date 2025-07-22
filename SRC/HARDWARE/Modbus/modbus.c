@@ -74,43 +74,30 @@ void ModbusInit(void)
 
 void ModbusTimesProcess(void)
 {
-	if((ModbusPara.sRUN&MB_BUSY)==MB_BUSY)
+	if(ModbusPara.sRUN&MB_BUSY)
 	{// 总线检测
-		if(++ModbusPara.times>=BUS_IDLE_TIME)
-		{// 总线进入空闲，帧结束或开始
+		if(ModbusPara.times < BUS_IDLE_TIME)
+		{
+			ModbusPara.times++;
+		}
+		else
+		{
+			//总线进入空闲，帧结束或开始
 			if(ModbusPara.sRUN == MB_RECIVE_ERR)
 			{// 接收过程中 有出现数据存储空间溢出或间隔时间超过T1.5
 				ModbusPara.sERR = ERR_MB_DEVICE;
+				ModbusPara.sRUN =  MB_IDEL;
 			}
-			ModbusPara.sRUN = MB_IDEL;
-			ModbusPara.times = 0;
+			else if(ModbusPara.sRUN == MB_NO_RESPONSE)
+			{
+				ModbusPara.sRUN = MB_IDEL;
+			}
+			else if(ModbusPara.sRUN == MB_RECIVE)
+			{
+				ModbusPara.sRUN =  MB_RECIVE_END;
+			}
 		}
 	}
-    else
-    {
-		if(++ModbusPara.times>=BUS_IDLE_TIME)
-        {
-            ModbusPara.rCnt = 0;
-            ModbusPara.times = 0;
-		}
-    }
-//	if(++ModbusPara.times>=BUS_IDLE_TIME)
-//	{// 总线进入空闲，帧结束或开始
-//    	if((ModbusPara.sRUN&MB_BUSY)==MB_BUSY)
-//    	{// 总线检测
-//			if(ModbusPara.sRUN == MB_RECIVE_ERR)
-//			{// 接收过程中 有出现数据存储空间溢出或间隔时间超过T1.5
-//				ModbusPara.sERR = ERR_MB_DEVICE;
-//			}
-//			ModbusPara.sRUN = MB_IDEL;
-//			ModbusPara.times = 0;
-//		}
-//        else
-//        {
-//            ModbusPara.rCnt = 0;
-//            ModbusPara.times = 0;
-//        }
-//	}
 }
 
 
@@ -143,6 +130,8 @@ void ModbusSend(unsigned char length)
 		}
 	}
 	while((USART2->SR&0X40)==0);                //等待发送结束
+	ModbusPara.sRUN = MB_IDEL;
+	ModbusPara.rCnt = 0;
 }
 
 void ModbusReceive(unsigned char res)
@@ -340,6 +329,7 @@ void MB_PresetSingleHoldingRegister(void)
         {// 复位指令
             valve.status = VALVE_INITING;
             valve.initStep = 0;
+            valve.retryTms = 0;
         }
         else if(func_num==7)
         {
@@ -425,17 +415,18 @@ void MB_PresetSingleHoldingRegister(void)
 
 void ModbusProces(void)
 {
-    uint32 i=0, tpCnt=0;
-    if(ModbusPara.sRUN==MB_IDEL && ModbusPara.rCnt>LEAST_RCV_CNT)
+    uint32 i=0;
+    if(ModbusPara.sRUN==MB_RECIVE_END)
 	{
-        tpCnt = ModbusPara.rCnt;
+        if(ModbusPara.rCnt>LEAST_RCV_CNT)
+    	{
         LED_WORK = !LED_WORK;
-		if(ModbusCRC16(&ModbusPara.rBuf[0], tpCnt)==0)
+    		if(ModbusCRC16(&ModbusPara.rBuf[0], ModbusPara.rCnt)==0)
 		{
 			#if DEBUG_MODBUS
             printd("\r bb");
-            for(i=0; i<tpCnt; i++)
-                printd(" %02x", ModbusPara.rBuf[i]);
+            for(i=0; i<ModbusPara.rCnt; i++)
+            printd(" %02x", ModbusPara.rBuf[i]);
 			#endif
 			{
                 //确认模块存在并且工作正常
@@ -459,6 +450,14 @@ void ModbusProces(void)
 		}
 		ModbusPara.rCnt = 0;
 		Modbus_ERROR();
+    		ModbusPara.sRUN = MB_IDEL;
+        }
+        else
+        {
+    		ModbusPara.rCnt = 0;
+    		Modbus_ERROR();
+    		ModbusPara.sRUN = MB_IDEL;
+        }
 	}
 }
 

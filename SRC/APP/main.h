@@ -7,8 +7,8 @@
 #define PEXT extern
 #endif
 
-#define SOFT_VER        129
-#define SOFT_VER_C      "V1.2.9r7"
+#define SOFT_VER        130
+#define SOFT_VER_C      "V1.3.0r0"
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)

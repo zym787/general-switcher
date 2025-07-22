@@ -20,7 +20,14 @@
 #define VALVE_RST		    PAout(5)
 #define VALVE_DIR		    PAout(6)
 #define VALVE_CLK		    PAout(7)
+
+#ifdef A12_909
+#define M_ISET_1           PBout(0)
+#define M_ISET_2           PBout(12)
+#define M_ISET_3           PAout(11)
 #endif
+#endif
+
 #ifdef A12_906
 #define LED_WORK            PCout(14)
 #define VALVE_OPT           PCin(15)
@@ -34,7 +41,7 @@
 #define M_ISET_3           PAout(11)
 #endif
 
-#ifndef A12_901
+#if (defined A12_906)||(defined A12_909)
 #define ISET(val)   \
     M_ISET_1=(val>>0&0x01);\
     M_ISET_2=(val>>1&0x01);\

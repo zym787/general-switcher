@@ -62,13 +62,13 @@ void EveryHSec(void)
                     }
                     // VICI°æ±¾Âß¼­
                     #ifdef A12_901
-                    IO_OUT = OFF;            
+                    IO_OUT = ON;            
+                    #endif
+                    #ifdef A12_906
+                    IO_OUT = OFF;
                     #endif
                     #ifdef A12_909
                     IO_OUT = ON;            // ÐÞ¸ÄÎªB3°æÂß¼­
-                    #endif
-                    #ifdef A12_906
-                    IO_OUT = ON;
                     #endif
                 }
             }
@@ -82,13 +82,13 @@ void EveryHSec(void)
                     }
                     // VICI°æ±¾Âß¼­
                     #ifdef A12_901
-                    IO_OUT = ON;             
+                    IO_OUT = OFF;             
+                    #endif
+                    #ifdef A12_906
+                    IO_OUT = ON;
                     #endif
                     #ifdef A12_909
                     IO_OUT = OFF;            // ÐÞ¸ÄÎªB3°æÂß¼­
-                    #endif
-                    #ifdef A12_906
-                    IO_OUT = OFF;
                     #endif
                 }
             }
