@@ -8,7 +8,10 @@
 #endif
 
 #define SOFT_VER        130
-#define SOFT_VER_C      "V1.3.0r0"
+#define SOFT_VER_C      "V1.3.0r1"
+// V1.2.9r7     2024.09.26  原点补偿做减速区间
+// V1.3.0r0     2025.01.14  修改通信丢包
+// V1.3.0r1     2025.03.05  修改序列号地址重复
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)
@@ -61,7 +64,7 @@
 #define ADDR_SN                 (ADDR_ISET+LEN_ISET)
 #define LEN_SN                  5
 
-#define ADDR_RDC_RATE			(ADDR_ISET+LEN_ISET)
+#define ADDR_RDC_RATE			(ADDR_SN+LEN_SN)
 #define LEN_RDC_RATE			1
 
 #define ADDR_HALF_SEAL			(ADDR_RDC_RATE+LEN_RDC_RATE)
