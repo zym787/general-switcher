@@ -243,7 +243,7 @@ void MB_ReadHoldingRegisters(void)
     	    }
     	    else if(func_num==8)
     		{
-//                I2CPageRead_Nbytes(ADDR_SN, LEN_SN, Valve.SnCode);
+                I2CPageRead_Nbytes(ADDR_SN, LEN_SN, valve.SnCode);
                 ModbusPara.tBuf[3] = valve.SnCode[0];
                 ModbusPara.tBuf[4] = valve.SnCode[1];
                 ModbusPara.tBuf[5] = valve.SnCode[2];
