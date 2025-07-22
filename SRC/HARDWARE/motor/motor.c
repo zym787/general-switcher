@@ -85,6 +85,8 @@ void InitValve(void)
                     ++valve.retryTms;
                     I2CPageRead_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portLast);
                     valve.initStep = 1;
+                    valve.ErrBlinkTime = RETRY_TIME_OUT;
+                    printd("\r RETRY %d %d", valve.retryTms, RETRY_TIME_OUT);
                 }
                 break;
             case 1:
@@ -175,13 +177,14 @@ void InitValve(void)
                     speed[AXSV] = 100;
                     accel[AXSV] = 100;
                     decel[AXSV] = 200;
-                    speed[AXSV] *= (spdVx2);    //恢复设置速度切换
+                    speed[AXSV] *= (spdVx2);    // 恢复设定速度
                     speed[AXSV] *= (rdc.rate);
                     accel[AXSV] *= (spdVx2);
                     accel[AXSV] *= (rdc.rate);
                     decel[AXSV] *= (spdVx2);
                     decel[AXSV] *= (rdc.rate);
-                    printd("\r\n spd%d acc%d dec%d", speed[AXSV], accel[AXSV], decel[AXSV]);
+                    printd("\r\n Restore motion speed  (%d) spd%d acc%d dec%d", 
+                        spdVx2, speed[AXSV], accel[AXSV], decel[AXSV]);
                 }
                 break;
             default:
@@ -238,6 +241,8 @@ void ProcessValve(void)
     				valve.status |= VALVE_RUNNING; 	    // 置位运行标志
                     valve.statusLast = VALVE_RUNNING;
                     syspara.protectTimeOut = 0;
+                    printd("\r\n %s initstep%d (%d) ststus%02x", 
+                        __FUNCTION__, valve.initStep, syspara.protectTimeOut, valve.status);
                 }
         	}
             else if(valve.statusLast==VALVE_RUNNING)
@@ -247,6 +252,7 @@ void ProcessValve(void)
                 {
                     valve.portDes = POS_N;
                     valve.status = VALVE_RUN_ERR;
+                    valve.ErrBlinkTime = ERROR_BLINK;
                     VALVE_ENA = DISABLE;
                     printd("\r\n signal err");
                     return;
@@ -298,7 +304,7 @@ void ValveOrg(void)
 void TestBurn(void)
 {
     static uint8 tmWait=0;
-    if(ModbusPara.mAddrs==ADDR_MAX)
+    if(ModbusPara.mAddrs==AGS_ADDR_MAX)
     {
         if(timerPara.timeWaitMill>SEC)
         {

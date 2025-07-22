@@ -191,7 +191,7 @@ void MB_ReadHoldingRegisters(void)
 
 	dvc_addr = ModbusPara.rBuf[0];		//模块地址
 	func_num = ModbusPara.rBuf[2];		//端口编号
-	if(dvc_addr >= 1 && dvc_addr <= ADDR_MAX)
+	if(AGS_ADDR_MIN <= dvc_addr && AGS_ADDR_MAX >= dvc_addr)
 	{// 模块地址判断OK
 		if(func_num==0 || func_num==1 || func_num==2 || func_num==3 || func_num==4 || func_num==5
           || func_num==7 || func_num==8 || func_num==9 || func_num==10)
@@ -216,16 +216,17 @@ void MB_ReadHoldingRegisters(void)
                 ModbusPara.tBuf[3] = valve.portCur;         // 通道编号
                 byteCount = 4;
     	    }
-    	    else if(func_num==2)
-    		{
-                ModbusPara.tBuf[3] = ModbusPara.mAddrs;         // 模块地址
-                byteCount = 4;
-    	    }
-    	    else if(func_num==3)
-    		{
-                ModbusPara.tBuf[3] = SOFT_VER;                  // 模块版本
-                byteCount = 4;
-    	    }
+            else if(AGS_R_VERSION == func_num)      /* 读版本 */
+            {
+                uint32_t temp = SOFT_VER;
+                ModbusPara.tBuf[3] = temp>>24;
+                ModbusPara.tBuf[4] = temp>>16;
+                ModbusPara.tBuf[5] = temp>>8;
+                ModbusPara.tBuf[6] = temp>>0;                       // 模块版本号
+    //            printd("\r\n Ver: %d %d %d %d",
+    //                ModbusPara.tBuf[3], ModbusPara.tBuf[4], ModbusPara.tBuf[5], ModbusPara.tBuf[6]);
+                byteCount = 7;
+            }
     	    else if(func_num==4)
     		{
                 ModbusPara.tBuf[3] = valveFix.fix.org;     // 原点补偿值
@@ -306,7 +307,7 @@ void MB_PresetSingleHoldingRegister(void)
 	    }
         else if(func_num==1)
         {
-    		if(port_num && port_num<=ADDR_MAX)
+    		if(port_num && port_num<=AGS_ADDR_MAX)
     		{// 写入地址编号判断OK,开始响应处理。
                 I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &port_num);
     		}

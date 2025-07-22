@@ -358,6 +358,7 @@ void TermIO(char rw)
     {
         bIoCtrl = !bIoCtrl;
         I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
+        printd("\r IO:%d %s", bIoCtrl, (0 == bIoCtrl ? "OFF" : "ON"));
     }
 }
 

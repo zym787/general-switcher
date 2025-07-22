@@ -117,7 +117,8 @@
 #endif
 
 #define BYTE_RANGE          255
-#define ADDR_MAX            64
+#define AGS_ADDR_MIN            0       /* AGS地址最小 0 */
+#define AGS_ADDR_MAX            64      /* AGS地址最大 64 */
 
 typedef struct
 {
