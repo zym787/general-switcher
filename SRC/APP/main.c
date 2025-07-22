@@ -291,17 +291,20 @@ void ParameterInit(void)
         ISET(valve.iSet);
 		#endif
     }
-    if(!spdVx2)
-    {
-        spdVx2 = spdDflt;
-    }
-    speed[AXSV] *= (spdVx2);
+//    if(!spdVx2)
+//    {
+//        spdVx2 = spdDflt;
+//    }
+    speed[AXSV] = 100;
+    accel[AXSV] = 100;
+    decel[AXSV] = 200;
+    speed[AXSV] *= (INIT_SPD);  // 使用初始化速度找原点
     speed[AXSV] *= (rdc.rate);
-    accel[AXSV] *= (spdVx2);
+    accel[AXSV] *= (INIT_SPD);
     accel[AXSV] *= (rdc.rate);
-    decel[AXSV] *= (spdVx2);
+    decel[AXSV] *= (INIT_SPD);
     decel[AXSV] *= (rdc.rate);
-    printd("\r\n spd%d acc%d dec%d", speed[AXSV], accel[AXSV], decel[AXSV]);
+    printd("\r\n Init motion!  Slow Down!  spd%d acc%d dec%d", speed[AXSV], accel[AXSV], decel[AXSV]);
 
     valve.status = VALVE_INITING;
     valve.ErrBlinkTime = NORMAL_BLINK;
@@ -323,6 +326,7 @@ int main(void)
     MotorCfg();
     IOconfig();
     delay_ms(100);
+    printd("\r\n Version:%s  Time:%s", SOFT_VER_C, __TIME__);
     ParameterInit();
     UsrCmdInit();
 	while(1)

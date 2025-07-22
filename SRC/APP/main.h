@@ -7,8 +7,8 @@
 #define PEXT extern
 #endif
 
-#define SOFT_VER        132
-#define SOFT_VER_C      "V1.3.2A"
+#define SOFT_VER        133
+#define SOFT_VER_C      "V1.3.3A"
 // V1.2.9r7     2024.09.26  原点补偿做减速区间 (TZY)
 // V1.3.0r0     2025.01.14  修改通信丢包 (TZY)
 // V1.3.0r1     2025.03.05  修改序列号地址重复 (TZY)
@@ -21,6 +21,9 @@
 // V1.3.2A/B    2025.06.30  修复超时保护
 //                          V1.3.1A    1.3.0r4 232/485+IO
 //                          V1.3.1B    1.2.9r7 IO
+// V1.3.3A/B    2025.06.30  修复初始化降速，增加版本输出
+//                          V1.3.3A    1.3.0r4 232/485+IO
+//                          V1.3.3B    1.2.9r7 IO
 
 
 

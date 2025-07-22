@@ -65,6 +65,7 @@
 #define PORT_CNT            10                      //通道数
 #define AXSV                0
 #define SPD_X               200
+#define INIT_SPD            20  // 初始化找位速度
 
 #define RDC01				1
 #define RDC04				4

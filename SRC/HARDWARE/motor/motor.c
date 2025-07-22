@@ -122,7 +122,7 @@ void InitValve(void)
                 break;
             case 5:
                 #ifdef IOCTRL
-                if(bIoCtrl)
+                if(bIoCtrl) // IOE IO生效
                 {
                     valve.initStep = 6;
 //                #else
@@ -151,7 +151,7 @@ void InitValve(void)
                     valve.initStep = 0;
                     valve.portDes = 0;
                     #ifdef IOCTRL
-                    if(bIoCtrl)
+                    if(bIoCtrl) // IO默认到A
                     {
                         valve.portCur = POS_A;
                     }
@@ -164,14 +164,23 @@ void InitValve(void)
                         I2CPageWrite_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portCur);
                     }
                     #endif
-                    valve.status &= ~VALVE_INITING;
-                    valve.status &= ~VALVE_RUNNING;
-                    valve.status |= VALVE_RUN_END;
-                    VALVE_ENA = DISABLE;
+                    valve.status &= ~VALVE_INITING; // 清除初始化标志
+                    valve.status &= ~VALVE_RUNNING; // 清除运行标志
+                    valve.status |= VALVE_RUN_END;  // 运行结束--空闲
+                    VALVE_ENA = DISABLE;            // 停止电机
 //                    ISET(I_05A);
                     // 清时间，保证不会连续复位转动
 //                    timerPara.timeMilli = 0;
 //                    printd("\r NO.%d", valveFix.fix.portCnt);
+                    speed[AXSV] = 100;
+                    accel[AXSV] = 100;
+                    decel[AXSV] = 200;
+                    speed[AXSV] *= (spdVx2);    //恢复设置速度切换
+                    speed[AXSV] *= (rdc.rate);
+                    accel[AXSV] *= (spdVx2);
+                    accel[AXSV] *= (rdc.rate);
+                    decel[AXSV] *= (spdVx2);
+                    decel[AXSV] *= (rdc.rate);
                     printd("\r\n spd%d acc%d dec%d", speed[AXSV], accel[AXSV], decel[AXSV]);
                 }
                 break;
