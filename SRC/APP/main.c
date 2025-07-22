@@ -43,7 +43,11 @@ void IOconfig(void)
     #endif
 }
 
-
+// 检测任务
+// 1 IO(实时)
+// 2 超时检测任务(1s)
+#define SINGLE_RUN_TIMEOUT          5           // 运行5秒超时
+#define SINGLE_INITING_TIMOUT       14           // 转一圈差不多3秒，复位单次是两圈
 void EveryHSec(void)
 {
     #ifdef IOCTRL
@@ -52,7 +56,7 @@ void EveryHSec(void)
         if(timerPara.timeMilli>DCSEC)
         {
             timerPara.timeMilli = 0;
-            if(IO_IN)
+            if(IO_IN)               // AI -- 1
             {// 未接通
                 if(valve.status==VALVE_RUN_END)
                 {
@@ -60,19 +64,30 @@ void EveryHSec(void)
                     {
                         valve.portDes = POS_A;
                     }
-                    // VICI版本逻辑
+                 #if IO_RS  // IO_RS 1 A 232/485/IO
                     #ifdef A12_901
-                    IO_OUT = ON;            
+                        IO_OUT = ON;    // AI -- 1  BO -- 1
                     #endif
                     #ifdef A12_906
-                    IO_OUT = OFF;
+                        IO_OUT = OFF;   // AI -- 1  BO -- 0
                     #endif
                     #ifdef A12_909
-                    IO_OUT = ON;            // 修改为B3版逻辑
+                        IO_OUT = ON;    // AI -- 1  BO -- 0(无AB区别)
                     #endif
+                 #else      // IO_RS 0 B IO
+                    #ifdef A12_901
+                        IO_OUT = OFF;   // AI -- 1  BO -- 0
+                    #endif
+                    #ifdef A12_906
+                        IO_OUT = ON;    // AI -- 1  BO -- 1
+                    #endif
+                    #ifdef A12_909
+                        IO_OUT = ON;    // AI -- 1  BO -- 0(无AB区别)
+                    #endif
+                #endif
                 }
             }
-            else
+            else                    // AI -- 0
             {// 接通
                 if(valve.status==VALVE_RUN_END)
                 {
@@ -80,21 +95,33 @@ void EveryHSec(void)
                     {
                         valve.portDes = POS_B;
                     }
-                    // VICI版本逻辑
+                 #if IO_RS  // IO_RS 1 A 232/485/IO
                     #ifdef A12_901
-                    IO_OUT = OFF;             
+                        IO_OUT = OFF;   // AI -- 0  BO -- 0
                     #endif
                     #ifdef A12_906
-                    IO_OUT = ON;
+                        IO_OUT = ON;    // AI -- 0  BO -- 1
                     #endif
                     #ifdef A12_909
-                    IO_OUT = OFF;            // 修改为B3版逻辑
+                        IO_OUT = OFF;   // AI -- 0  BO -- 1(无AB区别)
                     #endif
+                 #else      // IO_RS 0 B IO
+                    #ifdef A12_901
+                        IO_OUT = ON;    // AI -- 0  BO -- 1
+                    #endif
+                    #ifdef A12_906
+                        IO_OUT = OFF;   // AI -- 0  BO -- 0
+                    #endif
+                    #ifdef A12_909
+                        IO_OUT = OFF;   // AI -- 0  BO -- 1(无AB区别)
+                    #endif
+                #endif
                 }
             }
         }
     }
     #endif
+    // 每秒检测一次
     if(timerPara.sec>SEC)
     {
         timerPara.sec = 0;
@@ -106,11 +133,30 @@ void EveryHSec(void)
                 I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8*)&syspara.totalCnt);
             }
         }
-        if(syspara.protectTimeOut>5*SEC)
-        {// 单通道间做5秒的超时处理，避免长时间堵转烧坏电路
+        // 超时报错
+        // 单通道间做5秒的超时处理，避免长时间堵转烧坏电路
+        if((valve.status == VALVE_RUNNING&& 
+            syspara.protectTimeOut > SINGLE_RUN_TIMEOUT*SEC) ||
+            (valve.status&VALVE_INITING && 
+            syspara.protectTimeOut > SINGLE_INITING_TIMOUT*SEC))
+        {
+            if(!(valve.status&VALVE_RUN_ERR))
+            {
+                valve.portDes = 0;
+                valve.status = VALVE_RUN_ERR;
+                VALVE_ENA = DISABLE;
+                printd("\r\n time out err");
+            }
+            else
+            {
+                VALVE_ENA = DISABLE;
+            }
+        }
+        if(syspara.protectTimeOut > (SINGLE_INITING_TIMOUT+1)*SEC)
+        {
             valve.status = VALVE_RUN_ERR;
             VALVE_ENA = DISABLE;
-            printd("\r\n time out err");
+            printd("\r\n Timeout protection!");
         }
     }
 }
@@ -255,6 +301,7 @@ void ParameterInit(void)
     accel[AXSV] *= (rdc.rate);
     decel[AXSV] *= (spdVx2);
     decel[AXSV] *= (rdc.rate);
+    printd("\r\n spd%d acc%d dec%d", speed[AXSV], accel[AXSV], decel[AXSV]);
 
     valve.status = VALVE_INITING;
     valve.ErrBlinkTime = NORMAL_BLINK;
@@ -295,7 +342,9 @@ void DebugOut(void)
     {
         timerPara.timeDbg = 0;
         LED_WORK = !LED_WORK;
-        printd("\r\n >>sta:%02x port:%02x dest:%02x opt:%02x %d", valve.status, valve.portCur, valve.portDes, VALVE_OPT, IO_IN);
+        printd("\r\n >>sta:%02x port:%02x dest:%02x opt:%02x %d initstep%d IO_IN%d IO_OUT%d", 
+            valve.status, valve.portCur, valve.portDes, VALVE_OPT, IO_IN, 
+            valve.initStep, IO_IN, IO_OUT);
     }
 }
 

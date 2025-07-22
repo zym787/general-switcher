@@ -7,9 +7,13 @@ typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity    
 
 #define STM32_RC_C8             0       // 1-使用RC 0使用C8
 #define IOCTRL                          // 使用IO控制
+#define IO_RS             1   // IO_IN 和 IO_OUT是否取反
+                              // 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反)
+                              // 0 B (IO)           IO_IN高 IO_OUT高 (同电平)
+
 //#define A12_901
 //#define A12_906
-#define A12_909
+#define A12_909     // 909需要注意输出反向
 
 #include <stm32f10x.h>
 #include "usinterface.h"
@@ -207,7 +211,7 @@ typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity    
 #define	GPIO_Mode_Out_PP_50MHz_P14				((vu32)0x03000000)
 #define	GPIO_Mode_Out_PP_50MHz_P15				((vu32)0x30000000)
 
-//?'??1|??盱??3?????
+//?'??1|????盱??3?????
 #define	GPIO_Mode_AF_PP_10MHz_P0				((vu32)0x00000009)
 #define	GPIO_Mode_AF_PP_10MHz_P1				((vu32)0x00000090)
 #define	GPIO_Mode_AF_PP_10MHz_P2				((vu32)0x00000900)

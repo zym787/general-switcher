@@ -7,14 +7,22 @@
 #define PEXT extern
 #endif
 
-#define SOFT_VER        130
-#define SOFT_VER_C      "V1.3.0r4"
+#define SOFT_VER        132
+#define SOFT_VER_C      "V1.3.2A"
 // V1.2.9r7     2024.09.26  原点补偿做减速区间 (TZY)
 // V1.3.0r0     2025.01.14  修改通信丢包 (TZY)
 // V1.3.0r1     2025.03.05  修改序列号地址重复 (TZY)
 // V1.3.0r2     2025.05.19  应用方向补偿 (TZY)
 // V1.3.0r3     2025.05.21  修改通道数限制
 // V1.3.0r4     2025.06.20  修复读序列号
+// V1.3.1A/B    2025.06.26  统一IO  宏定义IO_RS 1-A(232/485/IO) 0-B(IO)
+//                          V1.3.1A    1.3.0r4 232/485+IO
+//                          V1.3.1B    1.2.9r7 IO
+// V1.3.2A/B    2025.06.30  修复超时保护
+//                          V1.3.1A    1.3.0r4 232/485+IO
+//                          V1.3.1B    1.2.9r7 IO
+
+
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)

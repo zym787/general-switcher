@@ -117,6 +117,9 @@ void InitValve(void)
                 if(!VALVE_OPT)
                     valve.initStep = 4;
                 break;
+            case 4:
+                valve.initStep = 5;
+                break;
             case 5:
                 #ifdef IOCTRL
                 if(bIoCtrl)
@@ -169,6 +172,7 @@ void InitValve(void)
                     // 清时间，保证不会连续复位转动
 //                    timerPara.timeMilli = 0;
 //                    printd("\r NO.%d", valveFix.fix.portCnt);
+                    printd("\r\n spd%d acc%d dec%d", speed[AXSV], accel[AXSV], decel[AXSV]);
                 }
                 break;
             default:
@@ -207,7 +211,7 @@ void ProcessValve(void)
                     }
                     else
                     {
-                        ftemp += (float)valveFix.fix.dirGap*rdc.stepP01dgr; // 方向补偿
+                        ftemp += (float)valveFix.fix.dirGap*rdc.stepP01dgr;
                         ftemp *= -1;
                     }
                     VALVE_ENA = ENABLE;
@@ -260,7 +264,7 @@ void ValveOrg(void)
     if(VALVE_OPT && valve.optLast==1)
     {
         valve.optLast = 0;
-        position[AXSV] = -rdc.stepP1dgr*valveFix.fix.org;   // 原点补偿 FIXO
+        position[AXSV] = -rdc.stepP1dgr*valveFix.fix.org;
         srd[AXSV].accel_count = -rdc.stepP1dgr*valveFix.fix.org;
         srd[AXSV].run_state = DECEL;
         if(valve.status&VALVE_INITING && valve.initStep==4)
