@@ -1,18 +1,18 @@
 #define _MODBUS_GLOBALS_
 #include "common.h"
 
-#define	RX_EN()		(PBout(1)=0)
-#define	TX_EN()		(PBout(1)=1)
+#define RX_EN()     (PBout(1)=0)
+#define TX_EN()     (PBout(1)=1)
 
 void ModbusInit(void)
 {
-	unsigned char cnt;
+    unsigned char cnt;
 
     RCC->APB2ENR |= (RCC_APB2Periph_GPIOB);
     GPIOB->CRL &= (GPIO_Crl_P1);
     GPIOB->CRL |= (GPIO_Mode_Out_PP_50MHz_P1);
 
-	RX_EN();			                        // 开机为接收模式
+    RX_EN();        /* 开机为接收模式 */
 
     I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
     printd("\r baud:%d", bdrate);
@@ -22,228 +22,248 @@ void ModbusInit(void)
     if(bdrate==1)
     {
         Usart2_Init(36, BAUD_RATE_9600);				//串口初始化默认为9600
-    	delay_ms(100);
-    	Usart3_Init(36, BAUD_RATE_9600);	        // 串口2 485初始化为9600
-    	delay_ms(100);
-    	TIM3_Init(MODBUS_TIME_9600,71);	                // 45us--0.45ms
+        delay_ms(100);
+        Usart3_Init(36, BAUD_RATE_9600);	        // 串口2 485初始化为9600
+        delay_ms(100);
+        TIM3_Init(MODBUS_TIME_9600,71);	                // 45us--0.45ms
     }
     else if(bdrate==2)
     {
         Usart2_Init(36, BAUD_RATE_19200);				//串口初始化默认为19200
-    	delay_ms(100);
-    	Usart3_Init(36, BAUD_RATE_19200);	            // 串口2 485初始化为19200
-    	delay_ms(100);
-    	TIM3_Init(MODBUS_TIME_19200,71);	                // 45us--0.45ms
+        delay_ms(100);
+        Usart3_Init(36, BAUD_RATE_19200);	            // 串口2 485初始化为19200
+        delay_ms(100);
+        TIM3_Init(MODBUS_TIME_19200,71);	                // 45us--0.45ms
     }
     else if(bdrate==3)
     {
         Usart2_Init(36, BAUD_RATE_38400);				//串口初始化默认为38400
-    	delay_ms(100);
-    	Usart3_Init(36, BAUD_RATE_38400);	        // 串口2 485初始化为38400
-    	delay_ms(100);
-    	TIM3_Init(MODBUS_TIME_38400,71);	                // 45us--0.45ms
+        delay_ms(100);
+        Usart3_Init(36, BAUD_RATE_38400);	        // 串口2 485初始化为38400
+        delay_ms(100);
+        TIM3_Init(MODBUS_TIME_38400,71);	                // 45us--0.45ms
     }
-	delay_ms(100);
+    delay_ms(100);
 
-	// 参数配置
-	ModbusPara.sRUN =  MB_IDEL;
-	ModbusPara.sERR = ERR_NOT;
-	ModbusPara.times = 0;
-	ModbusPara.rCnt = 0;
-	ModbusPara.HostRept = 0;
-	ModbusPara.mAddrs = MB_SALVE_DEF_ADDR;
-	for(cnt = 0 ;cnt < LENGTH_MB_DATA ;cnt++)
-	{
-		ModbusPara.rBuf[cnt] = 0;
-		ModbusPara.tBuf[cnt] = 0;
-	}
+    // 参数配置
+    ModbusPara.sRUN =  MB_IDEL;
+    ModbusPara.sERR = ERR_NOT;
+    ModbusPara.times = 0;
+    ModbusPara.rCnt = 0;
+    ModbusPara.HostRept = 0;
+    ModbusPara.mAddrs = MB_SALVE_DEF_ADDR;
+    for(cnt = 0; cnt < LENGTH_MB_DATA; cnt++)
+    {
+        ModbusPara.rBuf[cnt] = 0;
+        ModbusPara.tBuf[cnt] = 0;
+    }
 
-	for(cnt = 0 ;cnt <LENGTH_COIL_REG ;cnt++)
-		CoilBitPara[cnt] = 0;
+    for(cnt = 0; cnt < LENGTH_COIL_REG; cnt++)
+        CoilBitPara[cnt] = 0;
 
-	for(cnt = 0 ;cnt <LENGTH_DiscreteREG ;cnt++)
-		DiscreteBitPara[cnt] = 0;
+    for(cnt = 0; cnt < LENGTH_DiscreteREG; cnt++)
+        DiscreteBitPara[cnt] = 0;
 
-	for(cnt = 0 ;cnt <LENGTH_HoldingREG ;cnt++)
-		HoldingREGPara[cnt] = 0;
+    for(cnt = 0; cnt < LENGTH_HoldingREG; cnt++)
+        HoldingREGPara[cnt] = 0;
 
-	for(cnt = 0 ;cnt <LENGTH_InputREG ;cnt++)
-		InputREGPara[cnt] = 0;
+    for(cnt = 0; cnt < LENGTH_InputREG; cnt++)
+        InputREGPara[cnt] = 0;
 }
 
 
 void ModbusTimesProcess(void)
 {
-	if(ModbusPara.sRUN&MB_BUSY)
-	{// 总线检测
-		if(ModbusPara.times < BUS_IDLE_TIME)
-		{
-			ModbusPara.times++;
-		}
-		else
-		{
-			//总线进入空闲，帧结束或开始
-			if(ModbusPara.sRUN == MB_RECIVE_ERR)
-			{// 接收过程中 有出现数据存储空间溢出或间隔时间超过T1.5
-				ModbusPara.sERR = ERR_MB_DEVICE;
-				ModbusPara.sRUN =  MB_IDEL;
-			}
-			else if(ModbusPara.sRUN == MB_NO_RESPONSE)
-			{
-				ModbusPara.sRUN = MB_IDEL;
-			}
-			else if(ModbusPara.sRUN == MB_RECIVE)
-			{
-				ModbusPara.sRUN =  MB_RECIVE_END;
-			}
-		}
-	}
+    if(ModbusPara.sRUN&MB_BUSY)
+    {
+        /* 总线检测 */
+        if(ModbusPara.times < BUS_IDLE_TIME)
+        {
+            ModbusPara.times++;
+        }
+        else
+        {
+            //总线进入空闲，帧结束或开始
+            if(ModbusPara.sRUN == MB_RECIVE_ERR)
+            {
+                // 接收过程中 有出现数据存储空间溢出或间隔时间超过T1.5
+                ModbusPara.sERR = ERR_MB_DEVICE;
+                ModbusPara.sRUN =  MB_IDEL;
+            }
+            else if(ModbusPara.sRUN == MB_NO_RESPONSE)
+            {
+                ModbusPara.sRUN = MB_IDEL;
+            }
+            else if(ModbusPara.sRUN == MB_RECIVE)
+            {
+                ModbusPara.sRUN =  MB_RECIVE_END;
+            }
+        }
+    }
 }
 
 
 void ModbusSend(unsigned char length)
 {
-	unsigned char cnt;
+    unsigned char cnt;
 
-	TX_EN()	;
-	if(length)
-	{
-		ModbusPara.sRUN = MB_SEND;
-		for(cnt=0; cnt < length; cnt++)
-		{
-			while((USART3->SR&0X40)==0);        //等待发送结束
-			USART3->DR = ModbusPara.tBuf[cnt];
-			ModbusPara.times = 0;               //重新计时。
-		}
-	}
-	while((USART3->SR&0X40)==0);                //等待发送结束
-	RX_EN();
+    TX_EN();
+    if(length)
+    {
+        ModbusPara.sRUN = MB_SEND;
+        for(cnt=0; cnt < length; cnt++)
+        {
+            while((USART3->SR&0X40)==0);        //等待发送结束
+            USART3->DR = ModbusPara.tBuf[cnt];
+            ModbusPara.times = 0;               //重新计时。
+        }
+    }
+    while((USART3->SR&0X40)==0);                //等待发送结束
+    RX_EN();
 
-	if(length)
-	{
-		ModbusPara.sRUN = MB_SEND;
-		for(cnt=0; cnt < length; cnt++)
-		{
-			while((USART2->SR&0X40)==0);        //等待发送结束
-			USART2->DR = ModbusPara.tBuf[cnt];
-			ModbusPara.times = 0;               //重新计时。
-		}
-	}
-	while((USART2->SR&0X40)==0);                //等待发送结束
-	ModbusPara.sRUN = MB_IDEL;
-	ModbusPara.rCnt = 0;
+    if(length)
+    {
+        ModbusPara.sRUN = MB_SEND;
+        for(cnt=0; cnt < length; cnt++)
+        {
+            while((USART2->SR&0X40)==0);        //等待发送结束
+            USART2->DR = ModbusPara.tBuf[cnt];
+            ModbusPara.times = 0;               //重新计时。
+        }
+    }
+    while((USART2->SR&0X40)==0);                //等待发送结束
+    ModbusPara.sRUN = MB_IDEL;
+    ModbusPara.rCnt = 0;
 }
 
 void ModbusReceive(unsigned char res)
 {
-	ModbusPara.times = 0;  //重新计时
-	if(ModbusPara.sRUN==MB_IDEL && !ModbusPara.rCnt)
-	{// 空闲并且数据处理结束，可以进行新的接收
-		if(ModbusPara.mAddrs==res || res==MB_Broadcast_ADDR)
-		{// 开始接收数据
-			ModbusPara.sRUN = MB_RECIVE;
-			ModbusPara.sERR = ERR_NOT;
-    		ModbusPara.rCnt = 1;
-    		ModbusPara.rBuf[0] = res;
-		}
-		else
-		{// 非本设备地址，或非当前查询的设备，且非广播地址
-			ModbusPara.sRUN = MB_NO_RESPONSE;
-			ModbusPara.sERR = ERR_MB_DEVICE;
-		}
-	}
-	else if(ModbusPara.sRUN==MB_RECIVE)
-	{
-		// 如果溢出或者传输过程出现时间间隔超过T1.5，都不在接收
-		if(ModbusPara.rCnt<LENGTH_MB_DATA && ModbusPara.times<FRAME_ERR_TIME)
-			ModbusPara.rBuf[ModbusPara.rCnt] = res;
-		else
+    ModbusPara.times = 0;  //重新计时
+    if(ModbusPara.sRUN==MB_IDEL && !ModbusPara.rCnt)
+    {
+        // 空闲并且数据处理结束，可以进行新的接收
+        if(ModbusPara.mAddrs==res || res==MB_Broadcast_ADDR)
+        {
+            // 开始接收数据
+            ModbusPara.sRUN = MB_RECIVE;
+            ModbusPara.sERR = ERR_NOT;
+            ModbusPara.rCnt = 1;
+            ModbusPara.rBuf[0] = res;
+        }
+        else
+        {
+            // 非本设备地址，或非当前查询的设备，且非广播地址
+            ModbusPara.sRUN = MB_NO_RESPONSE;
+            ModbusPara.sERR = ERR_MB_DEVICE;
+        }
+    }
+    else if(ModbusPara.sRUN==MB_RECIVE)
+    {
+        // 如果溢出或者传输过程出现时间间隔超过T1.5，都不在接收
+        if(ModbusPara.rCnt < LENGTH_MB_DATA && ModbusPara.times < FRAME_ERR_TIME)
+        {
+            ModbusPara.rBuf[ModbusPara.rCnt] = res;
+        }
+        else
+        {
             ModbusPara.sRUN = MB_RECIVE_ERR;
+        }
 
-    	++ModbusPara.rCnt;
-	}
+        ++ModbusPara.rCnt;
+    }
 }
 
 void Modbus_ERROR(void)
 {
-	unsigned short 	temp16;
+    unsigned short 	temp16;
 
-	if(ModbusPara.sERR==ERR_MB_FUN || ModbusPara.sERR==ERR_MB_ADDR || ModbusPara.sERR==ERR_MB_DATA)
-	{// 从模式,发送响应数据
-		ModbusPara.tBuf[0] = ModbusPara.rBuf[0];			// 设备地址
-		ModbusPara.tBuf[1] = ModbusPara.rBuf[1]|0X80;	    // 功能码| 0X80
-		ModbusPara.tBuf[2] = ModbusPara.sERR;			    // 错误代码
-		temp16 = ModbusCRC16(&ModbusPara.tBuf[0], 3);	    // 获取CRC
-		ModbusPara.tBuf[3] = temp16 >> 8;
-		ModbusPara.tBuf[4] = temp16 ;
-		if(ModbusPara.tBuf[0] != MB_Broadcast_ADDR)
-		{
+    if(ModbusPara.sERR==ERR_MB_FUN || ModbusPara.sERR==ERR_MB_ADDR || ModbusPara.sERR==ERR_MB_DATA)
+    {
+        /* 从模式,发送响应数据 */
+        ModbusPara.tBuf[0] = ModbusPara.rBuf[0];			// 设备地址
+        ModbusPara.tBuf[1] = ModbusPara.rBuf[1]|0X80;	    // 功能码| 0X80
+        ModbusPara.tBuf[2] = ModbusPara.sERR;			    // 错误代码
+        temp16 = ModbusCRC16(&ModbusPara.tBuf[0], 3);	    // 获取CRC
+        ModbusPara.tBuf[3] = temp16 >> 8;
+        ModbusPara.tBuf[4] = temp16 ;
+        if(ModbusPara.tBuf[0] != MB_Broadcast_ADDR)
+        {
             ModbusSend(5);
-		}
-	}
-	ModbusPara.sERR = ERR_NOT;
+        }
+#ifdef DEBUG_MODBUS
+        printd("\r\n [%02x]error reply Func:%02x",
+               ModbusPara.sERR, ModbusPara.tBuf[1]);
+#endif
+    }
+    ModbusPara.sERR = ERR_NOT;
 }
 
 void MB_ReadHoldingRegisters(void)
-{ // 功能码3
-	unsigned short reg_num;
+{
+    // 功能码3
+    unsigned short reg_num;
     unsigned char dvc_addr, func_num, byteCount;
 
-	dvc_addr = ModbusPara.rBuf[0];		//模块地址
-	func_num = ModbusPara.rBuf[2];		//端口编号
-	if(AGS_ADDR_MIN <= dvc_addr && AGS_ADDR_MAX >= dvc_addr)
-	{// 模块地址判断OK
-		if(func_num==0 || func_num==1 || func_num==2 || func_num==3 || func_num==4 || func_num==5
-          || func_num==7 || func_num==8 || func_num==9 || func_num==10)
-		{// 通道编号判断OK,开始响应处理。
-			ModbusPara.tBuf[0] = ModbusPara.rBuf[0]; 			// 设备地址
-			ModbusPara.tBuf[1] = ModbusPara.rBuf[1];  			// 功能码
-			ModbusPara.tBuf[2] = ModbusPara.rBuf[2];  			// 功能码
-			if(func_num==0)
-    		{
+    dvc_addr = ModbusPara.rBuf[0];		//模块地址
+    func_num = ModbusPara.rBuf[2];		//端口编号
+    /* 地址判断 */
+    if(ModbusPara.mAddrs == dvc_addr || MB_Broadcast_ADDR == dvc_addr)
+    {
+        /* 功能码判断 */
+        if(func_num==0 || func_num==1 || func_num==2 || func_num==3 || func_num==4 || func_num==5
+                || func_num==7 || func_num==8 || func_num==9 || func_num==10)
+        {
+            ModbusPara.tBuf[0] = ModbusPara.rBuf[0]; 			// 设备地址
+            ModbusPara.tBuf[1] = ModbusPara.rBuf[1];  			// 功能码
+            ModbusPara.tBuf[2] = ModbusPara.rBuf[2];  			// 功能码
+            if(0x00 == func_num)            /* 读状态 */
+            {
                 ModbusPara.tBuf[3] = valve.status;              // 模块状态
-    			ModbusPara.tBuf[4] = valve.portCur;             // 通道编号
-    			ModbusPara.tBuf[5] = ModbusPara.mAddrs;         // 模块地址
-    			ModbusPara.tBuf[6] = bdrate;                    // 模块波特率
-    			ModbusPara.tBuf[7] = valveFix.fix.portCnt;      // 模块通道数
-    			ModbusPara.tBuf[8] = valve.fixOrg;              // 原点补偿值
-    			ModbusPara.tBuf[9] = valveFix.fix.org;       // 方向补偿值
-    			ModbusPara.tBuf[10] = spdVx2;                   // 速度
-			    byteCount = 11;
-			}
-    	    else if(func_num==1)
-    		{
+                ModbusPara.tBuf[4] = valve.portCur;             // 通道编号
+                ModbusPara.tBuf[5] = ModbusPara.mAddrs;         // 模块地址
+                ModbusPara.tBuf[6] = bdrate;                    // 模块波特率
+                ModbusPara.tBuf[7] = valveFix.fix.portCnt;      // 模块通道数
+                ModbusPara.tBuf[8] = valve.fixOrg;              // 原点补偿值
+                ModbusPara.tBuf[9] = valveFix.fix.org;       // 方向补偿值
+                ModbusPara.tBuf[10] = spdVx2;                   // 速度
+                byteCount = 11;
+            }
+            else if(0x01 == func_num)        /* 读通道位置 */
+            {
                 ModbusPara.tBuf[3] = valve.portCur;         // 通道编号
                 byteCount = 4;
-    	    }
-            else if(AGS_R_VERSION == func_num)      /* 读版本 */
+            }
+            else if(0x02 == func_num)        /* 读地址 */
+            {
+                ModbusPara.tBuf[3] = ModbusPara.mAddrs; /* 地址 */
+                byteCount = 4;
+            }
+            else if(0x03 == func_num)       /* 读版本 */
             {
                 uint32_t temp = SOFT_VER;
                 ModbusPara.tBuf[3] = temp>>24;
                 ModbusPara.tBuf[4] = temp>>16;
                 ModbusPara.tBuf[5] = temp>>8;
-                ModbusPara.tBuf[6] = temp>>0;                       // 模块版本号
-    //            printd("\r\n Ver: %d %d %d %d",
-    //                ModbusPara.tBuf[3], ModbusPara.tBuf[4], ModbusPara.tBuf[5], ModbusPara.tBuf[6]);
+                ModbusPara.tBuf[6] = temp>>0;   // 模块版本号
                 byteCount = 7;
             }
-    	    else if(func_num==4)
-    		{
+            else if(0x04 == func_num)       /* 读原点补偿 */
+            {
                 ModbusPara.tBuf[3] = valveFix.fix.org;     // 原点补偿值
                 byteCount = 4;
-    	    }
-    	    else if(func_num==5)
-    		{
+            }
+            else if(0x05 == func_num)       /* 读方向补偿 */
+            {
                 ModbusPara.tBuf[3] = valveFix.fix.dirGap;     // 补偿值
                 byteCount = 4;
-    	    }
-    	    else if(func_num==7)
-    		{
+            }
+            else if(0x07 == func_num)       /* 读波特率 */
+            {
                 ModbusPara.tBuf[3] = bdrate;     // 波特率
                 byteCount = 4;
-    	    }
-    	    else if(func_num==8)
-    		{
+            }
+            else if(0x08 == func_num)       /* 读序列号 */
+            {
                 I2CPageRead_Nbytes(ADDR_SN, LEN_SN, valve.SnCode);
                 ModbusPara.tBuf[3] = valve.SnCode[0];
                 ModbusPara.tBuf[4] = valve.SnCode[1];
@@ -251,14 +271,14 @@ void MB_ReadHoldingRegisters(void)
                 ModbusPara.tBuf[6] = valve.SnCode[3];
                 ModbusPara.tBuf[7] = valve.SnCode[4];
                 byteCount = 8;
-    	    }
-    	    else if(func_num==9)
-    		{
+            }
+            else if(0x09 == func_num)       /* 读速度 */
+            {
                 ModbusPara.tBuf[3] = spdVx2;     // 转动速度
                 byteCount = 4;
-    	    }
-    	    else if(func_num==0x0a)
-    		{
+            }
+            else if(0x0A == func_num)       /* 读切换次数 */
+            {
                 I2CPageRead_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8*)&syspara.totalCnt));
                 printd("\r\n read total count %d", syspara.totalCnt);
                 ModbusPara.tBuf[3] = ((uint8*)&syspara.totalCnt)[3];
@@ -266,97 +286,122 @@ void MB_ReadHoldingRegisters(void)
                 ModbusPara.tBuf[5] = ((uint8*)&syspara.totalCnt)[1];
                 ModbusPara.tBuf[6] = ((uint8*)&syspara.totalCnt)[0];
                 byteCount = 7;
-    	    }
-			reg_num = ModbusCRC16( &ModbusPara.tBuf[0], byteCount);	// 获取CRC
-			ModbusPara.tBuf[byteCount] = reg_num >> 8;
-			byteCount++;
-			ModbusPara.tBuf[byteCount] = reg_num ;
-			byteCount++;
-
-			if(ModbusPara.tBuf[0] != MB_Broadcast_ADDR)
-               ModbusSend(byteCount);
-		}
-		else
-		{// 超出系统规定保持寄存器地址范围或者读取个数与起始地址不匹配溢出
-			ModbusPara.sERR = ERR_MB_DATA;
-		}
-	}
-	else
-	{// 超出系统规定保持寄存器的总数
-		ModbusPara.sERR = ERR_MB_ADDR;
-	}
+            }
+            /* 拼接 */
+            reg_num = ModbusCRC16( &ModbusPara.tBuf[0], byteCount);	// 获取CRC
+            ModbusPara.tBuf[byteCount] = reg_num >> 8;
+            byteCount++;
+            ModbusPara.tBuf[byteCount] = reg_num ;
+            byteCount++;
+            /* 只有当地址不为广播地址且无报错时才回复 可以通过广播地址查地址 */
+            if(((ModbusPara.tBuf[0] != MB_Broadcast_ADDR) || 
+                (ModbusPara.tBuf[0] == MB_Broadcast_ADDR) && 
+                0x02 == func_num) && (ERR_NOT == ModbusPara.sERR))
+            {
+                ModbusSend(byteCount);   /* 回复 */
+            }
+#ifdef DEBUG_MODBUS
+            printd("\r s:");
+            for(uint8 i=0; i<byteCount; i++)
+                printd(" %02x", ModbusPara.tBuf[i]);
+#endif
+        }
+        else
+        {
+            // 超出系统规定保持寄存器地址范围或者读取个数与起始地址不匹配溢出
+            ModbusPara.sERR = ERR_MB_DATA;
+        }
+    }
+    else
+    {
+        // 超出系统规定保持寄存器的总数
+        ModbusPara.sERR = ERR_MB_ADDR;
+    }
 }
 
 void MB_PresetSingleHoldingRegister(void)
-{// 功能码6
-	unsigned short reg_num;
+{
+    // 功能码6
+    unsigned short reg_num;
     unsigned char dvc_addr, func_num, port_num, byteCount;
 
-	dvc_addr = ModbusPara.rBuf[0];		//模块地址
-	func_num = ModbusPara.rBuf[2];		//端口编号
-	port_num = ModbusPara.rBuf[3];		//端口编号
-	if(dvc_addr == ModbusPara.mAddrs)
-	{// 模块地址判断OK
-	    if(func_num==0)
-	    {
-    		if(port_num && port_num<=valveFix.fix.portCnt)
-    		{// 通道编号判断OK,开始响应处理。
+    dvc_addr = ModbusPara.rBuf[0];		//模块地址
+    func_num = ModbusPara.rBuf[2];		//端口编号
+    port_num = ModbusPara.rBuf[3];		//端口编号
+    /* 地址判断 */
+    if(dvc_addr == ModbusPara.mAddrs)
+    {
+        ModbusPara.tBuf[0] = ModbusPara.rBuf[0];    // 设备地址
+        ModbusPara.tBuf[1] = ModbusPara.rBuf[1];    // 功能码
+        ModbusPara.tBuf[2] = ModbusPara.rBuf[2];    // 端口编号
+        if(0x00 == func_num)            /* 写通道 */
+        {
+            if(port_num && port_num<=valveFix.fix.portCnt)
+            {
+                // 通道编号判断OK,开始响应处理。
                 if(valve.status==VALVE_RUN_END)
-                	valve.portDes = port_num;
-    		}
-	    }
-        else if(func_num==1)
+                    valve.portDes = port_num;
+            }
+        }
+        else if(func_num==1)            /* 写地址 */
         {
-    		if(port_num && port_num<=AGS_ADDR_MAX)
-    		{// 写入地址编号判断OK,开始响应处理。
+            if(port_num && port_num<=AGS_ADDR_MAX)
+            {
+                // 写入地址编号判断OK,开始响应处理。
                 I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &port_num);
-    		}
+            }
         }
-        else if(func_num==2)
+        else if(func_num==2)            /* 写原点补偿 */
         {
-    		if(port_num && port_num<=BYTE_RANGE)
-    		{// 写入地址编号判断OK,开始响应处理。
+            if(port_num && port_num<=BYTE_RANGE)
+            {
+                // 写入地址编号判断OK,开始响应处理。
                 I2CPageWrite_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &port_num);
-    		}
+            }
         }
-        else if(func_num==3)
+        else if(func_num==3)            /* 写方向补偿 */
         {
-    		if(port_num && port_num<=BYTE_RANGE)
-    		{// 写入地址编号判断OK,开始响应处理。
+            if(port_num && port_num<=BYTE_RANGE)
+            {
+                // 写入地址编号判断OK,开始响应处理。
                 I2CPageWrite_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &port_num);
-    		}
+            }
         }
-        else if(func_num==6)
-        {// 复位指令
+        else if(func_num==6)            /* 复位 */
+        {
+            // 复位指令
             valve.status = VALVE_INITING;
             valve.initStep = 0;
             valve.retryTms = 0;
         }
-        else if(func_num==7)
+        else if(func_num==7)            /* 写波特率 */
         {
-    		if(port_num && port_num<=3)
-    		{// 写入地址编号判断OK,开始响应处理。
+            if(port_num && port_num<=3)
+            {
+                // 写入地址编号判断OK,开始响应处理。
                 I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &port_num);
-    		}
+            }
         }
-        else if(func_num==8)
-        {// 序列码指令
-			valve.SnCode[0] = ModbusPara.rBuf[3]; 			// 设备地址
-			valve.SnCode[1] = ModbusPara.rBuf[4];  			// 功能码
-			valve.SnCode[2] = ModbusPara.rBuf[5];  			// 端口编号
-			valve.SnCode[3] = ModbusPara.rBuf[6];  			// 补偿值
-			valve.SnCode[4] = ModbusPara.rBuf[7];  			// 补偿值
+        else if(func_num==8)            /* 写序列号 */
+        {
+            // 序列码指令
+            valve.SnCode[0] = ModbusPara.rBuf[3]; 			// 设备地址
+            valve.SnCode[1] = ModbusPara.rBuf[4];  			// 功能码
+            valve.SnCode[2] = ModbusPara.rBuf[5];  			// 端口编号
+            valve.SnCode[3] = ModbusPara.rBuf[6];  			// 补偿值
+            valve.SnCode[4] = ModbusPara.rBuf[7];  			// 补偿值
             I2CPageWrite_Nbytes(ADDR_SN, LEN_SN, valve.SnCode);
         }
-        else if(func_num==9)
+        else if(func_num==9)            /* 写速度 */
         {
-    		if(port_num && port_num<=200)
-    		{// 写入地址编号判断OK,开始响应处理。
+            if(port_num && port_num<=200)
+            {
+                // 写入地址编号判断OK,开始响应处理。
                 I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &port_num);
-    		}
+            }
         }
         else if(func_num==0x0a)
-        {// 序列码指令
+        {
             ((uint8*)&syspara.totalCnt)[0] = ModbusPara.rBuf[6];
             ((uint8*)&syspara.totalCnt)[1] = ModbusPara.rBuf[5];
             ((uint8*)&syspara.totalCnt)[2] = ModbusPara.rBuf[4];
@@ -365,16 +410,17 @@ void MB_PresetSingleHoldingRegister(void)
         }
         else if(func_num==99)
         {
-    		if(port_num && port_num<=32)
-    		{// 写入地址编号判断OK,开始响应处理。
+            if(port_num && port_num<=32)
+            {
+                // 写入地址编号判断OK,开始响应处理。
                 I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &port_num);
-    		}
+            }
         }
         else if(func_num==0xff)
         {
             printd("\r\n rcv para: %02x %02x %02x %02x %02x %02x %02x %02x",
-                ModbusPara.rBuf[3], ModbusPara.rBuf[4], ModbusPara.rBuf[5], ModbusPara.rBuf[6],
-                ModbusPara.rBuf[7], ModbusPara.rBuf[8], ModbusPara.rBuf[9], ModbusPara.rBuf[10]);
+                   ModbusPara.rBuf[3], ModbusPara.rBuf[4], ModbusPara.rBuf[5], ModbusPara.rBuf[6],
+                   ModbusPara.rBuf[7], ModbusPara.rBuf[8], ModbusPara.rBuf[9], ModbusPara.rBuf[10]);
 
             I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.rBuf[3]);
             I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &ModbusPara.rBuf[4]);
@@ -382,7 +428,7 @@ void MB_PresetSingleHoldingRegister(void)
             I2CPageWrite_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &ModbusPara.rBuf[6]);
             I2CPageWrite_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &ModbusPara.rBuf[7]);
 
-            uint8 ReadBuf[2]={0,0};
+            uint8 ReadBuf[2]= {0,0};
             ReadBuf[0] = 0x00;
             ReadBuf[1] = ModbusPara.rBuf[8];
             I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, ReadBuf);
@@ -390,76 +436,78 @@ void MB_PresetSingleHoldingRegister(void)
             I2CPageWrite_Nbytes(ADDR_INTVL, LEN_INTVL, &ModbusPara.rBuf[10]);
         }
 
-		ModbusPara.tBuf[0] = ModbusPara.rBuf[0]; 			// 设备地址
-		ModbusPara.tBuf[1] = ModbusPara.rBuf[1];  			// 功能码
-		ModbusPara.tBuf[2] = ModbusPara.rBuf[2];  			// 端口编号
-		ModbusPara.tBuf[3] = ModbusPara.rBuf[3];  			// 端口编号
-		byteCount = 4;
-		reg_num = ModbusCRC16( &ModbusPara.tBuf[0], byteCount);	// 获取CRC
-		ModbusPara.tBuf[byteCount] = reg_num >> 8;
-		byteCount++;
-		ModbusPara.tBuf[byteCount] = reg_num ;
-		byteCount++;
-		if(ModbusPara.tBuf[0] != MB_Broadcast_ADDR)
-           ModbusSend(byteCount);
-	}
-    else if(dvc_addr == MB_Broadcast_ADDR)
-    {
-        ModbusPara.mAddrs = 1;
-        I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.mAddrs);
+        
+        ModbusPara.tBuf[3] = ModbusPara.rBuf[3];  			// 端口编号
+        byteCount = 4;
+        reg_num = ModbusCRC16( &ModbusPara.tBuf[0], byteCount);	// 获取CRC
+        ModbusPara.tBuf[byteCount] = reg_num >> 8;
+        byteCount++;
+        ModbusPara.tBuf[byteCount] = reg_num ;
+        byteCount++;
+        if((ModbusPara.tBuf[0] != MB_Broadcast_ADDR) && 
+            (ERR_NOT == ModbusPara.sERR))
+        {
+            ModbusSend(byteCount);   /* 回复 */
+        }
+#ifdef DEBUG_MODBUS
+        printd("\r s:");
+        for(uint8 i=0; i<byteCount; i++)
+            printd(" %02x", ModbusPara.tBuf[i]);
+#endif
     }
-	else
-	{// 超出系统规定保持寄存器的总数
-		ModbusPara.sERR = ERR_MB_ADDR;
-	}
+    else
+    {
+        // 超出系统规定保持寄存器的总数
+        ModbusPara.sERR = ERR_MB_ADDR;
+    }
 }
 
 void ModbusProces(void)
 {
     uint32 i=0;
     if(ModbusPara.sRUN==MB_RECIVE_END)
-	{
+    {
         if(ModbusPara.rCnt>LEAST_RCV_CNT)
-    	{
-        LED_WORK = !LED_WORK;
-    		if(ModbusCRC16(&ModbusPara.rBuf[0], ModbusPara.rCnt)==0)
-		{
-			#if DEBUG_MODBUS
-            printd("\r bb");
-            for(i=0; i<ModbusPara.rCnt; i++)
-            printd(" %02x", ModbusPara.rBuf[i]);
-			#endif
-			{
-                //确认模块存在并且工作正常
-				switch(ModbusPara.rBuf[1])
-				{
-					case GET_HOLDING_REGT:
-						MB_ReadHoldingRegisters();
-						break;
-					case PRESET_HOLDING_sREGT:
-						MB_PresetSingleHoldingRegister();
-						break;
-					default:
-						ModbusPara.sERR = ERR_MB_FUN;
-						break;
-				}
-			}
-		}
-		else
-		{
-			ModbusPara.sERR = ERR_MB_DEVICE;
-		}
-		ModbusPara.rCnt = 0;
-		Modbus_ERROR();
-    		ModbusPara.sRUN = MB_IDEL;
+        {
+            LED_WORK = !LED_WORK;
+            if(ModbusCRC16(&ModbusPara.rBuf[0], ModbusPara.rCnt)==0)
+            {
+#if DEBUG_MODBUS
+                printd("\r r:");
+                for(i=0; i<ModbusPara.rCnt; i++)
+                    printd(" %02x", ModbusPara.rBuf[i]);
+#endif
+                {
+                    //确认模块存在并且工作正常
+                    switch(ModbusPara.rBuf[1])
+                    {
+                        case GET_HOLDING_REGT:
+                            MB_ReadHoldingRegisters();
+                            break;
+                        case PRESET_HOLDING_sREGT:
+                            MB_PresetSingleHoldingRegister();
+                            break;
+                        default:
+                            ModbusPara.sERR = ERR_MB_FUN;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                ModbusPara.sERR = ERR_MB_DEVICE;
+            }
+            ModbusPara.rCnt = 0;
+            Modbus_ERROR();
+            ModbusPara.sRUN = MB_IDEL;
         }
         else
         {
-    		ModbusPara.rCnt = 0;
-    		Modbus_ERROR();
-    		ModbusPara.sRUN = MB_IDEL;
+            ModbusPara.rCnt = 0;
+            Modbus_ERROR();
+            ModbusPara.sRUN = MB_IDEL;
         }
-	}
+    }
 }
 
 

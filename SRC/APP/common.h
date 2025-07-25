@@ -12,8 +12,8 @@ typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity    
                               // 0 B (IO)           IO_IN高 IO_OUT高 (同电平)
 
 //#define A12_901
-//#define A12_906
-#define A12_909     // 909需要注意输出反向
+#define A12_906
+//#define A12_909     // 909需要注意输出反向
 
 // PCB引脚配置相同，驱动芯片不同
 #ifdef A12_901

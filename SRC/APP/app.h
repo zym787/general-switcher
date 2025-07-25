@@ -4,7 +4,8 @@
 /* 系统寄存器地址 */
 #define AGS_R_STATE             0x00    /* 读状态地址 */
 #define AGS_R_CUR_PORT          0x01    /* 读通道地址 */
-#define AGS_R_VERSION           0x02    /* 读版本地址 */
+#define AGS_RW_ADDR             0x02    /* 读地址 */
+#define AGS_R_VERSION           0x03    /* 读版本地址 */
 #define AGS_R_VOLUME            0x03    /* 读体积地址? */
 #define AGS_R_FIXORG            0x04    /* 读原点补偿地址 */
 #define AGS_R_FIXDIR            0x05    /* 读方向补偿地址 */
