@@ -50,12 +50,20 @@
 
 #define RETRY_TIMES         2                       //重试次数
 
+#define VALVE_NONE          0x00
 #define VALVE_INITING       0x80
 #define VALVE_RUN_END       0x40
 #define VALVE_RUN_ERR       0x20
 #define VALVE_RUNNING       0x08
 
 #define PULSE_CNT_EN        0
+
+/* 光感状态枚举 */
+enum OPTO_STATE
+{
+    OPT_GAP = 0ul,  /* 缺口狭缝 0 */
+    OPT_BLOCKER     /* 挡光片   1 */
+};
 
 #define POS_N               0x00
 #define POS_A               0x01
