@@ -7,15 +7,20 @@
 #define PEXT extern
 #endif
 
-#define DESCRIPTION     "Switch Valve"
-#define SOFT_VER        1311
+#define DESCRIPTION         "Switch Valve"
+#define SOFT_REVISION       (uint16_t)0x0001    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r1"                /* 软件修改版次 */
 #if IO_RS  // IO_RS 1 A 232/485/IO
-#define CONTROL     "232/485+IO"
-#define SOFT_VER_C      "V1.3.1A-r1"
+#define CONTROL     "232/485+IO AGS"
+#define SOFT_NAME   "v1.3.1A-"
+#define SOFT_VER_NUM    (uint32_t)0x131A0000    /* A 232/485/IO */
 #else      // IO_RS 0 B IO
 #define CONTROL     "Only IO Control"
-#define SOFT_VER_C      "V1.3.1B-r1"
+#define SOFT_NAME   "v1.3.1B-"
+#define SOFT_VER_NUM    (uint32_t)0x131B0000    /* B IO */
 #endif
+#define SOFT_VER    SOFT_VER_NUM + SOFT_REVISION
+#define SOFT_VER_C  SOFT_NAME##""##SOFTWARE_VERSION
 // V1.2.9r7     2024.09.26  原点补偿做减速区间 (TZY)
 // V1.3.0r0     2025.01.14  修改通信丢包 (TZY)
 // V1.3.0r1     2025.03.05  修改序列号地址重复 (TZY)
@@ -30,6 +35,11 @@
 // V1.3.1A/B    2025.07.10  修复超时保护，修复默认参数，修复LED闪烁，重置版本号
 // v1.3.1A/B-r1 2025.07.21  支持0地址，修复默认参数写入乱码，支持02读版本，修改版本号
 //                          新增系统可操作寄存器地址映射表
+// v1.3.1A/B-r1 2025.07.29  分离版本号中可变和不可变部分，去除寄存器映射表
+//                          下载口新增MOVES查询/写入切换次数指令(0-2^32)
+//                          AGS: 删除读写补偿指令，增加写功能时长度匹配，写速度范围限制在20-200
+//                               优化协议栈，定义异常码，使用宏优化语句
+//                          
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)
@@ -100,10 +110,10 @@ PEXT uint16 spdVx2;
 
 typedef struct
 {
-    uint16  totalCnt;
-    uint16  totalCntLst;
-    uint16  lastTime;
-    uint32  protectTimeOut;
+    uint32_t  totalCnt;
+    uint32_t  totalCntLst;
+    uint16_t  lastTime;
+    uint32_t  protectTimeOut;
 }_SYS_T;
 PEXT _SYS_T syspara;
 

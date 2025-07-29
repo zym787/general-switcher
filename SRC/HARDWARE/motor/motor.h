@@ -65,7 +65,9 @@
 #define PORT_CNT            10                      //通道数
 #define AXSV                0
 #define SPD_X               200
-#define INIT_SPD            20  // 初始化找位速度
+#define INIT_SPD            20      /* 初始化找位速度 */
+#define SPD_MIN             20      /* 最小速度 */
+#define SPD_MAX             200     /* 最大速度 */
 
 #define RDC01				1
 #define RDC04				4
@@ -117,8 +119,8 @@
 #endif
 
 #define BYTE_RANGE          255
-#define AGS_ADDR_MIN            0       /* AGS地址最小 0 */
-#define AGS_ADDR_MAX            64      /* AGS地址最大 64 */
+#define AGS_ADDR_MIN        0       /* AGS地址最小 0 */
+#define AGS_ADDR_MAX        63      /* AGS地址最大 64 */
 
 typedef struct
 {

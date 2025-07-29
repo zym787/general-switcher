@@ -5,15 +5,15 @@ typedef unsigned char  uint8;                    /* Unsigned  8 bit quantity    
 typedef unsigned short uint16;                   /* Unsigned 16 bit quantity                           */
 typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity                           */
 
-#define STM32_RC_C8             0       // 1-使用RC 0使用C8
-#define IOCTRL                          // 使用IO控制
-#define IO_RS             0   // IO_IN 和 IO_OUT是否取反
+#define STM32_RC_C8     0   // 1-使用RC 0使用C8
+#define IOCTRL              // 使用IO控制
+#define IO_RS           0   // IO_IN 和 IO_OUT是否取反
                               // 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反)
                               // 0 B (IO)           IO_IN高 IO_OUT高 (同电平)
 
 //#define A12_901
-//#define A12_906
-#define A12_909     // 909需要注意输出反向
+#define A12_906
+//#define A12_909     // 909需要注意输出反向
 
 // PCB引脚配置相同，驱动芯片不同
 #ifdef A12_901

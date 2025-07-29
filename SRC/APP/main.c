@@ -1,8 +1,15 @@
 #define _MAIN_GLOBALS_
 #include "common.h"
 
-uint8 moduleAddrDflt = 1, valveFixDflt = 5, valveFixDir=0,
-      valvePortCnt=10, baudDflt=2, spdDflt=20, IODflt=0, IntDflt=5, IsetDflt=0;
+uint8_t moduleAddrDflt  = 1,
+        valveFixDflt    = 5,
+        valveFixDir     = 0,
+        valvePortCnt    =10,
+        baudDflt        =2,
+        spdDflt         =20,
+        IODflt          =0,
+        IntDflt         =5,
+        IsetDflt        =0;
 
 
 void IOconfig(void)
@@ -249,11 +256,15 @@ void ParameterInit(void)
         printd("\r Interval:%d Sec", intCtrl);
 
         // 906/909 支持电流设置
-    #ifndef A12_901
+#ifndef A12_901
         I2CPageRead_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);
         ISET(valve.iSet);
-        printd("\r Current:%d  0(Max)-4(Min)", valve.iSet);
-    #endif
+        printd("\r Current:%d %sA  0(Max)-4(Min)", valve.iSet, 
+            (0 == valve.iSet ? "2.6" :
+                (1 == valve.iSet ? "2.2" :
+                    (2 == valve.iSet ? "1.8" : 
+                        (3 == valve.iSet ? "1.6" : "0.5")))));
+#endif
         
         // 减速比
         I2CPageRead_Nbytes(ADDR_RDC_RATE, LEN_RDC_RATE, &rdc.rate);
@@ -347,9 +358,9 @@ void ParameterInit(void)
         // 电流设置 906/909
         valve.iSet = IsetDflt;
         I2CPageWrite_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);
-    #ifndef A12_901
+#ifndef A12_901
         ISET(valve.iSet);
-    #endif
+#endif
         // 锁定驱动?
         VALVE_ENA = DISABLE;
         printd("\r 写入成功,请复位!!!");
@@ -387,7 +398,7 @@ int main(void)
     MotorCfg();
     IOconfig();
     delay_ms(100);
-    printd("\r\n Version:%s(%d)  Time: %s %s \
+    printd("\r\n Version:%s(%08X)  Time: %s %s \
             \r\n Description:%s (%s)\
             \r\n PCB:%s  %s \r\n", 
         SOFT_VER_C, SOFT_VER, __DATE__, __TIME__, 
