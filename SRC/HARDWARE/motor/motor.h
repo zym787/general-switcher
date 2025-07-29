@@ -65,10 +65,10 @@ enum OPTO_STATE
     OPT_BLOCKER     /* 挡光片   1 */
 };
 
-#define POS_N               0x00
-#define POS_A               0x01
-#define POS_B               0x02
-#define POS_M               0xff
+#define POS_N               0x00    /* 空位置   0 */
+#define POS_A               0x01    /* A位置    1 */
+#define POS_B               0x02    /* B位置    2 */
+#define POS_M               0xff    /* 半通道   FF */
 
 #define PORT_CNT            10                      //通道数
 #define AXSV                0
@@ -162,16 +162,16 @@ typedef struct
     unsigned char bReInit;          // 再次复位转动
     unsigned char bEmgStopV;        // 再次复位转动
     unsigned char SnCode[LEN_SN];   // 序列码
-}_VALVE_T;
+} _VALVE_T;
 PEXT _VALVE_T valve;
 
 typedef struct
 {
-	uint8	rate;
-	uint32	stepRound;
-	float	stepP1dgr;
-	float	stepP01dgr;
-}RDC_T;
+    uint8	rate;
+    uint32	stepRound;
+    float	stepP1dgr;
+    float	stepP01dgr;
+} RDC_T;
 PEXT RDC_T rdc;
 
 
@@ -199,8 +199,8 @@ typedef union
         unsigned char org;              // 原点补偿 FIXO
         unsigned char dirGap;           // 方向补偿 FIXG
         unsigned char portCnt;          //
-    }fix;
-}_12VALVE_FIX;
+    } fix;
+} _12VALVE_FIX;
 PEXT _12VALVE_FIX valveFix;
 
 PEXT void MotorCfg(void);

@@ -244,14 +244,14 @@ void ProcessValve(void)
                     valve.status &= ~VALVE_RUN_END;     // 清除运行结束标志
                     valve.status |= VALVE_RUNNING;      // 置位运行标志
                     valve.statusLast = VALVE_RUNNING;
-                    syspara.protectTimeOut = 0;
+                    syspara.protectTimeOut = 0; /* 重新开始单次保护计时 */
                     printd("\r\n %s initstep%d (%d) ststus%02x",
                            __FUNCTION__, valve.initStep, syspara.protectTimeOut, valve.status);
                 }
             }
             else if(VALVE_RUNNING == valve.statusLast)  /* 阀组上次运行状态 */
             {
-                valve.statusLast = VALVE_NONE;
+                valve.statusLast = VALVE_NONE;      /* 清空状态 */
                 if(POS_A == valve.portDes && (OPT_GAP == VALVE_OPT))
                 {
                     valve.portDes = POS_N;
@@ -261,12 +261,12 @@ void ProcessValve(void)
                     printd("\r\n signal err");
                     return;
                 }
-                I2CPageWrite_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portDes);
                 valve.portCur = valve.portDes;
+                I2CPageWrite_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portCur);
                 valve.portDes = POS_N;
                 valve.retryTms = 0;
                 valve.status = VALVE_RUN_END;
-                ++syspara.totalCnt;
+                ++syspara.totalCnt;     /* 切换次数+1 */
 //                ISET(I_05A);
                 VALVE_ENA = DISABLE;
 //                EnableReceive();

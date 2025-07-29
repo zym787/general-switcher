@@ -48,16 +48,18 @@ void TermMap(char rw)
         }
         getAddr = (int *)strtohex(*getChar);
         if(**(getChar+1))
-        {//判断是否有参数写入
+        {
+            //判断是否有参数写入
             getInt = str2int(*(getChar+1));
             *getAddr = getInt;
             printd("\r\n Wr 0x%08x to 0x%08x", getInt, getAddr);
         }
         else
-        {//无参数，取指
+        {
+            //无参数，取指
             getInt = (int)(*getAddr);
             printd("\r\n Rd 0x[%02x %02x %02x %02x] from 0x%08x",
-                (char)(getInt>>24), (char)(getInt>>16), (char)(getInt>>8), (char)(getInt>>0), getAddr);
+                   (char)(getInt>>24), (char)(getInt>>16), (char)(getInt>>8), (char)(getInt>>0), getAddr);
         }
     }
 }
@@ -68,7 +70,7 @@ void TermMap(char rw)
 */
 void TermIIC(char rw)
 {
-    unsigned char rwBuf[4]={0, 0, 0, 0};
+    unsigned char rwBuf[4]= {0, 0, 0, 0};
     int getInt=0;
     if(rw==READ_ACT)
     {
@@ -326,7 +328,7 @@ void TermBaud(char rw)
 */
 void TermSpd(char rw)
 {
-    uint8 rdbuff[2]={0};
+    uint8 rdbuff[2]= {0};
     int getInt = 0;
     if(rw == READ_ACT)
     {
@@ -414,9 +416,9 @@ void TermISet(char rw)
             printd("\r\n set I to %d", getInt);
             valve.iSet = getInt;
             I2CPageWrite_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);
-			#ifndef A12_901
+#ifndef A12_901
             ISET(valve.iSet);
-			#endif
+#endif
         }
     }
 }
@@ -486,29 +488,31 @@ void TermOut(char rw)
 
 void TermList(char rw);
 /* 填充命令结构体数组 */
-static _CMD_T cmds[] = {
-	{"/?",      2,  TermList},
-	{"VR",      2,  TermVR},
-	{"MAP",     3,  TermMap},
-	{"IIC",     3,  TermIIC},
-	{"RST",     3,  TermReset},
-	{"MOT",     3,  TermMotorX},
-	{"FIXO",    4,  TermFixO},
+static _CMD_T cmds[] =
+{
+    {"/?",      2,  TermList},
+    {"VR",      2,  TermVR},
+    {"MAP",     3,  TermMap},
+    {"IIC",     3,  TermIIC},
+    {"RST",     3,  TermReset},
+    {"MOT",     3,  TermMotorX},
+    {"FIXO",    4,  TermFixO},
     {"FIXG",    4,  TermFixG},
-	{"ADDR",    4,  TermAddr},
-	{"CNT",     3,  TermCnt},
-	{"POS",     3,  TermPos},
-	{"BDR",     3,  TermBaud},
-	{"SPD",     3,  TermSpd},
-	{"IOE",     3,  TermIO},
-	{"INT",     3,  TermInterval},
-	{"ISET",    4,  TermISet},
-	{"OUT",     3,  TermOut},
+    {"ADDR",    4,  TermAddr},
+    {"CNT",     3,  TermCnt},
+    {"POS",     3,  TermPos},
+    {"BDR",     3,  TermBaud},
+    {"SPD",     3,  TermSpd},
+    {"IOE",     3,  TermIO},
+    {"INT",     3,  TermInterval},
+    {"ISET",    4,  TermISet},
+    {"OUT",     3,  TermOut},
     {"RDCR",    4,  TermRDCR},
     {"HALF",    4,  TermHalf},
 };
 
-static char* comment[] = {
+static char* comment[] =
+{
     "display all commands",
     "display version",
     "write value into specify address",
@@ -544,7 +548,7 @@ void TermList(char rw)
 
 void UsrCmdInit(void)
 {
-	RegisterCmds(cmds, ARRAY_SIZE(cmds));
+    RegisterCmds(cmds, ARRAY_SIZE(cmds));
 }
 
 
