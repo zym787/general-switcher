@@ -27,8 +27,9 @@ void TIM2_IRQHandler(void)
         ++timerPara.timeDbg;
         ++timerPara.timeMilli;
         ++timerPara.timeWaitMill;
+        ++timerPara.timeOut;
         ++timerPara.sec;
-        if(valve.statusLast==VALVE_RUNNING)
+        if(VALVE_INITING == valve.status || VALVE_RUNNING == valve.status)
             ++syspara.protectTimeOut;
 
         UsrCmdAnalyse(rcvStr);

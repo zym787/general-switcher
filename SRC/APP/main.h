@@ -7,8 +7,15 @@
 #define PEXT extern
 #endif
 
-#define SOFT_VER        133
-#define SOFT_VER_C      "V1.3.3A"
+#define DESCRIPTION     "Switch Valve"
+#define SOFT_VER        1311
+#if IO_RS  // IO_RS 1 A 232/485/IO
+#define CONTROL     "232/485+IO"
+#define SOFT_VER_C      "V1.3.1A-r1"
+#else      // IO_RS 0 B IO
+#define CONTROL     "Only IO Control"
+#define SOFT_VER_C      "V1.3.1B-r1"
+#endif
 // V1.2.9r7     2024.09.26  原点补偿做减速区间 (TZY)
 // V1.3.0r0     2025.01.14  修改通信丢包 (TZY)
 // V1.3.0r1     2025.03.05  修改序列号地址重复 (TZY)
@@ -16,16 +23,13 @@
 // V1.3.0r3     2025.05.21  修改通道数限制
 // V1.3.0r4     2025.06.20  修复读序列号
 // V1.3.1A/B    2025.06.26  统一IO  宏定义IO_RS 1-A(232/485/IO) 0-B(IO)
-//                          V1.3.1A    1.3.0r4 232/485+IO
-//                          V1.3.1B    1.2.9r7 IO
+//                          |- A    1.3.0r4 232/485+IO  所有都支持
+//                          |- B    1.2.9r7 IO          仅支持IO
 // V1.3.2A/B    2025.06.30  修复超时保护
-//                          V1.3.1A    1.3.0r4 232/485+IO
-//                          V1.3.1B    1.2.9r7 IO
 // V1.3.3A/B    2025.06.30  修复初始化降速，增加版本输出
-//                          V1.3.3A    1.3.0r4 232/485+IO
-//                          V1.3.3B    1.2.9r7 IO
-
-
+// V1.3.1A/B    2025.07.10  修复超时保护，修复默认参数，修复LED闪烁，重置版本号
+// v1.3.1A/B-r1 2025.07.21  支持0地址，修复默认参数写入乱码，支持02读版本，修改版本号
+//                          新增系统可操作寄存器地址映射表
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)
@@ -87,8 +91,9 @@
 #define ADDR_TOTAL_CNT        	(ADDR_HALF_SEAL+LEN_HALF_SEAL)
 #define LEN_TOTAL_CNT           4
 
-#define NORMAL_BLINK            2500       //正常运行的闪烁间隔
-#define RETRY_TIME_OUT          500        //异常运行的闪烁间隔
+#define NORMAL_BLINK            1500       // 正常运行的闪烁间隔
+#define RETRY_TIME_OUT          1100       // 重试的闪烁间隔
+#define ERROR_BLINK             400
 
 PEXT uint8 bdrate, bIoCtrl, intCtrl;
 PEXT uint16 spdVx2;
@@ -110,6 +115,7 @@ PEXT void dlyInTimer(void);
 PEXT unsigned char IntDly(unsigned short intMs);
 PEXT void EnableReceive(void);
 PEXT void DisableReceive(void);
+PEXT void ErrBlink(void);
 
 
 
