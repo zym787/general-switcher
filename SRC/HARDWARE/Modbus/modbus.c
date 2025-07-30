@@ -381,7 +381,8 @@ void MB_PresetSingleHoldingRegister(void)
     		if(SPD_MIN <= ModbusPara.rBuf[3] && SPD_MAX >= ModbusPara.rBuf[3] && 
                 6 == ModbusPara.rCnt)
     		{
-                I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &port_num);
+                spdVx2 = ModbusPara.rBuf[3];
+                I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
     		}
             else
             {

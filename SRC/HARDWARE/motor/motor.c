@@ -4,7 +4,7 @@
 void MotorCfg(void)
 {
     RCC->APB2ENR |= (RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC);
-    #if (defined A12_901)||(defined A12_909)
+#if (defined A12_901)||(defined A12_909)
     //LED
     GPIOC->CRH &= (GPIO_Crh_P15);
     GPIOC->CRH |= (GPIO_Mode_Out_PP_50MHz_P15);
@@ -24,9 +24,9 @@ void MotorCfg(void)
     GPIOA->CRH &= (GPIO_Crh_P11);
     GPIOA->CRH |= (GPIO_Mode_IN_PU_PD_P11);
     GPIOA->ODR |= (GPIO_Pin_11);
-    #endif
+#endif
 
-    #ifdef A12_906
+#ifdef A12_906
     //LED
     GPIOC->CRH &= (GPIO_Crh_P14);
     GPIOC->CRH |= (GPIO_Mode_Out_PP_50MHz_P14);
@@ -46,8 +46,7 @@ void MotorCfg(void)
     GPIOA->CRH &= (GPIO_Crh_P11);
     GPIOA->CRH |= (GPIO_Mode_IN_PU_PD_P11);
     GPIOA->ODR |= (GPIO_Pin_11);
-
-    #endif
+#endif
 
     VALVE_RST = 0;
     delay_ms(10);
@@ -60,9 +59,9 @@ void MotorCfg(void)
     srd[AXXN].signalCR1 = &TIM4->CR1;
     srd[AXXN].SearchOrg = ValveOrg;
     srd[AXXN].bEmgStop = &valve.bEmgStopV;
-	#ifndef A12_901
+#ifndef A12_901
     ISET(I_18A);
-	#endif
+#endif
 }
 
 
@@ -93,12 +92,14 @@ void InitValve(void)
                 if(!MotionStatus[AXSV])
                 {
                     if(!VALVE_OPT || (valve.portLast==POS_B&&!VALVE_OPT) || (valve.portLast!=POS_A&&VALVE_OPT))
-                    {// 未挡住，或者挡住了但上一个位置是B
+                    {
+                        // 未挡住，或者挡住了但上一个位置是B
                         AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);
                         valve.initStep = 3;
                     }
                     else
-                    {// 反转半个角度值
+                    {
+                        // 反转半个角度值
 
                         ftemp = (float)rdc.stepRound/valveFix.fix.portCnt;
                         ftemp /= 2;
@@ -122,37 +123,31 @@ void InitValve(void)
             case 4:
                 valve.initStep = 5;
                 break;
-            case 5:
-                #ifdef IOCTRL
-                if(bIoCtrl) // IOE IO生效
-                {
-                    valve.initStep = 6;
-//                #else
-                }
-                else
+            case 5:         /* 是否执行半通道 */
+#ifdef IOCTRL
+                if(OFF == bIoCtrl) // IOE IO不生效时才有半通道
                 {
                     if(!MotionStatus[AXSV])
                     {
                         if(valve.bHalfSeal)
                         {
-                            // 复位密封
-                            ftemp = (float)rdc.stepRound/valveFix.fix.portCnt;
-                            ftemp /= 2;
+                            // 复位密封 半通道
+                            ftemp = (float)rdc.stepRound/valveFix.fix.portCnt / 2;
                             AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
                         }
                         valve.bNewInit = 1;
-                        valve.initStep = 6;
                     }
                 }
-                #endif
+#endif
+                valve.initStep = 6;
                 break;
-            case 6:
+            case 6:         /* 更新状态 */
                 if(!MotionStatus[AXSV])
                 {
                     valve.bReInit = 1;
                     valve.initStep = 0;
                     valve.portDes = 0;
-                    #ifdef IOCTRL
+#ifdef IOCTRL
                     if(bIoCtrl) // IO默认到A
                     {
                         valve.portCur = POS_A;
@@ -165,7 +160,7 @@ void InitValve(void)
                             valve.portCur = POS_A;
                         I2CPageWrite_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portCur);
                     }
-                    #endif
+#endif
                     valve.status &= ~VALVE_INITING; // 清除初始化标志
                     valve.status &= ~VALVE_RUNNING; // 清除运行标志
                     valve.status |= VALVE_RUN_END;  // 运行结束--空闲
@@ -183,8 +178,8 @@ void InitValve(void)
                     accel[AXSV] *= (rdc.rate);
                     decel[AXSV] *= (spdVx2);
                     decel[AXSV] *= (rdc.rate);
-                    printd("\r\n Restore motion speed  (%d) spd%d acc%d dec%d", 
-                        spdVx2, speed[AXSV], accel[AXSV], decel[AXSV]);
+                    printd("\r\n Restore motion speed  (%d) spd%d acc%d dec%d",
+                           spdVx2, speed[AXSV], accel[AXSV], decel[AXSV]);
                 }
                 break;
             default:
@@ -202,13 +197,13 @@ void ProcessValve(void)
 {
     float ftemp=0;
     if(!(valve.status&VALVE_INITING))
-	{
+    {
         if(!MotionStatus[AXSV])
         {
             if(valve.status==VALVE_RUN_END)
-        	{
+            {
                 if(valve.portCur!=valve.portDes && (valve.portDes==POS_A||valve.portDes==POS_B))
-        	    {
+                {
                     syspara.lastTime = 0;
                     ftemp = (float)rdc.stepRound/valveFix.fix.portCnt;
                     if(valve.bNewInit)
@@ -237,14 +232,14 @@ void ProcessValve(void)
                         AxisMoveAbs(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
                     }
                     // 清空计数，避免数据暂留
-    				valve.status &= ~VALVE_RUN_END; 	// 清除运行结束标志
-    				valve.status |= VALVE_RUNNING; 	    // 置位运行标志
+                    valve.status &= ~VALVE_RUN_END; 	// 清除运行结束标志
+                    valve.status |= VALVE_RUNNING; 	    // 置位运行标志
                     valve.statusLast = VALVE_RUNNING;
                     syspara.protectTimeOut = 0;
-                    printd("\r\n %s initstep%d (%d) ststus%02x", 
-                        __FUNCTION__, valve.initStep, syspara.protectTimeOut, valve.status);
+                    printd("\r\n %s initstep%d (%d) ststus%02x",
+                           __FUNCTION__, valve.initStep, syspara.protectTimeOut, valve.status);
                 }
-        	}
+            }
             else if(valve.statusLast==VALVE_RUNNING)
             {
                 valve.statusLast = 0;
@@ -263,7 +258,7 @@ void ProcessValve(void)
                 valve.retryTms = 0;
                 valve.status = VALVE_RUN_END;
                 ++syspara.totalCnt;
-    //                ISET(I_05A);
+                //                ISET(I_05A);
                 VALVE_ENA = DISABLE;
 //                EnableReceive();
             }
@@ -283,7 +278,8 @@ void ValveOrg(void)
         srd[AXSV].accel_count = -rdc.stepP1dgr*valveFix.fix.org;
         srd[AXSV].run_state = DECEL;
         if(valve.status&VALVE_INITING && valve.initStep==4)
-        {// 初始化完成，找到10号位原点
+        {
+            // 初始化完成，找到10号位原点
             valve.initStep = 5;
         }
         else if(valve.portDes==POS_A)
@@ -310,7 +306,8 @@ void TestBurn(void)
         {
             timerPara.timeWaitMill = 0;
             if(++tmWait>intCtrl)
-            {// 30秒间隔，启动模块运转到下一个通道
+            {
+                // 30秒间隔，启动模块运转到下一个通道
                 tmWait = 0;
                 if(valve.status==VALVE_RUN_END)
                 {

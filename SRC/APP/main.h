@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0001    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r1"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0002    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r2"                /* 软件修改版次 */
 #if IO_RS  // IO_RS 1 A 232/485/IO
 #define CONTROL     "232/485+IO AGS"
 #define SOFT_NAME   "v1.3.1A-"
@@ -39,7 +39,10 @@
 //                          下载口新增MOVES查询/写入切换次数指令(0-2^32)
 //                          AGS: 删除读写补偿指令，增加写功能时长度匹配，写速度范围限制在20-200
 //                               优化协议栈，定义异常码，使用宏优化语句
-//                          
+// v1.3.1A/B-r2 2025.07.30  修复09读写速度错误，速度修改为1个字节范围20-200
+//                          修复默认减速比错误并设置为4，IO、半通道默认关闭，最大通道数限制为16
+//                          序列号、切换次数必须手动清空，无法使用IIC清空
+//
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)
@@ -75,7 +78,7 @@
 #define LEN_BAUD                1
 
 #define ADDR_SPD                (ADDR_BAUD+LEN_BAUD)
-#define LEN_SPD                 2
+#define LEN_SPD                 1
 
 #define ADDR_NOW_POS            (ADDR_SPD+LEN_SPD)
 #define LEN_NOW_POS             1
@@ -105,8 +108,7 @@
 #define RETRY_TIME_OUT          1100       // 重试的闪烁间隔
 #define ERROR_BLINK             400
 
-PEXT uint8 bdrate, bIoCtrl, intCtrl;
-PEXT uint16 spdVx2;
+PEXT uint8_t bdrate, bIoCtrl, intCtrl, spdVx2;
 
 typedef struct
 {

@@ -4,17 +4,18 @@
 uint8_t moduleAddrDflt  = 1,
         valveFixDflt    = 5,
         valveFixDir     = 0,
-        valvePortCnt    =10,
-        baudDflt        =2,
-        spdDflt         =20,
-        IODflt          =0,
-        IntDflt         =5,
-        IsetDflt        =0;
+        valvePortCnt    = 10,
+        baudDflt        = 2,
+        rateDflt        = 4,
+        spdDflt         = 20,
+        IODflt          = 0,
+        IntDflt         = 5,
+        IsetDflt        = 0;
 
 
 void IOconfig(void)
 {
-    #ifdef IOCTRL
+#ifdef IOCTRL
     RCC->APB2ENR |= RCC_APB2Periph_AFIO;
     RCC->APB2ENR |= (RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB);
 
@@ -47,7 +48,7 @@ void IOconfig(void)
     GPIOB->CRH &= (GPIO_Crh_P14);
     GPIOB->CRH |= (GPIO_Mode_IN_PU_PD_P14);
     #endif
-    #endif
+#endif
 }
 
 // 检测任务
@@ -57,7 +58,7 @@ void IOconfig(void)
 #define SINGLE_INITING_TIMOUT       14           // 转一圈差不多3秒，复位单次是两圈
 void EveryHSec(void)
 {
-    #ifdef IOCTRL
+#ifdef IOCTRL
     if(bIoCtrl)
     {
         if(timerPara.timeMilli>DCSEC)
@@ -71,27 +72,27 @@ void EveryHSec(void)
                     {
                         valve.portDes = POS_A;
                     }
-                 #if IO_RS  // IO_RS 1 A 232/485/IO
-                    #ifdef A12_901
-                        IO_OUT = ON;    // AI -- 1  BO -- 1
-                    #endif
-                    #ifdef A12_906
-                        IO_OUT = OFF;   // AI -- 1  BO -- 0
-                    #endif
-                    #ifdef A12_909
-                        IO_OUT = ON;    // AI -- 1  BO -- 0(无AB区别)
-                    #endif
-                 #else      // IO_RS 0 B IO
-                    #ifdef A12_901
-                        IO_OUT = OFF;   // AI -- 1  BO -- 0
-                    #endif
-                    #ifdef A12_906
-                        IO_OUT = ON;    // AI -- 1  BO -- 1
-                    #endif
-                    #ifdef A12_909
-                        IO_OUT = ON;    // AI -- 1  BO -- 0(无AB区别)
-                    #endif
+             #if IO_RS  // IO_RS 1 A 232/485/IO
+                #ifdef A12_901
+                    IO_OUT = ON;    // AI -- 1  BO -- 1
                 #endif
+                #ifdef A12_906
+                    IO_OUT = OFF;   // AI -- 1  BO -- 0
+                #endif
+                #ifdef A12_909
+                    IO_OUT = ON;    // AI -- 1  BO -- 0(无AB区别)
+                #endif
+             #else      // IO_RS 0 B IO
+                #ifdef A12_901
+                    IO_OUT = OFF;   // AI -- 1  BO -- 0
+                #endif
+                #ifdef A12_906
+                    IO_OUT = ON;    // AI -- 1  BO -- 1
+                #endif
+                #ifdef A12_909
+                    IO_OUT = ON;    // AI -- 1  BO -- 0(无AB区别)
+                #endif
+            #endif
                 }
             }
             else                    // AI -- 0
@@ -127,7 +128,7 @@ void EveryHSec(void)
             }
         }
     }
-    #endif
+#endif
     // 每秒检测一次
     if(timerPara.sec>SEC)
     {
@@ -203,16 +204,11 @@ void ParameterInit(void)
     {
         printd("\r Read stored data");
 
-        // 地址 0~255
+        /* 地址 */
         I2CPageRead_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.mAddrs);
         printd("\r Addr:%d", ModbusPara.mAddrs);
 
-        // 通道数
-        I2CPageRead_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
-        (valveFix.fix.portCnt&&valveFix.fix.portCnt>24)?(valveFix.fix.portCnt=10):(valveFix.fix.portCnt);
-        printd("\r Port Cnt:%d", valveFix.fix.portCnt);
- 
-        // 原点补偿
+        /* 原点补偿 */
         I2CPageRead_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &valveFix.fix.org);
         if(0 == valveFix.fix.org)
         {
@@ -224,12 +220,17 @@ void ParameterInit(void)
         {
             printd("\r Fix Org:%d DEG", valveFix.fix.org);
         }
-
-        // 方向补偿
+        
+        /* 方向补偿 */
         I2CPageRead_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &valveFix.fix.dirGap);
         printd("\r Fix Dir:%d (0.1)DEG", valveFix.fix.dirGap);
+        
+        /* 通道数 */
+        I2CPageRead_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
+        (valveFix.fix.portCnt&&valveFix.fix.portCnt>16)?(valveFix.fix.portCnt=10):(valveFix.fix.portCnt);
+        printd("\r Port Cnt:%d", valveFix.fix.portCnt);
 
-        // 波特率
+        /* 波特率 */
         I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
         if (!bdrate || bdrate > 3)
         {
@@ -240,22 +241,24 @@ void ParameterInit(void)
         printd("\r Baud:%d %sbps", bdrate, 
             (bdrate == 1 ? "9600" : (bdrate == 2 ? "19200" : "38400")));
 
-        // 速度
-        I2CPageRead_Nbytes(ADDR_SPD, LEN_SPD, ReadBuf);
-        spdVx2 = ReadBuf[0];
-        spdVx2 <<= 8;
-        spdVx2 |= ReadBuf[1];
+        /* 速度 */
+        I2CPageRead_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
+        if(!spdVx2 || SPD_MAX < spdVx2)
+        {
+            spdVx2 = INIT_SPD;
+        }
         printd("\r Speed:%d RPM", spdVx2);
 
-        // IO控制
+        /* IO控制 */
         I2CPageRead_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
         printd("\r IO:%d %s", bIoCtrl, (0 == bIoCtrl ? "OFF" : "ON"));
 
-        // 烧机间隔
+        /* 老化间隔 */
         I2CPageRead_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
         printd("\r Interval:%d Sec", intCtrl);
 
-        // 906/909 支持电流设置
+        /* 电流设置 */
+        /* 906/909 支持电流设置 */
 #ifndef A12_901
         I2CPageRead_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);
         ISET(valve.iSet);
@@ -265,8 +268,14 @@ void ParameterInit(void)
                     (2 == valve.iSet ? "1.8" : 
                         (3 == valve.iSet ? "1.6" : "0.5")))));
 #endif
+
+        /* 序列号 */
+        I2CPageRead_Nbytes(ADDR_SN, LEN_SN, valve.SnCode);
+        printd("\r SN:");
+        for(uint8_t i = 0; i < 5; ++i)
+            printd(" %02X", *(valve.SnCode + i));
         
-        // 减速比
+        /* 减速比 */
         I2CPageRead_Nbytes(ADDR_RDC_RATE, LEN_RDC_RATE, &rdc.rate);
 		switch(rdc.rate)
 		{
@@ -298,18 +307,18 @@ void ParameterInit(void)
         rdc.stepRound *= rdc.rate;  // 减速比
         printd("\r Rate:%d Round:%d", rdc.rate, rdc.stepRound);
 
-        // 半通道
+        /* 半通道 */
         I2CPageRead_Nbytes(ADDR_HALF_SEAL, LEN_HALF_SEAL, &valve.bHalfSeal);
         printd("\r Half Seal:%d", valve.bHalfSeal);
 
-        // 补偿
+        /* 补偿 */
         // printd("\r Fix:");
         // for(uint32 i=0; i<valveFix.fix.portCnt; i++)
         //     printd(" %d", valveFix.array[i]);
 
-        // 切换次数
+        /* 切换次数 */
         I2CPageRead_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8*)&syspara.totalCnt));
-        printd("\r\n Total Shif Count:%d", syspara.totalCnt);
+        printd("\r\n Moves Count:%d", syspara.totalCnt);
     }
     // 写入默认参数
     else
@@ -319,49 +328,48 @@ void ParameterInit(void)
         ReadBuf[0] = 0x88;
         ReadBuf[1] = 0x66;
         I2CPageWrite_Nbytes(ADDR_BOARD_ID, LEN_BOARD_ID, ReadBuf);
-        // 地址 1
+        /* 地址 1 */
         ModbusPara.mAddrs = moduleAddrDflt;
         I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.mAddrs);
-        // 通道数 10
-        valveFix.fix.portCnt = valvePortCnt;
-        I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
-        // 原点补偿 5度
+        /* 原点补偿 5度 */
         valveFix.fix.org = valveFixDflt;
         I2CPageWrite_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &valveFix.fix.org);
-        // 方向补偿 0
+        /* 方向补偿 0 */
         valveFix.fix.dirGap = valveFixDir;
         I2CPageWrite_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &valveFix.fix.dirGap);
-        // 波特率 2 19200
+        /* 通道数 10 */
+        valveFix.fix.portCnt = valvePortCnt;
+        I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
+        /* 波特率 2 19200 */
         bdrate = baudDflt;
         I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
-        // 速度 20
-        ReadBuf[0] = spdDflt>>8;
-        ReadBuf[1] = spdDflt;
-        I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, ReadBuf);
+        /* 速度 20 */
         spdVx2 = spdDflt;
-        // 减速比 4
-        rdc.rate = RDC04;
-        rdc.stepP1dgr = STEPS_1_DEGREE_RD04;
-        rdc.stepP01dgr = STEPS_01_DEGREE_RD04;
-        I2CPageRead_Nbytes(ADDR_RDC_RATE, LEN_RDC_RATE, &rdc.rate);
-        // IO控制 0 不开启
-//    #if IO_RS  // IO_RS 1 A 232/485/IO
-//        IODflt = 0;
-//    #else      // IO_RS 0 B 默认开启IO
-//        IODflt = 1;
-//    #endif
+        I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
+        /* IO控制 0 不开启 */
         bIoCtrl = IODflt;
         I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
-        // 老化间隔 5秒
+        /* 老化间隔 5秒 */
         intCtrl = IntDflt;
         I2CPageWrite_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
-        // 电流设置 906/909
+        /* 电流设置 906/909  0 最大 */
         valve.iSet = IsetDflt;
         I2CPageWrite_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);
 #ifndef A12_901
         ISET(valve.iSet);
 #endif
-        // 锁定驱动?
+        /* 序列号必须手动清空 */
+        /* 减速比 4 */
+        rdc.rate = RDC04;
+        rdc.stepP1dgr = STEPS_1_DEGREE_RD04;
+        rdc.stepP01dgr = STEPS_01_DEGREE_RD04;
+        I2CPageWrite_Nbytes(ADDR_RDC_RATE, LEN_RDC_RATE, &rdc.rate);
+        /* 半通道 0 */
+        valve.bHalfSeal = OFF;
+        I2CPageWrite_Nbytes(ADDR_HALF_SEAL, LEN_HALF_SEAL, &valve.bHalfSeal);
+        /* 切换次数必须手动清空 */
+
+        /* 写入参数后 锁定驱动? */
         VALVE_ENA = DISABLE;
         printd("\r 写入成功,请复位!!!");
     }

@@ -69,10 +69,10 @@
 #define SPD_MIN             20      /* 最小速度 */
 #define SPD_MAX             200     /* 最大速度 */
 
-#define RDC01				1
-#define RDC04				4
-#define RDC10				10
-#define RDC16				16
+#define RDC01               1
+#define RDC04               4
+#define RDC10               10
+#define RDC16               16
 
 #ifdef A12_901
 #define SCALE               64                      //当前细分数为64
@@ -161,10 +161,10 @@ PEXT _VALVE_T valve;
 
 typedef struct
 {
-	uint8	rate;
-	uint32	stepRound;
-	float	stepP1dgr;
-	float	stepP01dgr;
+	uint8_t     rate;
+	uint32_t    stepRound;
+	float       stepP1dgr;
+	float       stepP01dgr;
 }RDC_T;
 PEXT RDC_T rdc;
 
