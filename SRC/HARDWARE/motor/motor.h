@@ -70,15 +70,24 @@ enum OPTO_STATE
 #define POS_B               0x02    /* B位置    2 */
 #define POS_M               0xff    /* 半通道   FF */
 
-#define PORT_CNT            10                      //通道数
 #define AXSV                0
-#define SPD_X               200
-#define INIT_SPD            20  // 初始化找位速度
 
-#define RDC01				1
-#define RDC04				4
-#define RDC10				10
-#define RDC16				16
+#define BYTE_RANGE          255
+
+#define AGS_ADDR_MIN        0       /* AGS地址最小 0 */
+#define AGS_ADDR_MAX        63      /* AGS地址最大 64 */
+#define INIT_SPD            20      /* 初始化找位速度 */
+#define SPD_MIN             20      /* 最小速度 */
+#define SPD_MAX             200     /* 最大速度 */
+#define CHANNEL_MIN         3       /* 最小通道数 */
+#define CHANNEL_MAX         16      /* 最大通道数 */
+#define BAUD_MIN            1       /* 最小波特率 */
+#define BAUD_MAX            3       /* 最大波特率 */
+
+#define RDC01               1
+#define RDC04               4
+#define RDC10               10
+#define RDC16               16
 
 #ifdef A12_901
 #define SCALE               64                      //当前细分数为64
@@ -124,9 +133,6 @@ enum OPTO_STATE
 #define STEPS_01_DEGREE_RD16     (14.2)                  //每0.1度需走的步数为12800/3600=3.555~
 #endif
 
-#define BYTE_RANGE          255
-#define AGS_ADDR_MIN            0       /* AGS地址最小 0 */
-#define AGS_ADDR_MAX            64      /* AGS地址最大 64 */
 
 typedef struct
 {
@@ -167,11 +173,11 @@ PEXT _VALVE_T valve;
 
 typedef struct
 {
-    uint8	rate;
-    uint32	stepRound;
-    float	stepP1dgr;
-    float	stepP01dgr;
-} RDC_T;
+	uint8_t     rate;
+	uint32_t    stepRound;
+	float       stepP1dgr;
+	float       stepP01dgr;
+}RDC_T;
 PEXT RDC_T rdc;
 
 

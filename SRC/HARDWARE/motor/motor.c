@@ -46,7 +46,6 @@ void MotorCfg(void)
     GPIOA->CRH &= (GPIO_Crh_P11);
     GPIOA->CRH |= (GPIO_Mode_IN_PU_PD_P11);
     GPIOA->ODR |= (GPIO_Pin_11);
-
 #endif
 
     VALVE_RST = 0;
@@ -87,15 +86,17 @@ void InitValve(void)
                     valve.ErrBlinkTime = RETRY_TIME_OUT;
                     printd("\r RETRY %d %d", valve.retryTms, RETRY_TIME_OUT);
                     valve.initStep = 1;
+                    valve.ErrBlinkTime = RETRY_TIME_OUT;
+                    printd("\r RETRY %d %d", valve.retryTms, RETRY_TIME_OUT);
                 }
                 break;
             case 1:     /* 根据光感信号决定移动方向 */
                 if(!MotionStatus[AXSV])
                 {
                     /* 未挡住，或者挡住了但上一个位置是B */
-                    if((OPT_GAP == VALVE_OPT) ||
-                            ((OPT_GAP == VALVE_OPT) && valve.portLast == POS_B) ||
-                            ((OPT_BLOCKER == VALVE_OPT) && (valve.portLast!=POS_A)))
+                    if  ((OPT_GAP == VALVE_OPT) ||
+                        ((OPT_GAP == VALVE_OPT) && valve.portLast == POS_B) ||
+                        ((OPT_BLOCKER == VALVE_OPT) && (valve.portLast!=POS_A)))
                     {
                         AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);    /* 电机相对移动一圈 */
                         valve.initStep = 3;
@@ -125,31 +126,26 @@ void InitValve(void)
             case 4:
                 valve.initStep = 5; /* 初始化完成 */
                 break;
-            case 5:
+            case 5:         /* 是否执行半通道 */
 #ifdef IOCTRL
-                if(bIoCtrl) // IOE IO生效
-                {
-                    valve.initStep = 6;
-                }
-                else
+                if(OFF == bIoCtrl) // IOE IO不生效时才有半通道
                 {
                     if(!MotionStatus[AXSV])
                     {
                         /* 半通道生效 复位密封 */
                         if(valve.bHalfSeal)
                         {
-                            /* 反转半个通道角度值 */
-                            ftemp = (float)rdc.stepRound / valveFix.fix.portCnt;
-                            ftemp /= 2;
+                            // 复位密封 半通道
+                            ftemp = (float)rdc.stepRound/valveFix.fix.portCnt / 2;
                             AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
                         }
                         valve.bNewInit = 1;
-                        valve.initStep = 6;
                     }
                 }
 #endif
+                valve.initStep = 6;
                 break;
-            case 6:
+            case 6:         /* 更新状态 */
                 if(!MotionStatus[AXSV])
                 {
                     valve.bReInit = 1;
@@ -210,8 +206,8 @@ void ProcessValve(void)
         {
             if(VALVE_RUN_END == valve.status)           /* 阀组空闲状态 */
             {
-                if(valve.portCur != valve.portDes &&
-                        (POS_A == valve.portDes || POS_B ==valve.portDes))
+                if  (valve.portCur != valve.portDes &&
+                    (POS_A == valve.portDes || POS_B ==valve.portDes))
                 {
                     syspara.lastTime = 0;   /* 清空切换时间 */
                     ftemp = (float)rdc.stepRound / valveFix.fix.portCnt;    /* 单通道切换步数 */
@@ -241,10 +237,10 @@ void ProcessValve(void)
                         AxisMoveAbs(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
                     }
                     // 清空计数，避免数据暂留
-                    valve.status &= ~VALVE_RUN_END;     // 清除运行结束标志
-                    valve.status |= VALVE_RUNNING;      // 置位运行标志
+                    valve.status &= ~VALVE_RUN_END;     /* 清除运行结束标志 */
+                    valve.status |= VALVE_RUNNING;      /* 置位运行标志 */
                     valve.statusLast = VALVE_RUNNING;
-                    syspara.protectTimeOut = 0; /* 重新开始单次保护计时 */
+                    syspara.protectTimeOut = 0;         /* 重新开始单次保护计时 */
                     printd("\r\n %s initstep%d (%d) ststus%02x",
                            __FUNCTION__, valve.initStep, syspara.protectTimeOut, valve.status);
                 }

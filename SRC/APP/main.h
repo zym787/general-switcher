@@ -8,15 +8,18 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_VER            1312        /* 软件版本4AGS */
-#define SOFTWARE_VERSION    "r2"        /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0003    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r3"                /* 软件修改版次 */
 #if IO_RS  // IO_RS 1 A 232/485/IO
 #define CONTROL     "232/485+IO AGS"
-#define SOFT_NAME   "V1.3.1A-"
+#define SOFT_NAME   "v1.3.1A-"
+#define SOFT_VER_NUM    (uint32_t)0x131A0000    /* A 232/485/IO */
 #else      // IO_RS 0 B IO
 #define CONTROL     "Only IO Control"
-#define SOFT_NAME   "V1.3.1B-"
+#define SOFT_NAME   "v1.3.1B-"
+#define SOFT_VER_NUM    (uint32_t)0x131B0000    /* B IO */
 #endif
+#define SOFT_VER    SOFT_VER_NUM + SOFT_REVISION
 #define SOFT_VER_C  SOFT_NAME##""##SOFTWARE_VERSION
 // V1.2.9r7     2024.09.26  原点补偿做减速区间 (TZY)
 // V1.3.0r0     2025.01.14  修改通信丢包 (TZY)
@@ -34,6 +37,16 @@
 //                          新增系统可操作寄存器地址映射表
 // v1.3.1A/B-r2 2025.07.22  分离软件版本号中的修改版次和版本名称
 //                          修复
+// v1.3.1A/B-r1 2025.07.29  分离版本号中可变和不可变部分，去除寄存器映射表
+//                          下载口新增MOVES查询/写入切换次数指令(0-2^32)
+//                          AGS: 删除读写补偿指令，增加写功能时长度匹配，写速度范围限制在20-200
+//                               优化协议栈，定义异常码，使用宏优化语句
+// v1.3.1A/B-r2 2025.07.30  修复09读写速度错误，速度修改为1个字节范围20-200
+//                          修复默认减速比错误并设置为4，IO、半通道默认关闭，最大通道数限制为16
+//                          序列号、切换次数必须手动清空，无法使用IIC清空
+// v1.3.1A/B-r3 2025.07.31  对地址(0-63)、波特率(1-3)、速度(20-200)、通道数(3-16)进行限制
+//                          修复无法使用广播地址AA等地址问题
+//
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)
@@ -69,7 +82,7 @@
 #define LEN_BAUD                1
 
 #define ADDR_SPD                (ADDR_BAUD+LEN_BAUD)
-#define LEN_SPD                 2
+#define LEN_SPD                 1
 
 #define ADDR_NOW_POS            (ADDR_SPD+LEN_SPD)
 #define LEN_NOW_POS             1
@@ -99,15 +112,14 @@
 #define RETRY_TIME_OUT          1100       // 重试的闪烁间隔
 #define ERROR_BLINK             400
 
-PEXT uint8 bdrate, bIoCtrl, intCtrl;
-PEXT uint16 spdVx2;
+PEXT uint8_t bdrate, bIoCtrl, intCtrl, spdVx2;
 
 typedef struct
 {
-    uint16  totalCnt;
-    uint16  totalCntLst;
-    uint16  lastTime;
-    uint32  protectTimeOut;
+    uint32_t  totalCnt;
+    uint32_t  totalCntLst;
+    uint16_t  lastTime;
+    uint32_t  protectTimeOut;
 }_SYS_T;
 PEXT _SYS_T syspara;
 

@@ -402,6 +402,11 @@ void TermISet(char rw)
     {
         I2CPageWrite_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);
         printd("\r\n now current %d", valve.iSet);
+        printd("\r Current:%d %sA ", valve.iSet, 
+            (0 == valve.iSet ? "2.6" :
+                (1 == valve.iSet ? "2.2" :
+                    (2 == valve.iSet ? "1.8" : 
+                        (3 == valve.iSet ? "1.6" : "0.5")))));
     }
     else
     {
@@ -411,14 +416,22 @@ void TermISet(char rw)
             printd("\r Err code %d", ret);
             return;
         }
-        if(getInt<=3)
+        if(3 >= getInt)
         {
-            printd("\r\n set I to %d", getInt);
             valve.iSet = getInt;
+            printd("\r set Current to:%d %sA ", valve.iSet, 
+            (0 == valve.iSet ? "2.6" :
+                (1 == valve.iSet ? "2.2" :
+                    (2 == valve.iSet ? "1.8" : 
+                        (3 == valve.iSet ? "1.6" : "0.5")))));
             I2CPageWrite_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);
 #ifndef A12_901
             ISET(valve.iSet);
 #endif
+        }
+        else
+        {
+            printd("\r Current setting range:0(Max)-4(Min)");
         }
     }
 }
@@ -486,6 +499,32 @@ void TermOut(char rw)
     }
 }
 
+/*
+ * 切换次数
+ */
+void TermMovesCnt(char rw)
+{
+    int getInt = 0;
+    printd("\r\n func %s", __func__);
+    if(rw == READ_ACT)
+    {
+        I2CPageRead_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8*)&syspara.totalCnt));
+        printd("\r 切换次数:%d", syspara.totalCnt);
+    }
+    else
+    {
+        unsigned char ret = FetchInt(5, 0, rcvStr, &getInt);
+        if(ret)
+        {
+            printd("\r Err code %d", ret);
+            return;
+        }
+        syspara.totalCnt = getInt;
+        I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8*)&syspara.totalCnt);
+        printd("\r 写入切换次数:%d", syspara.totalCnt);
+    }
+}
+
 void TermList(char rw);
 /* 填充命令结构体数组 */
 static _CMD_T cmds[] =
@@ -509,6 +548,7 @@ static _CMD_T cmds[] =
     {"OUT",     3,  TermOut},
     {"RDCR",    4,  TermRDCR},
     {"HALF",    4,  TermHalf},
+    {"MOVES",   5,  TermMovesCnt},
 };
 
 static char* comment[] =
