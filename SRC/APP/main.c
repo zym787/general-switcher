@@ -4,7 +4,7 @@
 uint8_t moduleAddrDflt  = 1,
         valveFixDflt    = 5,
         valveFixDir     = 0,
-        valvePortCnt    = 10,
+        valveChannelCntDflt= 10,
         baudDflt        = 2,
         rateDflt        = 4,
         spdDflt         = 20,
@@ -227,27 +227,42 @@ void ParameterInit(void)
         
         /* 通道数 */
         I2CPageRead_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
-        (valveFix.fix.portCnt&&valveFix.fix.portCnt>16)?(valveFix.fix.portCnt=10):(valveFix.fix.portCnt);
-        printd("\r Port Cnt:%d", valveFix.fix.portCnt);
+        if(CHANNEL_MIN <= valveFix.fix.portCnt && CHANNEL_MAX >= valveFix.fix.portCnt)
+        {
+            printd("\r 通道数:%d", valveFix.fix.portCnt);
+        }
+        else
+        {
+            valveFix.fix.portCnt = valveChannelCntDflt;
+            printd("\r 通道数超限,默认写入%d 请重新设置!", valveFix.fix.portCnt);
+            I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
+        }
 
         /* 波特率 */
         I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
-        if (!bdrate || bdrate > 3)
+        if (BAUD_MIN <= bdrate && BAUD_MAX >= bdrate)
         {
-          bdrate = 2;
-          printd("\r 波特率超限,写入%d 19200bps \r 请重新设置", bdrate);
-          I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
+            printd("\r 波特率:%d %sbps", bdrate, 
+                (bdrate == 1 ? "9600" : (bdrate == 2 ? "19200" : "38400")));
         }
-        printd("\r Baud:%d %sbps", bdrate, 
-            (bdrate == 1 ? "9600" : (bdrate == 2 ? "19200" : "38400")));
+        else
+        {
+            bdrate = 2;
+            printd("\r 波特率超限,默认写入%d 19200bps 请重新设置!", bdrate);
+            I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
+        }
 
         /* 速度 */
         I2CPageRead_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
-        if(!spdVx2 || SPD_MAX < spdVx2)
+        if(SPD_MIN <= spdVx2 && SPD_MAX >= spdVx2)
         {
-            spdVx2 = INIT_SPD;
+            printd("\r 速度:%d RPM", spdVx2);
         }
-        printd("\r Speed:%d RPM", spdVx2);
+        else
+        {
+            spdVx2 = SPD_MIN;
+            printd("\r 速度超限,默认写入%d 请重新设置!", spdVx2);
+        }
 
         /* IO控制 */
         I2CPageRead_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
@@ -338,7 +353,7 @@ void ParameterInit(void)
         valveFix.fix.dirGap = valveFixDir;
         I2CPageWrite_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &valveFix.fix.dirGap);
         /* 通道数 10 */
-        valveFix.fix.portCnt = valvePortCnt;
+        valveFix.fix.portCnt = valveChannelCntDflt;
         I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
         /* 波特率 2 19200 */
         bdrate = baudDflt;

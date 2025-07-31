@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0002    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r2"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0003    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r3"                /* 软件修改版次 */
 #if IO_RS  // IO_RS 1 A 232/485/IO
 #define CONTROL     "232/485+IO AGS"
 #define SOFT_NAME   "v1.3.1A-"
@@ -42,6 +42,8 @@
 // v1.3.1A/B-r2 2025.07.30  修复09读写速度错误，速度修改为1个字节范围20-200
 //                          修复默认减速比错误并设置为4，IO、半通道默认关闭，最大通道数限制为16
 //                          序列号、切换次数必须手动清空，无法使用IIC清空
+// v1.3.1A/B-r3 2025.07.31  对地址(0-63)、波特率(1-3)、速度(20-200)、通道数(3-16)进行限制
+//                          修复无法使用广播地址AA等地址问题
 //
 
 #ifdef A12_901

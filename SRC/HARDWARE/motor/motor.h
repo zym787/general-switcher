@@ -55,19 +55,22 @@
 #define VALVE_RUN_ERR       0x20
 #define VALVE_RUNNING       0x08
 
-#define PULSE_CNT_EN        0
-
 #define POS_N               0x00
 #define POS_A               0x01
 #define POS_B               0x02
 #define POS_M               0xff
 
-#define PORT_CNT            10                      //通道数
 #define AXSV                0
-#define SPD_X               200
+
+#define AGS_ADDR_MIN        0       /* AGS地址最小 0 */
+#define AGS_ADDR_MAX        63      /* AGS地址最大 64 */
 #define INIT_SPD            20      /* 初始化找位速度 */
 #define SPD_MIN             20      /* 最小速度 */
 #define SPD_MAX             200     /* 最大速度 */
+#define CHANNEL_MIN         3       /* 最小通道数 */
+#define CHANNEL_MAX         16      /* 最大通道数 */
+#define BAUD_MIN            1       /* 最小波特率 */
+#define BAUD_MAX            3       /* 最大波特率 */
 
 #define RDC01               1
 #define RDC04               4
@@ -118,9 +121,6 @@
 #define STEPS_01_DEGREE_RD16     (14.2)                  //每0.1度需走的步数为12800/3600=3.555~
 #endif
 
-#define BYTE_RANGE          255
-#define AGS_ADDR_MIN        0       /* AGS地址最小 0 */
-#define AGS_ADDR_MAX        63      /* AGS地址最大 64 */
 
 typedef struct
 {

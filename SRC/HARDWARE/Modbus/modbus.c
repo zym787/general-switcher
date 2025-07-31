@@ -192,7 +192,7 @@ void MB_ReadHoldingRegisters(void)
 	dvc_addr = ModbusPara.rBuf[0];		//模块地址
 	op_addr = ModbusPara.rBuf[2];		//端口编号
     /* 地址判断 */
-	if(ModbusPara.mAddrs <= dvc_addr && AGS_ADDR_MAX >= dvc_addr)
+	if(ModbusPara.mAddrs == dvc_addr || MB_Broadcast_ADDR == dvc_addr)
 	{
         ModbusPara.tBuf[0] = ModbusPara.rBuf[0]; 			// 设备地址
         ModbusPara.tBuf[1] = ModbusPara.rBuf[1];  			// 功能码
@@ -325,10 +325,11 @@ void MB_PresetSingleHoldingRegister(void)
 	    }
         else if(0x01 == op_addr)        /* 写地址 */
         {
-    		if(ModbusPara.rBuf[3] && AGS_ADDR_MAX >= ModbusPara.rBuf[3] && 
+    		if(AGS_ADDR_MIN <= ModbusPara.rBuf[3] && AGS_ADDR_MAX >= ModbusPara.rBuf[3] && 
                 6 == ModbusPara.rCnt)
     		{
-                I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &port_num);
+                ModbusPara.mAddrs = ModbusPara.rBuf[3];
+                I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.mAddrs);
     		}
             else
             {
@@ -350,10 +351,11 @@ void MB_PresetSingleHoldingRegister(void)
         }
         else if(0x07 == op_addr)        /* 写波特率 */
         {
-    		if(ModbusPara.rBuf[3] && 3 >= ModbusPara.rBuf[3] && 
+    		if(BAUD_MIN <= ModbusPara.rBuf[3] && BAUD_MAX >= ModbusPara.rBuf[3] && 
                 6 == ModbusPara.rCnt)
     		{
-                I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &port_num);
+                bdrate = ModbusPara.rBuf[3];
+                I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
     		}
             else
             {
@@ -406,10 +408,10 @@ void MB_PresetSingleHoldingRegister(void)
         }
         else if(0x99 == op_addr)        /* 写通道数 */
         {
-    		if(ModbusPara.rBuf[3] && 32 >= ModbusPara.rBuf[3] && 
+    		if(CHANNEL_MIN <= ModbusPara.rBuf[3] && CHANNEL_MAX >= ModbusPara.rBuf[3] && 
                 6 == ModbusPara.rCnt)
     		{
-                valveFix.fix.portCnt = port_num;
+                valveFix.fix.portCnt = ModbusPara.rBuf[3];
                 I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
     		}
             else
