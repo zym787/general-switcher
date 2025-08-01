@@ -72,10 +72,11 @@ enum OPTO_STATE
 
 #define AXSV                0
 
-#define BYTE_RANGE          255
-
+#define BYTE_RANGE_MIN      0
+#define BYTE_RANGE_MAX      255
 #define AGS_ADDR_MIN        0       /* AGS地址最小 0 */
-#define AGS_ADDR_MAX        63      /* AGS地址最大 64 */
+#define AGS_ADDR_MAX        63      /* AGS地址最大 63 */
+#define BURN_ADDR           64      /* 老化地址 64 */
 #define INIT_SPD            20      /* 初始化找位速度 */
 #define SPD_MIN             20      /* 最小速度 */
 #define SPD_MAX             200     /* 最大速度 */

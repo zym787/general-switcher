@@ -306,7 +306,7 @@ void ValveOrg(void)
 void TestBurn(void)
 {
     static uint8 tmWait=0;
-    if(ModbusPara.mAddrs==AGS_ADDR_MAX)
+    if(BURN_ADDR == ModbusPara.mAddrs)
     {
         if(timerPara.timeWaitMill>SEC)
         {

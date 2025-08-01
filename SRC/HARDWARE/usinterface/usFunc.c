@@ -287,7 +287,7 @@ void TermPos(char rw)
             printd("\r Err code %d", ret);
             return;
         }
-        if(1 <= getInt && valveFix.fix.portCnt >= getInt)
+        if(POS_A == getInt || POS_B == getInt)
         {
             if(valve.status==VALVE_RUN_END)
             {
@@ -301,10 +301,9 @@ void TermPos(char rw)
         }
         else
         {
-            printd("\r\n pos overflow");
+            printd("\r\n pos overflow, switcher only two states");
             return;
         }
-        
     }
 }
 
@@ -423,7 +422,7 @@ void TermInterval(char rw)
             printd("\r Err code %d", ret);
             return;
         }
-        if(0 <= getInt && 255 >= getInt)
+        if(BYTE_RANGE_MIN <= getInt && BYTE_RANGE_MAX >= getInt)
         {
             intCtrl = getInt;
             printd("\r\n set interval to %d Sec", intCtrl);
