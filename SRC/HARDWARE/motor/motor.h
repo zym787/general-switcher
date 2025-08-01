@@ -161,7 +161,7 @@ typedef struct
     unsigned char dirLast;          //
     unsigned char statusLast;       //
     unsigned char passByOne;        //重新校准1号位标志
-    unsigned char bStrtCnt;         //新一轮找位，丢弃首个滞留计步
+    unsigned char bStrtCnt;         //新一轮找位,丢弃首个滞留计步
     unsigned char bHalfSeal;        // 是否半通道
 
     unsigned char bNewInit;         // 刚复位完成

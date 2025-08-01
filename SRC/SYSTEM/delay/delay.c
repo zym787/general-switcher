@@ -51,7 +51,7 @@ void delay_us(u32 nus)
     u32 reload=SysTick->LOAD;	//LOAD的值
     ticks=nus*fac_us; 			//需要的节拍数
     tcnt=0;
-    OSSchedLock();				//阻止ucos调度，防止打断us延时
+    OSSchedLock();				//阻止ucos调度,防止打断us延时
     told=SysTick->VAL;        	//刚进入时的计数器值
     while(1)
     {

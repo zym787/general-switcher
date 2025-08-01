@@ -17,7 +17,7 @@
 #define POSITIVE            1
 #define NEGATIVE            -1
 
-//从电机屁股的方向看，顺时针与逆时针
+//从电机屁股的方向看,顺时针与逆时针
 #define CW                  0   //clock wise顺时针
 #define CCW                 1   //counter clock wise逆时针
 
@@ -53,7 +53,7 @@ PEXT unsigned char bEmgStopping[AXIS_N]; //是否碰限位急停
 PEXT unsigned char bLmtPos[AXIS_N];
 PEXT unsigned char bLmtNeg[AXIS_N];
 PEXT unsigned char bStopCmd[AXIS_N];
-PEXT unsigned char MotionStatus[AXIS_N]; //是否在运动？0：停止，1：运动
+PEXT unsigned char MotionStatus[AXIS_N]; //是否在运动？0：停止,1：运动
 
 typedef struct 
 {

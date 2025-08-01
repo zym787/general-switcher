@@ -53,7 +53,7 @@ void MY_NVIC_Init(u8 NVIC_PreemptionPriority,u8 NVIC_SubPriority,u8 NVIC_Channel
 //参数:
 //GPIOx:0~6,代表GPIOA~G
 //BITx:需要使能的位;
-//TRIM:触发模式,1,下升沿;2,上降沿;3，任意电平触发
+//TRIM:触发模式,1,下升沿;2,上降沿;3,任意电平触发
 //该函数一次只能配置1个IO口,多个IO口,需多次调用
 //该函数会自动开启对应中断,以及屏蔽线
 void Ex_NVIC_Config(u8 GPIOx,u8 BITx,u8 TRIM)
@@ -148,7 +148,7 @@ void JTAG_Set(u8 mode)
     AFIO->MAPR|=temp;       //设置jtag模式
 }
 //系统时钟初始化函数
-//pll:选择的倍频数，从2开始，最大值为16
+//pll:选择的倍频数,从2开始,最大值为16
 void Stm32_Clock_Init(u8 PLL)
 {
     unsigned char temp=0;

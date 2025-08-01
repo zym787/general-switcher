@@ -61,7 +61,7 @@ void Usart1_Init(u32 pclk2,u32 bound)
     //使能接收中断
     USART1->CR1|=1<<8;                      //PE中断使能
     USART1->CR1|=1<<5;                      //接收缓冲区非空中断使能
-    MY_NVIC_Init(3,3,USART1_IRQn,2);        //组2，最低优先级
+    MY_NVIC_Init(3,3,USART1_IRQn,2);        //组2,最低优先级
 #endif
 }
 
@@ -110,12 +110,12 @@ void Usart2_Init(u32 pclk2,u32 bound)
 
     //波特率设置
     USART2->BRR=mantissa;            // 波特率设置
-    USART2->CR1 |= 0x200C;           //默认:一个起始位，8个数据位,1位停止,无校验位.
+    USART2->CR1 |= 0x200C;           //默认:一个起始位,8个数据位,1位停止,无校验位.
 #if EN_UART2_RX 		         //如果使能了接收
     //使能接收中断
     USART2->CR1 |= 1<<8;              //PE中断使能,接收缓冲区非空中断使能
     USART2->CR1 |= 1<<5;              //接收缓冲区非空中断使能
-    MY_NVIC_Init(1,3,USART2_IRQn,2); //组2(4组抢占(0,1,2,3)，4组优先(0,1,2,3))，最低抢占级，最低优先级
+    MY_NVIC_Init(1,3,USART2_IRQn,2); //组2(4组抢占(0,1,2,3),4组优先(0,1,2,3)),最低抢占级,最低优先级
 #endif
 }
 
@@ -152,7 +152,7 @@ void USART2_IRQHandler(void)
 //pclk2:PCLK2时钟频率(Mhz)
 //bound:波特率
 //CHECK OK
-void Usart3_Init(u32 pclk2,u32 bound)
+void Usart3_Init(u32 pclk2, u32 bound)
 {
     float temp;
     u16 mantissa;
@@ -174,12 +174,12 @@ void Usart3_Init(u32 pclk2,u32 bound)
 
     //波特率设置
     USART3->BRR=mantissa;            // 波特率设置
-    USART3->CR1 |= 0x200C;           //默认:一个起始位，8个数据位,1位停止,无校验位.
+    USART3->CR1 |= 0x200C;           //默认:一个起始位,8个数据位,1位停止,无校验位.
 #if EN_UART3_RX 		        //如果使能了接收
     //使能接收中断
     USART3->CR1|= 1<<8;              //PE中断使能,接收缓冲区非空中断使能
     USART3->CR1|= 1<<5;              //接收缓冲区非空中断使能
-    MY_NVIC_Init(1,3,USART3_IRQn,2); //组2(4组抢占(0,1,2,3)，4组优先(0,1,2,3))，最低抢占级，最低优先级
+    MY_NVIC_Init(1,3,USART3_IRQn,2); //组2(4组抢占(0,1,2,3),4组优先(0,1,2,3)),最低抢占级,最低优先级
 #endif
 }
 
@@ -240,12 +240,12 @@ void Uart4_Init(u32 pclk2,u32 bound)
 
     //波特率设置
     UART4->BRR=mantissa;            // 波特率设置
-    UART4->CR1 |= 0x200C;           //默认:一个起始位，8个数据位,1位停止,无校验位.
+    UART4->CR1 |= 0x200C;           //默认:一个起始位,8个数据位,1位停止,无校验位.
 #if EN_UART4_RX 		        //如果使能了接收
     //使能接收中断
     UART4->CR1|= 1<<8;              //PE中断使能,接收缓冲区非空中断使能
     UART4->CR1|= 1<<5;              //接收缓冲区非空中断使能
-    MY_NVIC_Init(3,3,UART4_IRQn,2); //组2(4组抢占(0,1,2,3)，4组优先(0,1,2,3))，最低抢占级，最低优先级
+    MY_NVIC_Init(3,3,UART4_IRQn,2); //组2(4组抢占(0,1,2,3),4组优先(0,1,2,3)),最低抢占级,最低优先级
 #endif
 }
 

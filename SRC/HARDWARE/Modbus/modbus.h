@@ -25,7 +25,7 @@
 #define ERR_NOT						0x00    /* 00 无异常码 成功 */
 #define ERR_MB_FUN					0x01    /* 01 非法功能异常码 */
 #define ERR_MB_ADDR					0x02    /* 02 非法数据地址 */
-#define ERR_MB_DATA					0x03    /* 03 非法数据值，超出某功能的极限值 */
+#define ERR_MB_DATA					0x03    /* 03 非法数据值,超出某功能的极限值 */
 #define ERR_MB_DEVICE				0x04    /* 04 从站设备故障 主模式响应超出等待时间；从模式设备地址出错；包括字符间隔时间 超过1.5个字符 */
 #define ERR_MB_AFFIRM               0x05    /* 05 从设备确认 */
 #define ERR_MB_BUSY                 0x06    /* 06 从设备忙 */
@@ -35,7 +35,7 @@
 #define BAUD_RATE_9600			    9600L	// MODBUS波特列
 #define BAUD_RATE_19200			    19200L	// MODBUS波特列
 #define BAUD_RATE_38400			    38400L	// MODBUS波特列
-//每个bit的时间为1/BR，每个字节为8位+停止位+校验位=10位，则每个字节耗时10/BR，半字节为5/BR，转般为us乘以1000000
+//每个bit的时间为1/BR,每个字节为8位+停止位+校验位=10位,则每个字节耗时10/BR,半字节为5/BR,转般为us乘以1000000
 #define MODBUS_TIME_9600			(520)		// 520uS=(10/9600)/2
 #define MODBUS_TIME_19200			(260)		// 260uS=(10/19200)/2
 #define MODBUS_TIME_38400			(130)		// 130uS=(10/38400)/2
@@ -50,15 +50,15 @@
 #define MB_RECIVE					0X51	// 总线接收
 #define MB_SEND						0X52	// 总线发送
 #define MB_RECIVE_END				0X53	// 总线发送
-#define MB_NO_RESPONSE				0X54	// 主模式响应的当前查询的设备，从模式设备地址出错
+#define MB_NO_RESPONSE				0X54	// 主模式响应的当前查询的设备,从模式设备地址出错
 #define MB_RECIVE_ERR				0X55	// 总线接收过程有出错
-//---- 通信地址参数，此处少改?------------------------------------------------
+//---- 通信地址参数,此处少改?------------------------------------------------
 #define MB_Broadcast_ADDR			0xAA	// 广播地址
 
 #define MB_MAX_ADDR					128		// 模块最大地址
 
-#define MB_REPEAT					2		// 数据传输出错，后重新处理的次数
-#define MB_ADDR_ERR_FLAG			0xFF	// 地址错误，无效标记
+#define MB_REPEAT					2		// 数据传输出错,后重新处理的次数
+#define MB_ADDR_ERR_FLAG			0xFF	// 地址错误,无效标记
 #define MB_ADDR_NULL				0xFF	// 模块不存在
 
 //=====================函数和变量声明=============================

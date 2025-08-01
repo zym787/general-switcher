@@ -59,8 +59,9 @@ void MotorCfg(void)
     srd[AXXN].signalCR1 = &TIM4->CR1;
     srd[AXXN].SearchOrg = ValveOrg;
     srd[AXXN].bEmgStop = &valve.bEmgStopV;
+    /* 电流设置 906/909  0 最大 */
 #ifndef A12_901
-    ISET(I_18A);
+    ISET(I_26A);
 #endif
 }
 
@@ -93,7 +94,7 @@ void InitValve(void)
             case 1:     /* 根据光感信号决定移动方向 */
                 if(!MotionStatus[AXSV])
                 {
-                    /* 未挡住，或者挡住了但上一个位置是B */
+                    /* 未挡住,或者挡住了但上一个位置是B */
                     if  ((OPT_GAP == VALVE_OPT) ||
                         ((OPT_GAP == VALVE_OPT) && valve.portLast == POS_B) ||
                         ((OPT_BLOCKER == VALVE_OPT) && (valve.portLast!=POS_A)))
@@ -101,7 +102,7 @@ void InitValve(void)
                         AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);    /* 电机相对移动一圈 */
                         valve.initStep = 3;
                     }
-                    /* 挡住，或者挡住了但上一个位置是A */
+                    /* 挡住,或者挡住了但上一个位置是A */
                     else
                     {
                         /* 反转半个通道角度值 */
@@ -170,7 +171,7 @@ void InitValve(void)
                     valve.status |= VALVE_RUN_END;  // 运行结束--空闲
                     VALVE_ENA = DISABLE;            // 停止电机
 //                    ISET(I_05A);
-                    // 清时间，保证不会连续复位转动
+                    // 清时间,保证不会连续复位转动
 //                    timerPara.timeMilli = 0;
 //                    printd("\r NO.%d", valveFix.fix.portCnt);
                     speed[AXSV] = 100;
@@ -193,9 +194,9 @@ void InitValve(void)
 }
 
 /*
-    初始化完成后进行通道寻位，预给出两圈的行程，肯定会找到两次目标位置
-    找到一个通道点，位置加1，直到找到目标位置，激活急停
-    如果超过一圈没有找到目标位置，启动重新初始化，重新初始化的次数超过3次，报错退出
+    初始化完成后进行通道寻位,预给出两圈的行程,肯定会找到两次目标位置
+    找到一个通道点,位置加1,直到找到目标位置,激活急停
+    如果超过一圈没有找到目标位置,启动重新初始化,重新初始化的次数超过3次,报错退出
 */
 void ProcessValve(void)
 {
@@ -227,7 +228,7 @@ void ProcessValve(void)
                         ftemp *= -1;
                     }
                     VALVE_ENA = ENABLE;
-                    if(valve.bNewInit)  /* 刚复位完成，用相对移动 */
+                    if(valve.bNewInit)  /* 刚复位完成,用相对移动 */
                     {
                         valve.bNewInit = 0;
                         AxisMoveRel(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
@@ -236,7 +237,7 @@ void ProcessValve(void)
                     {
                         AxisMoveAbs(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
                     }
-                    // 清空计数，避免数据暂留
+                    // 清空计数,避免数据暂留
                     valve.status &= ~VALVE_RUN_END;     /* 清除运行结束标志 */
                     valve.status |= VALVE_RUNNING;      /* 置位运行标志 */
                     valve.statusLast = VALVE_RUNNING;
@@ -273,7 +274,7 @@ void ProcessValve(void)
 
 
 /*
- *  原点与端口光耦的信号激时，分别激活急停功能，确保停止的位置够精确
+ *  原点与端口光耦的信号激时,分别激活急停功能,确保停止的位置够精确
  */
 void ValveOrg(void)
 {
@@ -285,7 +286,7 @@ void ValveOrg(void)
         srd[AXSV].run_state = DECEL;
         if(valve.status & VALVE_INITING && 4 == valve.initStep)
         {
-            valve.initStep = 5; /* 初始化完成，找到10号位原点 */
+            valve.initStep = 5; /* 初始化完成,找到10号位原点 */
         }
         else if(POS_A == valve.portDes)
         {
@@ -300,7 +301,7 @@ void ValveOrg(void)
 
 
 /*
- *  设置地址为64号的时候，模块会自动启动烧机测试模式
+ *  设置地址为64号的时候,模块会自动启动烧机测试模式
  */
 void TestBurn(void)
 {
@@ -312,7 +313,7 @@ void TestBurn(void)
             timerPara.timeWaitMill = 0;
             if(++tmWait>intCtrl)
             {
-                // 30秒间隔，启动模块运转到下一个通道
+                // 30秒间隔,启动模块运转到下一个通道
                 tmWait = 0;
                 if(valve.status==VALVE_RUN_END)
                 {

@@ -18,7 +18,7 @@ PEXT unsigned char  USART_RX_BUF[USART_REC_LEN]; //½ÓÊÕ»º³å,×î´óUSART_REC_LEN¸ö×
 PEXT unsigned short USART_RX_STA;         		//½ÓÊÕ×´Ì¬±ê¼Ç	
 
 
-//Èç¹ûÏë´®¿ÚÖĞ¶Ï½ÓÊÕ£¬Çë²»Òª×¢ÊÍÒÔÏÂºê¶¨Òå
+//Èç¹ûÏë´®¿ÚÖĞ¶Ï½ÓÊÕ,Çë²»Òª×¢ÊÍÒÔÏÂºê¶¨Òå
 PEXT void Usart1_Init(u32 pclk2,u32 bound);
 PEXT void USART1_IRQHandler(void);
 PEXT void Usart2_Init(u32 pclk2,u32 bound);
