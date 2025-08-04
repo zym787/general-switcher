@@ -220,7 +220,7 @@ void TermAddr(char rw)
             printd("\r Err code %d", ret);
             return;
         }
-        if(AGS_ADDR_MIN <= getInt && AGS_ADDR_MAX >= getInt)
+        if((AGS_ADDR_MIN <= getInt && AGS_ADDR_MAX >= getInt) || BURN_ADDR == getInt)
         {
             ModbusPara.mAddrs = getInt;
             I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.mAddrs);

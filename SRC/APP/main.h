@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0005    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r5"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0006    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r6"                /* 软件修改版次 */
 #if IO_RS  // IO_RS 1 A 232/485/IO
 #define CONTROL     "232/485+IO AGS"
 #define SOFT_NAME   "v1.3.1A-"
@@ -56,7 +56,7 @@
 //                                                  BAUD(1-3),SPD(20-200),INT(0-255)
 //                                                  ISET(0-4),RDCR(1,4,10,16),HALF(0,1)
 // v1.3.1A/B-r5 2025.08.01  修复老化地址64支持,修复POS切换时状态限制
-//
+// v1.3.1A/B-r6 2025.08.04  修复老化地址64bug,AGS无法在老化地址06写操作但可以03读操作
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)

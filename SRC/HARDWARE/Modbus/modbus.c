@@ -313,7 +313,7 @@ void MB_PresetSingleHoldingRegister(void)
 
     dvc_addr = ModbusPara.rBuf[0];  /* 第1字节 站号 模块地址 */
     op_addr = ModbusPara.rBuf[2];   /* 第3字节 操作码 操作地址 */
-    if(dvc_addr == ModbusPara.mAddrs)
+    if((dvc_addr == ModbusPara.mAddrs) && BURN_ADDR != dvc_addr)
     {
         ModbusPara.tBuf[0] = ModbusPara.rBuf[0];    /* 设备地址 */
         ModbusPara.tBuf[1] = ModbusPara.rBuf[1];    /* 功能码 */
