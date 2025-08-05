@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0006    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r6"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0007    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r7"                /* 软件修改版次 */
 #if IO_RS  // IO_RS 1 A 232/485/IO
 #define CONTROL     "232/485+IO AGS"
 #define SOFT_NAME   "v1.3.1A-"
@@ -57,6 +57,8 @@
 //                                                  ISET(0-4),RDCR(1,4,10,16),HALF(0,1)
 // v1.3.1A/B-r5 2025.08.01  修复老化地址64支持,修复POS切换时状态限制
 // v1.3.1A/B-r6 2025.08.04  修复老化地址64bug,AGS无法在老化地址06写操作但可以03读操作
+// v1.3.1AB-r7 2025.08.05   修复开启IO在B位置无法就近复位的情况
+//                          新增调试口切换时间输出,添加调试信息输出开关
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)
@@ -126,6 +128,7 @@ PEXT uint8_t bdrate, bIoCtrl, intCtrl, spdVx2;
 
 typedef struct
 {
+    bool    bCountLastTime;     /* 切换时间计时标志 */
     uint32_t  totalCnt;         /* 切换次数 */
     uint32_t  totalCntLst;
     uint16_t  lastTime;         /* 上次切换时间 */
