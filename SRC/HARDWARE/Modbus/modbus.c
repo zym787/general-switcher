@@ -286,7 +286,7 @@ void MB_ReadHoldingRegisters(void)
         byteCount++;
         ModbusPara.tBuf[byteCount] = reg_num ;
         byteCount++;
-        /* 只有当地址不为广播地址且无报错时才回复 可以通过广播地址查地址 */
+        /* 只有当地址不为广播地址且无报错时才回复 可以通过广播地址02查地址 */
         if(((MB_Broadcast_ADDR != ModbusPara.tBuf[0]) ||
                 (MB_Broadcast_ADDR == ModbusPara.tBuf[0]) &&
                 0x02 == op_addr) && (ERR_NOT == ModbusPara.sERR))
@@ -357,6 +357,7 @@ void MB_PresetSingleHoldingRegister(void)
                 valve.status = VALVE_INITING;
                 valve.initStep = 0;     /* 复位指令 */
                 valve.retryTms = 0;
+                valve.ErrBlinkTime = RETRY_TIME_OUT;
             }
             else
             {

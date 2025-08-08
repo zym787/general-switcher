@@ -57,7 +57,7 @@ void IOconfig(void)
 void EveryHSec(void)
 {
 #ifdef IOCTRL
-    if(bIoCtrl)                 /* 1 IO(实时) */
+    if(bIoCtrl)                 /* 1 IO (100ms) */
     {
         if(timerPara.timeMilli>DCSEC)
         {
@@ -130,7 +130,7 @@ void EveryHSec(void)
     }
 #endif      /* IOCTRL */
     /* 每秒检测一次 */
-    if(SEC < timerPara.sec)     /* 2 超时检测任务(1s) */
+    if(SEC < timerPara.sec)     /* 2 超时检测任务 (1s) */
     {
         timerPara.sec = 0;
         if(VALVE_RUN_END == valve.status)
@@ -161,7 +161,7 @@ void EveryHSec(void)
                 valve.initStep, syspara.protectTimeOut);
             valve.ErrBlinkTime = ERROR_BLINK;
         }
-        /* 15秒超时锁机 */
+            /* 15秒超时锁机 */
         if(syspara.protectTimeOut > (SINGLE_INITING_TIMOUT+1)*SEC)
         {
             valve.status = VALVE_RUN_ERR;       /* 超时报错 */

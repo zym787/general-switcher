@@ -117,8 +117,10 @@ void TermIIC(char rw)
 void TermReset(char rw)
 {
     valve.status = VALVE_INITING;
-    valve.initStep = 0;
-    printd("\r\n RESET");
+    valve.initStep = 0;     /* ∏¥Œª÷∏¡Ó */
+    valve.retryTms = 0;
+    valve.ErrBlinkTime = RETRY_TIME_OUT;
+    printd("\r\n RESET!");
 }
 
 

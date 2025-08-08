@@ -87,7 +87,6 @@ void InitValve(void)
 //                    ISET(valve.iSet);
                     ++valve.retryTms;
                     I2CPageRead_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portLast);
-                    valve.ErrBlinkTime = RETRY_TIME_OUT;
                     valve.initStep = 1;
                     if (1 == valve.retryTms)
                     {
@@ -95,6 +94,7 @@ void InitValve(void)
                     }
                     else
                     {
+                        valve.ErrBlinkTime = RETRY_TIME_OUT;
                         printd("\r RETRY %d %d", 
                             valve.retryTms, RETRY_TIME_OUT);
                     }
@@ -106,7 +106,7 @@ void InitValve(void)
                     /* 未挡住,或者挡住了但上一个位置是B */
 //                    if  ((OPT_GAP == VALVE_OPT) ||
 //                        ((OPT_GAP == VALVE_OPT) && valve.portLast == POS_B) ||
-//                        ((OPT_BLOCKER == VALVE_OPT) && (valve.portLast!=POS_A)))
+//                        ((OPT_BLOCKER == VALVE_OPT) && (valve.portLast != POS_A)))
                     if (OPT_GAP == VALVE_OPT)
                     {
                         AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);    /* 电机相对移动一圈 */
@@ -155,12 +155,16 @@ void InitValve(void)
                 if(OPT_GAP == VALVE_OPT)   /* 未挡住 */
                     valve.initStep = 4;
                 break;
-            case 4:
-                valve.initStep = 5; /* 初始化完成 */
-                break;
+//            case 4:
+//                valve.initStep = 5; /* 初始化完成 */
+//                break;
             case 5:         /* 是否执行半通道 */
 #ifdef IOCTRL
-                if(OFF == bIoCtrl) // IOE IO不生效时才有半通道
+                if(ON == bIoCtrl)       /* IO生效时无半通道 */
+                {
+                    valve.initStep = 6;
+                }
+                else                    /* IO不生效时才有半通道 */
                 {
                     if(!MotionStatus[AXSV])
                     {
@@ -168,18 +172,17 @@ void InitValve(void)
                         if(ON == valve.bHalfSeal)
                         {
                             // 复位密封 半通道
-                            ftemp = (float)rdc.stepRound/valveFix.fix.portCnt;
-                            ftemp /= 2;
+                            ftemp = (float)rdc.stepRound / valveFix.fix.portCnt / 2;
                             AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
                             #ifdef DEBUG
                             printd("\r Half Seal (%d)", valve.initStep);
                             #endif
                         }
                         valve.bNewInit = 1;
+                        valve.initStep = 6;
                     }
                 }
 #endif
-                valve.initStep = 6;
                 break;
             case 6:         /* 更新状态 */
                 if(!MotionStatus[AXSV])
@@ -204,14 +207,26 @@ void InitValve(void)
                 }
                 break;
             case 7:
-                valve.status &= ~VALVE_INITING; // 清除初始化标志
-                valve.status &= ~VALVE_RUNNING; // 清除运行标志
-                valve.status |= VALVE_RUN_END;  // 运行结束--空闲
-                VALVE_ENA = DISABLE;            // 停止电机
+                if(!MotionStatus[AXSV])
+                {
+                    valve.status &= ~VALVE_INITING; // 清除初始化标志
+                    valve.status &= ~VALVE_RUNNING; // 清除运行标志
+                    valve.status |= VALVE_RUN_END;  // 运行结束--空闲
+                    VALVE_ENA = DISABLE;            // 停止电机
+                    valve.initStep = 0;
+                }
+                else
+                {
+                    printd("\r\n Fatal Error!");
+                    return ;
+                }
 //                    ISET(I_05A);
                     // 清时间,保证不会连续复位转动
 //                    timerPara.timeMilli = 0;
-//                    printd("\r NO.%d", valveFix.fix.portCnt);
+                printd("\r POS %c", 
+                    (POS_A == valve.portCur ? 'A' : 
+                        (POS_B == valve.portCur ? 'B' : 
+                            (POS_M == valve.portCur ? 'M' : 'X'))));
                 speed[AXSV] = 100;
                 accel[AXSV] = 100;
                 decel[AXSV] = 200;
@@ -223,7 +238,6 @@ void InitValve(void)
                 decel[AXSV] *= (rdc.rate);
                 printd("\r\n Restore motion speed  (%d) spd%d acc%d dec%d",
                        spdVx2, speed[AXSV], accel[AXSV], decel[AXSV]);
-                valve.initStep = 0;
                 break;
             default:
                 break;
@@ -231,7 +245,8 @@ void InitValve(void)
         #ifdef DEBUG
         if (stepTemp != valve.initStep)
         {
-            printd("\r >%d< %d %d", valve.initStep, valve.bNewInit, valve.bReInit);
+            printd("\r >%d< %d %d %02x", 
+                    valve.initStep, valve.bNewInit, valve.bReInit, valve.status);
             stepTemp = valve.initStep;
         }
         #endif
@@ -302,7 +317,7 @@ void ProcessValve(void)
                 valve.ErrBlinkTime = ERROR_BLINK;
                 VALVE_ENA = DISABLE;
                 printd("\r\n signal err");
-                return;
+                return ;
             }
             valve.portCur = valve.portDes;
             I2CPageWrite_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portCur);
@@ -333,7 +348,7 @@ void ValveOrg(void)
         srd[AXSV].run_state = DECEL;
         if(valve.status & VALVE_INITING && 4 == valve.initStep)
         {
-            valve.initStep = 5; /* 初始化完成,找到10号位原点 */
+            valve.initStep = 5;     /* 初始化完成,找到原点 */
         }
         else if(POS_A == valve.portDes)
         {
