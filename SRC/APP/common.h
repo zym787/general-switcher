@@ -11,16 +11,41 @@ typedef enum
     true
 }bool;
 
+/* 版本选择 */
+#define A_901
+//#define A_906
+//#define A_909
+//#define B_901
+//#define B_906
+
 #define STM32_RC_C8     0   // 1-使用RC 0使用C8
 #define IOCTRL              // 使用IO控制
-#define IO_RS           1   // IO_IN 和 IO_OUT是否取反
-                            // 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反)
-                            // 0 B (IO)           IO_IN高 IO_OUT高 (同电平)
 //#define DEBUG               /* 调试信息输出 */
 
-//#define A12_901
-//#define A12_906
-#define A12_909     // 909需要注意输出反向
+/* 不同版本宏处理 = 板宏 + IO宏 */
+/* IO_RS IO_IN 和 IO_OUT是否取反 */
+// 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反)
+// 0 B (IO)           IO_IN高 IO_OUT高 (同电平)
+#ifdef  A_901
+#define IO_RS       1   /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+#define A12_901
+#endif
+#ifdef  A_906
+#define IO_RS       1   /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+#define A12_906
+#endif
+#ifdef  A_909
+#define IO_RS       1   /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+#define A12_909         /* 909需要注意输出反向 */
+#endif
+#ifdef  B_901
+#define IO_RS       0   /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
+#define A12_901
+#endif
+#ifdef  B_906
+#define IO_RS       0   /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
+#define A12_906
+#endif
 
 // PCB引脚配置相同,驱动芯片不同
 #ifdef A12_901

@@ -219,7 +219,7 @@ void MB_ReadHoldingRegisters(void)
             ModbusPara.tBuf[5] = ModbusPara.mAddrs;     /* 模块地址 */
             ModbusPara.tBuf[6] = valveFix.fix.portCnt;  /* 模块通道数 */
             ModbusPara.tBuf[7] = valve.fixOrg;          /* 原点补偿值 */
-            ModbusPara.tBuf[8] = valveFix.fix.org;         /* 方向补偿值 */
+            ModbusPara.tBuf[8] = valveFix.fix.org;      /* 方向补偿值 */
             ModbusPara.tBuf[9] = spdVx2;                /* 速度 */
             byteCount = 10;
         }
@@ -258,21 +258,24 @@ void MB_ReadHoldingRegisters(void)
         }
         else if(0x09 == op_addr)       /* 读速度 */
         {
-            ModbusPara.tBuf[3] = spdVx2;     // 转动速度
+            ModbusPara.tBuf[3] = spdVx2;     /* 转动速度 */
             byteCount = 4;
         }
         else if(0x0A == op_addr)       /* 读切换次数 */
         {
-            I2CPageRead_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8*)&syspara.totalCnt));
             ModbusPara.tBuf[3] = ((uint8*)&syspara.totalCnt)[3];
             ModbusPara.tBuf[4] = ((uint8*)&syspara.totalCnt)[2];
             ModbusPara.tBuf[5] = ((uint8*)&syspara.totalCnt)[1];
             ModbusPara.tBuf[6] = ((uint8*)&syspara.totalCnt)[0];
+            if(syspara.totalCnt != syspara.totalCntLst)
+            {
+                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8*)&syspara.totalCnt));
+            }
             byteCount = 7;
         }
         else if(0x99 == op_addr)        /* 读通道数 */
         {
-            I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
+            I2CPageRead_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
             ModbusPara.tBuf[3] = valveFix.fix.portCnt;
             byteCount = 4;
         }
