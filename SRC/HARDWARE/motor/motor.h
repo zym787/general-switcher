@@ -77,18 +77,24 @@ enum OPTO_STATE
 #define AGS_ADDR_MIN        0       /* AGS地址最小 0 */
 #define AGS_ADDR_MAX        63      /* AGS地址最大 63 */
 #define BURN_ADDR           64      /* 老化地址 64 */
+#define AGS_ADDR_DEF        1       /* 默认地址 1 */
 #define INIT_SPD            20      /* 初始化找位速度 */
-#define SPD_MIN             20      /* 最小速度 */
+#define SPD_MIN             1       /* 最小速度 */
 #define SPD_MAX             200     /* 最大速度 */
+#define SPD_MIN_RDCR20      1       /* 20减速比 最小速度 */
+#define SPD_MAX_RDCR20      50      /* 20减速比 最大速度 */
 #define CHANNEL_MIN         3       /* 最小通道数 */
 #define CHANNEL_MAX         16      /* 最大通道数 */
+#define CHANNEL_DEF         10      /* 默认通道数 */
 #define BAUD_MIN            1       /* 最小波特率 */
 #define BAUD_MAX            3       /* 最大波特率 */
+#define BAUD_DEF            2       /* 默认波特率 */
 
 #define RDC01               1
 #define RDC04               4
 #define RDC10               10
 #define RDC16               16
+#define RDC20               20
 
 #ifdef A12_901
 #define SCALE               64                      //当前细分数为64
@@ -137,75 +143,75 @@ enum OPTO_STATE
 
 typedef struct
 {
-    unsigned int OptStep;           //光耦脉冲步数统计
-    unsigned int OptHigh;           //光耦高电平脉冲步数
-    unsigned int OptLow;            //光耦低电平脉冲步数
-    unsigned int stpCnt;            //初始化后开始补偿的步数
+    uint32_t OptStep;           //光耦脉冲步数统计
+    uint32_t OptHigh;           //光耦高电平脉冲步数
+    uint32_t OptLow;            //光耦低电平脉冲步数
+    uint32_t stpCnt;            //初始化后开始补偿的步数
 
-    unsigned int BaudRate;          //运行的波特率值
+    uint32_t BaudRate;          //运行的波特率值
 
-    unsigned short ErrBlinkTime;    //错误灯提示间隔
-    unsigned char Addr;             //模块地址
-    unsigned char status;           //通阀当前状态
-    unsigned char optLast;
-    unsigned char retryTms;         //走位重试的次数
+    uint16_t ErrBlinkTime;    //错误灯提示间隔
+    uint8_t Addr;             //模块地址
+    uint8_t status;           //通阀当前状态
+    uint8_t optLast;
+    uint8_t retryTms;         //走位重试的次数
 
-    unsigned char initStep;         //阀初始化的步骤
-    unsigned char portCur;          //通阀当前位置编号
-    unsigned char portDes;          //通阀目标位置编号
-    unsigned char direct;           //通阀目标位置编号
-    unsigned char portLast;         // 上一个位置
-    unsigned char iSet;             // 上一个位置
-    unsigned char lastIO;             // 上一个状态
-    unsigned char fixOrg;           // 原点补偿
+    uint8_t initStep;         //阀初始化的步骤
+    uint8_t portCur;          //通阀当前位置编号
+    uint8_t portDes;          //通阀目标位置编号
+    uint8_t direct;           //通阀目标位置编号
+    uint8_t portLast;         // 上一个位置
+    uint8_t iSet;             // 上一个位置
+    uint8_t lastIO;             // 上一个状态
+    uint8_t fixOrg;           // 原点补偿
 
-    unsigned char dirLast;          //
-    unsigned char statusLast;       //
-    unsigned char passByOne;        //重新校准1号位标志
-    unsigned char bStrtCnt;         //新一轮找位,丢弃首个滞留计步
-    unsigned char bHalfSeal;        // 是否半通道
+    uint8_t dirLast;          //
+    uint8_t statusLast;       //
+    uint8_t passByOne;        //重新校准1号位标志
+    uint8_t bStrtCnt;         //新一轮找位,丢弃首个滞留计步
+    uint8_t bHalfSeal;        // 是否半通道
 
-    unsigned char bNewInit;         // 刚复位完成
-    unsigned char bReInit;          // 再次复位转动
-    unsigned char bEmgStopV;        // 再次复位转动
-    unsigned char SnCode[LEN_SN];   // 序列码
+    uint8_t bNewInit;         // 刚复位完成
+    uint8_t bReInit;          // 再次复位转动
+    uint8_t bEmgStopV;        // 再次复位转动
+    uint8_t SnCode[LEN_SN];   // 序列码
 } _VALVE_T;
 PEXT _VALVE_T valve;
 
 typedef struct
 {
-	uint8_t     rate;
-	uint32_t    stepRound;
-	float       stepP1dgr;
-	float       stepP01dgr;
-}RDC_T;
+    uint8_t     rate;
+    uint32_t    stepRound;
+    float       stepP1dgr;
+    float       stepP01dgr;
+} RDC_T;
 PEXT RDC_T rdc;
 
 
 #define FIX_VAL_LENGHT      14
 typedef union
 {
-    unsigned char array[FIX_VAL_LENGHT];
+    uint8_t array[FIX_VAL_LENGHT];
     struct
     {
-        unsigned char port1Val;
-        unsigned char port2Val;
-        unsigned char port3Val;
-        unsigned char port4Val;
+        uint8_t port1Val;
+        uint8_t port2Val;
+        uint8_t port3Val;
+        uint8_t port4Val;
 
-        unsigned char port5Val;
-        unsigned char port6Val;
-        unsigned char port7Val;
-        unsigned char port8Val;
+        uint8_t port5Val;
+        uint8_t port6Val;
+        uint8_t port7Val;
+        uint8_t port8Val;
 
-        unsigned char port9Val;
-        unsigned char port10Val;
-        unsigned char port11Val;
-        unsigned char port12Val;
+        uint8_t port9Val;
+        uint8_t port10Val;
+        uint8_t port11Val;
+        uint8_t port12Val;
 
-        unsigned char org;              // 原点补偿 FIXO
-        unsigned char dirGap;           // 方向补偿 FIXG
-        unsigned char portCnt;          //
+        uint8_t org;              // 原点补偿 FIXO
+        uint8_t dirGap;           // 方向补偿 FIXG
+        uint8_t portCnt;          //
     } fix;
 } _12VALVE_FIX;
 PEXT _12VALVE_FIX valveFix;

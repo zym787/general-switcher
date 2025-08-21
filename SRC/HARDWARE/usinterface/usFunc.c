@@ -222,17 +222,18 @@ void TermAddr(char rw)
             printd("\r Err code %d", ret);
             return;
         }
-        if((AGS_ADDR_MIN <= getInt && AGS_ADDR_MAX >= getInt) || BURN_ADDR == getInt)
+        if(AGS_ADDR_MIN <= getInt && BURN_ADDR >= getInt)
         {
             ModbusPara.mAddrs = getInt;
-            I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.mAddrs);
-            printd("\r\n set addr to %d", ModbusPara.mAddrs);
+            printd("\r\n Set Addr to %d", ModbusPara.mAddrs);
         }
         else
         {
-            printd("\r\n addr overflow");
-            return;
+            printd("\r\n %d Address out of range (%d-%d)", getInt, AGS_ADDR_MIN, BURN_ADDR);
+            ModbusPara.mAddrs = AGS_ADDR_DEF;
+            printd("\r\n Use default Address %d", ModbusPara.mAddrs);
         }
+        I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.mAddrs);
     }
 }
 
@@ -247,7 +248,7 @@ void TermCnt(char rw)
     {
         I2CPageRead_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
         (CHANNEL_MIN > valveFix.fix.portCnt && CHANNEL_MAX < valveFix.fix.portCnt) ? 
-            (valveFix.fix.portCnt = 10) : (valveFix.fix.portCnt);
+            (valveFix.fix.portCnt = CHANNEL_DEF) : (valveFix.fix.portCnt);
         printd("\r Port Cnt:%d", valveFix.fix.portCnt);
     }
     else
@@ -261,14 +262,16 @@ void TermCnt(char rw)
         if(CHANNEL_MIN <= getInt && CHANNEL_MAX >= getInt)
         {
             valveFix.fix.portCnt = getInt;
-            I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
+            
             printd("\r\n set port cnt to %d", valveFix.fix.portCnt);
         }
         else
         {
-            printd("\r\n port cnt overflow");
-            return;
+            printd("\r\n %d Channel out of range (%d-%d)", getInt, CHANNEL_MIN, CHANNEL_MAX);
+            valveFix.fix.portCnt = CHANNEL_DEF;
+            printd("\r\n Use default Channel %d", valveFix.fix.portCnt);
         }
+        I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
     }
 }
 
@@ -317,8 +320,8 @@ void TermBaud(char rw)
     int getInt = 0;
     if(rw == READ_ACT)
     {
-        I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &bdrate);
-        printd("\r\n Baud %d", bdrate);
+        I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
+        printd("\r\n Baud:%d", bdrate);
     }
     else
     {
@@ -333,27 +336,24 @@ void TermBaud(char rw)
             printd("\r\n baud rate must be an integer multiple of 9600, %d not exist", getInt);
             return;
         }
+        if(9600 == getInt)
+        {
+            bdrate = 1;
+        }
+        else if(19200 == getInt)
+        {
+            bdrate = 2;
+        }
+        else if(38400 == getInt)
+        {
+            bdrate = 3;
+        }
         else
         {
-            if(9600 == getInt)
-            {
-                bdrate = 1;
-            }
-            else if(19200 == getInt)
-            {
-                bdrate = 2;
-            }
-            else if(38400 == getInt)
-            {
-                bdrate = 3;
-            }
-            else
-            {
-                printd("\r\n baud rate overflow");
-                return;
-            }
-            printd("\r set baud rate to %d %dbps", bdrate, getInt);
+            printd("\r\n baud rate overflow");
+            return;
         }
+        printd("\r set baud rate to %d %dbps", bdrate, getInt);
         I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
     }
 }
@@ -377,17 +377,37 @@ void TermSpd(char rw)
             printd("\r Err code %d", ret);
             return;
         }
-        if(SPD_MIN <= getInt && SPD_MAX >= getInt)
+        if(RDC20 == rdc.rate)
         {
-            spdVx2 = getInt;
-            printd("\r\n set speed to %d", spdVx2);
-            I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
+            if(SPD_MIN_RDCR20 <= getInt && SPD_MAX_RDCR20 >= getInt)
+            {
+                spdVx2 = getInt;
+                printd("\r\n set speed to %d", spdVx2);
+            }
+            else
+            {
+                printd("\r\n %d Speed out of range (%dRDCR: %d-%d)", 
+                    getInt, rdc.rate, SPD_MIN_RDCR20, SPD_MAX_RDCR20);
+                spdVx2 = INIT_SPD / 2;
+                printd("\r\n Use default Speed %d", spdVx2);
+            }
         }
         else
         {
-            printd("\r\n speed overflow");
-            return;
+            if(SPD_MIN <= getInt && SPD_MAX >= getInt)
+            {
+                spdVx2 = getInt;
+                printd("\r\n set speed to %d", spdVx2);
+            }
+            else
+            {
+                printd("\r\n %d Speed out of range (%dRDCR: %d-%d)", 
+                    getInt, rdc.rate, SPD_MIN, SPD_MAX);
+                spdVx2 = INIT_SPD;
+                printd("\r\n Use default Speed %d", spdVx2);
+            }
         }
+        I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
     }
 }
 
@@ -501,19 +521,18 @@ void TermRDCR(char rw)
             printd("\r Err code %d", ret);
             return;
         }
-        
-        if (RDC01 == getInt || RDC04 == getInt || 
-            RDC10 == getInt || RDC16 == getInt)
+        if (RDC01 == getInt || RDC04 == getInt || RDC10 == getInt || 
+            RDC16 == getInt || RDC20 == getInt)
         {
             rdc.rate = getInt;
-            printd("\r\n set rate to %d", rdc.rate);
-            I2CPageWrite_Nbytes(ADDR_RDC_RATE, LEN_RDC_RATE, &rdc.rate);
+            printd("\r\n set Rate to %d", rdc.rate);
         }
         else
         {
-            printd("\r\n rate overflow");
-            return;
+            rdc.rate = RDC04;
+            printd("\r\n %d Rate out of range. Use default Rate %d", getInt, rdc.rate);
         }
+        I2CPageWrite_Nbytes(ADDR_RDC_RATE, LEN_RDC_RATE, &rdc.rate);
     }
 }
 
@@ -540,14 +559,13 @@ void TermHalf(char rw)
         {
             valve.bHalfSeal = getInt;
             printd("\r\n set half seal to %d", valve.bHalfSeal);
-            I2CPageWrite_Nbytes(ADDR_HALF_SEAL, LEN_HALF_SEAL, &valve.bHalfSeal);
         }
         else
         {
-            printd("\r\n half seal overflow");
-            return;
+            valve.bHalfSeal = OFF;
+            printd("\r\n %d half seal overflow. Use default half %d", getInt, valve.bHalfSeal);
         }
-        
+        I2CPageWrite_Nbytes(ADDR_HALF_SEAL, LEN_HALF_SEAL, &valve.bHalfSeal);
     }
 }
 

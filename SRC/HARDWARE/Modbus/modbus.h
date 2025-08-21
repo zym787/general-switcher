@@ -2,12 +2,13 @@
 #define _MODBUS_H_
 
 #ifdef _MODBUS_GLOBALS_
-#define PEXT 
+#define PEXT
 #else
 #define PEXT extern
 #endif
 
-#define DEBUG_MODBUS                1
+//#define DEBUG_MODBUS    /* AGS */
+
 //======================  参数宏定义=================================
 #define MAX_ADDR                    1
 #define	MB_SALVE_DEF_ADDR           1
@@ -68,16 +69,16 @@
 #define LEAST_RCV_CNT               3       // 最小接收字节数
 typedef struct
 {
-	unsigned char 	sRUN;					// 总线运行状态 
-	unsigned char 	sERR;					// 总线出错状态 
-	unsigned char 	rCnt;					// 总线接收计数
-	unsigned char 	HostRept;				// 作为主设备的重复次数
-	unsigned short 	times;					// 总线计时1
-	unsigned char	mAddrs;					// 设备地址
-	unsigned char	res;				    // 保留---凑2的倍数
-	unsigned char	rBuf[LENGTH_MB_DATA];	// 待解析的接收数据
-	unsigned char	tBuf[LENGTH_MB_DATA];	// 待发送数据
-}_MB_PRAR_T;
+    uint8_t     sRUN;					// 总线运行状态
+    uint8_t     sERR;					// 总线出错状态
+    uint8_t     rCnt;					// 总线接收计数
+    uint8_t     HostRept;				// 作为主设备的重复次数
+    uint16_t    times;					// 总线计时1
+    uint8_t     mAddrs;					// 设备地址
+    uint8_t     res;				    // 保留---凑2的倍数
+    uint8_t     rBuf[LENGTH_MB_DATA];	// 待解析的接收数据
+    uint8_t     tBuf[LENGTH_MB_DATA];	// 待发送数据
+} _MB_PRAR_T;
 
 
 //线圈变量
@@ -120,7 +121,7 @@ typedef struct
 #define	HMI_COIL_BIT6		0x40	// 
 #define	HMI_COIL_BIT7		0x80	// 
 
-//离散输入变量:16~71 bit : 16~23 [0]  24`31[1] 32~39 [2] 40~47 [3] 48~55 [4] 56~63 [5] 64~71 [6] 
+//离散输入变量:16~71 bit : 16~23 [0]  24`31[1] 32~39 [2] 40~47 [3] 48~55 [4] 56~63 [5] 64~71 [6]
 #define	HMI_DisIN_BIT0		0x01	// 
 #define	HMI_DisIN_BIT1		0x02	// 
 #define	HMI_DisIN_BIT2		0x04	// 
@@ -132,25 +133,23 @@ typedef struct
 
 //----变量声明----------------
 PEXT _MB_PRAR_T	    ModbusPara;
-PEXT unsigned char 	CoilBitPara[LENGTH_COIL_REG];
-PEXT unsigned char 	DiscreteBitPara[LENGTH_DiscreteREG];
-PEXT unsigned char 	HoldingREGPara[LENGTH_HoldingREG];
-PEXT unsigned char 	InputREGPara[LENGTH_InputREG];
+PEXT uint8_t 	CoilBitPara[LENGTH_COIL_REG];
+PEXT uint8_t 	DiscreteBitPara[LENGTH_DiscreteREG];
+PEXT uint8_t 	HoldingREGPara[LENGTH_HoldingREG];
+PEXT uint8_t 	InputREGPara[LENGTH_InputREG];
 
 //----函数声明----------------
-PEXT unsigned short  ModbusCRC16( unsigned char  *puchMsg, unsigned short usDataLen) ;
+PEXT uint16_t  ModbusCRC16( uint8_t  *puchMsg, uint16_t usDataLen) ;
 PEXT void ModbusInit(void);
-PEXT void ModbusSend(unsigned char length) ;
-PEXT void ModbusReceive(unsigned char res);
+PEXT void ModbusSend(uint8_t length) ;
+PEXT void ModbusReceive(uint8_t res);
 PEXT void ModbusTimesProcess(void);
 PEXT void Modbus_ERROR(void) ;
 PEXT void MB_ReadHoldingRegisters(void) ;
 PEXT void MB_PresetSingleHoldingRegister(void);
-PEXT void MB_PresetMultipleHoldingRegisters(void); 
+PEXT void MB_PresetMultipleHoldingRegisters(void);
 PEXT void ModbusProces(void);
-PEXT void ModbusRequest(unsigned char style, unsigned char sAdd,unsigned short val);
+PEXT void ModbusRequest(uint8_t style, uint8_t sAdd,uint16_t val);
 
 #undef PEXT
 #endif
-
-

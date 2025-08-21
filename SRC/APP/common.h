@@ -9,14 +9,14 @@ typedef enum
 {
     false,
     true
-}bool;
+} bool;
 
 /* 版本选择 */
-#define A_901
+//#define A_901
 //#define A_906
 //#define A_909
 //#define B_901
-//#define B_906
+#define B_906
 
 #define STM32_RC_C8     0   // 1-使用RC 0使用C8
 #define IOCTRL              // 使用IO控制
@@ -49,16 +49,16 @@ typedef enum
 
 // PCB引脚配置相同,驱动芯片不同
 #ifdef A12_901
-    #define PCB_VR                  "A12-901"
-    #define HARDWARE_DESCRIPTION     "Mini Version (1.6A Max)"
+#define PCB_VR                  "A12-901"
+#define HARDWARE_DESCRIPTION     "Mini Version (1.6A Max)"
 #endif
 #ifdef A12_906
-    #define PCB_VR                  "A12-906"
-    #define HARDWARE_DESCRIPTION     "Horizontal Version (2.5A Max)"
+#define PCB_VR                  "A12-906"
+#define HARDWARE_DESCRIPTION     "Horizontal Version (2.5A Max)"
 #endif
 #ifdef A12_909
-    #define PCB_VR                  "A12-909"
-    #define HARDWARE_DESCRIPTION     "Vertical Version (2.2A Max)"
+#define PCB_VR                  "A12-909"
+#define HARDWARE_DESCRIPTION     "Vertical Version (2.2A Max)"
 #endif
 
 
@@ -419,5 +419,3 @@ typedef enum
 #define TIM_DISABLE						        ((vu16)0xFFFE)		//失能计数器
 
 #endif
-
-

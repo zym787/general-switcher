@@ -1,13 +1,9 @@
 #define _MAIN_GLOBALS_
 #include "common.h"
 
-uint8_t moduleAddrDflt  = 1,    /* 默认地址 */
-        valveFixDflt    = 5,    /* 默认原点补偿 */
+uint8_t valveFixDflt    = 5,    /* 默认原点补偿 */
         valveFixDir     = 0,    /* 默认方向补偿 */
-        valveChannelCntDflt= 10,   /* 默认通道数 */
-        baudDflt        = 2,    /* 默认波特率 */
         rateDflt        = 4,    /* 默认减速比 */
-        spdDflt         = 20,   /* 默认速度 */
         IODflt          = 0,    /* 默认IO不启用 */
         IntDflt         = 5,    /* 默认烧机老化时间间隔 */
         IsetDflt        = 0;    /* 默认电流设置 */
@@ -194,7 +190,7 @@ void DisableReceive(void)
 
 void ParameterInit(void)
 {
-    uint8 ReadBuf[2] = {0,0};
+    uint8 ReadBuf[2] = {0, 0};
     /* 读取板号判断是否第一次进行初始化 */
     I2CPageRead_Nbytes(ADDR_BOARD_ID, LEN_BOARD_ID, ReadBuf);
     /* 读取默认参数 */
@@ -227,7 +223,7 @@ void ParameterInit(void)
         }
         else
         {
-            valveFix.fix.portCnt = valveChannelCntDflt;
+            valveFix.fix.portCnt = CHANNEL_DEF;
             printd("\r 通道数超限,默认写入%d 请重新设置!", valveFix.fix.portCnt);
             I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
         }
@@ -240,7 +236,7 @@ void ParameterInit(void)
         }
         else
         {
-            bdrate = 2;
+            bdrate = BAUD_DEF;
             printd("\r 波特率超限,默认写入%d 19200bps 请重新设置!", bdrate);
             I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
         }
@@ -324,11 +320,11 @@ void ParameterInit(void)
     {
         printd("\r Write default data");
         // 板号
-        ReadBuf[0] = 0x88;
-        ReadBuf[1] = 0x66;
+        ReadBuf[0] = BOARD_0;
+        ReadBuf[1] = BOARD_1;
         I2CPageWrite_Nbytes(ADDR_BOARD_ID, LEN_BOARD_ID, ReadBuf);
         /* 地址 1 */
-        ModbusPara.mAddrs = moduleAddrDflt;
+        ModbusPara.mAddrs = AGS_ADDR_DEF;
         I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.mAddrs);
         /* 原点补偿 5度 */
         valveFix.fix.org = valveFixDflt;
@@ -337,13 +333,13 @@ void ParameterInit(void)
         valveFix.fix.dirGap = valveFixDir;
         I2CPageWrite_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &valveFix.fix.dirGap);
         /* 通道数 10 */
-        valveFix.fix.portCnt = valveChannelCntDflt;
+        valveFix.fix.portCnt = CHANNEL_DEF;
         I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
         /* 波特率 2 19200 */
-        bdrate = baudDflt;
+        bdrate = BAUD_DEF;
         I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
         /* 速度 20 */
-        spdVx2 = spdDflt;
+        spdVx2 = INIT_SPD;
         I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
         /* IO控制 0 不开启 */
         bIoCtrl = IODflt;

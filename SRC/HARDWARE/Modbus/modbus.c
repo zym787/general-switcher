@@ -204,15 +204,15 @@ void MB_ReadHoldingRegisters(void)
     unsigned short reg_num;
     unsigned char dvc_addr, op_addr, byteCount;
 
-    dvc_addr = ModbusPara.rBuf[0];		//模块地址
-    op_addr = ModbusPara.rBuf[2];		//端口编号
+    dvc_addr = ModbusPara.rBuf[0];      /* 模块地址 */
+    op_addr = ModbusPara.rBuf[2];       /* 操作码/操作地址 */
     /* 地址判断 */
     if(ModbusPara.mAddrs == dvc_addr || MB_Broadcast_ADDR == dvc_addr)
     {
-        ModbusPara.tBuf[0] = ModbusPara.rBuf[0]; 			// 设备地址
-        ModbusPara.tBuf[1] = ModbusPara.rBuf[1];  			// 功能码
-        ModbusPara.tBuf[2] = ModbusPara.rBuf[2];  			// 功能码
-        if(0x00 == op_addr)           /* 读当前状态 */
+        ModbusPara.tBuf[0] = ModbusPara.rBuf[0];    /* 模块地址 */
+        ModbusPara.tBuf[1] = ModbusPara.rBuf[1];    /* 功能码 */
+        ModbusPara.tBuf[2] = ModbusPara.rBuf[2];    /* 操作码/操作地址 */
+        if(0x00 == op_addr)                /* 读状态 */
         {
             ModbusPara.tBuf[3] = valve.status;          /* 模块状态 */
             ModbusPara.tBuf[4] = valve.portCur;         /* 当前通道 */
@@ -497,7 +497,7 @@ void ModbusProces(void)
             LED_WORK = !LED_WORK;
             if(0 == ModbusCRC16(&ModbusPara.rBuf[0], ModbusPara.rCnt))
             {
-#if DEBUG_MODBUS
+#ifdef DEBUG_MODBUS
                 printd("\r r:");
                 for(i = 0; i < ModbusPara.rCnt; i++)
                     printd(" %02x", ModbusPara.rBuf[i]);
