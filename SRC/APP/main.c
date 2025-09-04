@@ -4,10 +4,8 @@
 uint8_t valveFixDflt    = 5,    /* 默认原点补偿 */
         valveFixDir     = 0,    /* 默认方向补偿 */
         rateDflt        = 4,    /* 默认减速比 */
-        IODflt          = 0,    /* 默认IO不启用 */
         IntDflt         = 5,    /* 默认烧机老化时间间隔 */
         IsetDflt        = 0;    /* 默认电流设置 */
-
 
 void IOconfig(void)
 {
@@ -117,7 +115,7 @@ void EveryHSec(void)
                     IO_OUT = OFF;   // AI -- 0  BO -- 0
                 #endif
                 #ifdef A12_909
-                    IO_OUT = OFF;   // AI -- 0  BO -- 1(无AB区别)
+                    IO_OUT = OFF;   // AI -- 0  BO -- 0(无AB区别)
                 #endif
             #endif      /* IO_RS */
                 }
@@ -251,9 +249,11 @@ void ParameterInit(void)
             spdVx2 = SPD_MIN;
             printd("\r 速度超限,默认写入%d 请重新设置!", spdVx2);
         }
+#ifdef IOCTRL
         /* IO控制 */
         I2CPageRead_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
         printd("\r IO:%d %s", bIoCtrl, (0 == bIoCtrl ? "OFF" : "ON"));
+#endif
         /* 老化间隔 */
         I2CPageRead_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
         printd("\r Interval:%d Sec", intCtrl);
@@ -335,15 +335,21 @@ void ParameterInit(void)
         /* 通道数 10 */
         valveFix.fix.portCnt = CHANNEL_DEF;
         I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
-        /* 波特率 2 19200 */
+        /* 波特率 1 9600 */
         bdrate = BAUD_DEF;
         I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
         /* 速度 20 */
         spdVx2 = INIT_SPD;
         I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
-        /* IO控制 0 不开启 */
-        bIoCtrl = IODflt;
+#ifdef IOCTRL
+        /* IO控制 1 开启 */
+        bIoCtrl = ON;
         I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
+#else
+        /* IO控制 0 不开启 */
+        bIoCtrl = OFF;
+        I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
+#endif
         /* 老化间隔 5秒 */
         intCtrl = IntDflt;
         I2CPageWrite_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
@@ -426,8 +432,13 @@ void DebugOut(void)
     if(timerPara.timeDbg > SEC*3)
     {
         timerPara.timeDbg = 0;
+#ifdef IOCTRL
         printd("\r\n >>sta:%02x  port:%02x dest:%02x opt:%02x  IO_IN:%02x IO_OUT:%02x",
             valve.status, valve.portCur, valve.portDes, VALVE_OPT, IO_IN, IO_OUT);
+#else
+        printd("\r\n >>sta:%02x  port:%02x dest:%02x opt:%02x",
+            valve.status, valve.portCur, valve.portDes, VALVE_OPT);
+#endif
     }
 }
 

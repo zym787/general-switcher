@@ -88,7 +88,7 @@ enum OPTO_STATE
 #define CHANNEL_DEF         10      /* 默认通道数 */
 #define BAUD_MIN            1       /* 最小波特率 */
 #define BAUD_MAX            3       /* 最大波特率 */
-#define BAUD_DEF            2       /* 默认波特率 */
+#define BAUD_DEF            1       /* 默认波特率 */
 
 #define RDC01               1
 #define RDC04               4

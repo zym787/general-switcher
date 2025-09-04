@@ -8,16 +8,22 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0010    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r10"                /* 软件修改版次 */
-#if IO_RS  // IO_RS 1 A 232/485/IO
-#define CONTROL     "232/485+IO AGS"
-#define SOFT_NAME   "v1.3.1A"
-#define SOFT_VER_NUM    (uint32_t)0x131A0000    /* A 232/485/IO */
-#else      // IO_RS 0 B IO
-#define CONTROL     "Only IO Control"
-#define SOFT_NAME   "v1.3.1B"
-#define SOFT_VER_NUM    (uint32_t)0x131B0000    /* B IO */
+#define SOFT_REVISION       (uint16_t)0x0011    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r11"                /* 软件修改版次 */
+#ifdef RS232_485_CONTROL
+  #define CONTROL     "Only 232/485 AGS"
+  #define SOFT_NAME   "v1.3.1"
+  #define SOFT_VER_NUM    (uint32_t)0x13100000 
+#else
+  #if IO_RS  // IO_RS 1 A IO
+    #define CONTROL     "IO 232/485"
+    #define SOFT_NAME   "v1.3.1A"
+    #define SOFT_VER_NUM    (uint32_t)0x131A0000    /* A 232/485/IO */
+  #else      // IO_RS 0 B IO
+    #define CONTROL     "IO 232/485"
+    #define SOFT_NAME   "v1.3.1B"
+    #define SOFT_VER_NUM    (uint32_t)0x131B0000    /* B IO */
+  #endif
 #endif
 #define BOARD_0     0x88
 #define BOARD_1     0x66
@@ -48,13 +54,11 @@
 //                              序列号、切换次数必须手动清空,无法使用IIC清空
 //  v1.3.1A/B-r3    2025.07.31  对地址(0-63)、波特率(1-3)、速度(20-200)、通道数(3-16)进行限制
 //                              修复无法使用广播地址AA等地址问题
-//  v1.3.1A/B-r4    2025.07.31  修复默认电流设置问题
-//                              优化注释等文本
+//  v1.3.1A/B-r4    2025.07.31  修复默认电流设置问题,优化注释等文本
 //                  2025.08.01  修复下载口设置速度失败
 //                              新增BAUD,SPD,INT读功能
-//                              下载口参数增加范围限制  ADDR(0-63),CNT(3-16),POS(1-最大通道)
-//                                                  BAUD(1-3),SPD(20-200),INT(0-255)
-//                                                  ISET(0-4),RDCR(1,4,10,16),HALF(0,1)
+//                              下载口参数增加范围限制ADDR(0-63),CNT(3-16),POS(1-最大通道)
+//                              BAUD(1-3),SPD(20-200),INT(0-255),ISET(0-4),RDCR(1,4,10,16),HALF(0,1)
 //  v1.3.1A/B-r5    2025.08.01  修复老化地址64支持,修复POS切换时状态限制
 //  v1.3.1A/B-r6    2025.08.04  修复老化地址64bug,AGS无法在老化地址06写操作但可以03读操作
 //  v1.3.1AB-r7     2025.08.05  修复开启IO在B位置无法就近复位的情况
@@ -65,6 +69,10 @@
 //  v1.3.1AB-r10    2025.08.21  新增20减速比,20减速比速度限制在1-50,正常速度限制1-200
 //                              下载口设置地址,通道数,波特率,速度,减速比,半通道增加默认值写入
 //                              修复下载口读波特率错误
+//  v1.3.1AB-r11    2025.09.04  输出三种版本程序,默认波特率修改为9600,
+//                                1.3.1   232/485版本屏蔽IO,仅支持串口
+//                                1.3.1AB 默认打开IO,区分不同电平标准
+
 #ifdef A12_901
 #define IO_OUT          PAout(8)
 #define IO_IN           PBin(3)

@@ -142,7 +142,7 @@ void ModbusReceive(unsigned char res)
     if(ModbusPara.sRUN==MB_IDEL && !ModbusPara.rCnt)
     {
         // 空闲并且数据处理结束,可以进行新的接收
-        if(ModbusPara.mAddrs==res || res==MB_Broadcast_ADDR)
+        if(ModbusPara.mAddrs == res || MB_Broadcast_ADDR == res)
         {
             // 开始接收数据
             ModbusPara.sRUN = MB_RECIVE;
@@ -291,8 +291,8 @@ void MB_ReadHoldingRegisters(void)
         byteCount++;
         /* 只有当地址不为广播地址且无报错时才回复 可以通过广播地址02查地址 */
         if(((MB_Broadcast_ADDR != ModbusPara.tBuf[0]) ||
-                (MB_Broadcast_ADDR == ModbusPara.tBuf[0]) &&
-                0x02 == op_addr) && (ERR_NOT == ModbusPara.sERR))
+                ((MB_Broadcast_ADDR == ModbusPara.tBuf[0]) && 0x02 == op_addr)) && 
+                (ERR_NOT == ModbusPara.sERR))
         {
             ModbusSend(byteCount);   /* 回复 */
         }
@@ -489,7 +489,6 @@ void MB_PresetSingleHoldingRegister(void)
 /* Modbus主线程 处理CRC 功能码 报错 */
 void ModbusProces(void)
 {
-    uint32_t i = 0;
     if(MB_RECIVE_END == ModbusPara.sRUN)
     {
         if(LEAST_RCV_CNT < ModbusPara.rCnt)
@@ -499,7 +498,7 @@ void ModbusProces(void)
             {
 #ifdef DEBUG_MODBUS
                 printd("\r r:");
-                for(i = 0; i < ModbusPara.rCnt; i++)
+                for(uint8_t i = 0; i < ModbusPara.rCnt; i++)
                     printd(" %02x", ModbusPara.rBuf[i]);
 #endif
                 /* 确认模块存在并且工作正常 */

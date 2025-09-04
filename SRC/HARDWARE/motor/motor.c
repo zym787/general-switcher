@@ -182,6 +182,22 @@ void InitValve(void)
                         valve.initStep = 6;
                     }
                 }
+#else
+                if(!MotionStatus[AXSV])
+                {
+                    /* 半通道生效 复位密封 */
+                    if(ON == valve.bHalfSeal)
+                    {
+                        // 复位密封 半通道
+                        ftemp = (float)rdc.stepRound / valveFix.fix.portCnt / 2;
+                        AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                        #ifdef DEBUG
+                        printd("\r Half Seal (%d)", valve.initStep);
+                        #endif
+                    }
+                    valve.bNewInit = 1;
+                    valve.initStep = 6;
+                }
 #endif
                 break;
             case 6:         /* 更新状态 */
@@ -189,7 +205,7 @@ void InitValve(void)
                 {
                     valve.bReInit = 1;
                     valve.portDes = 0;  /* 清空 */
-                #ifdef IOCTRL
+#ifdef IOCTRL
                     if(ON == bIoCtrl)   /* IO默认到A */
                     {
                         valve.portCur = POS_A;
@@ -202,7 +218,13 @@ void InitValve(void)
                             valve.portCur = POS_A;
                         I2CPageWrite_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portCur);
                     }
-                #endif
+#else
+                    if(ON == valve.bHalfSeal)
+                            valve.portCur = POS_M;
+                    else
+                        valve.portCur = POS_A;
+                    I2CPageWrite_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portCur);
+#endif
                     valve.initStep = 7;
                 }
                 break;

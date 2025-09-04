@@ -12,6 +12,9 @@ typedef enum
 } bool;
 
 /* 版本选择 */
+//#define O_901
+//#define O_906
+//#define O_909
 //#define A_901
 //#define A_906
 //#define A_909
@@ -19,32 +22,63 @@ typedef enum
 #define B_906
 
 #define STM32_RC_C8     0   // 1-使用RC 0使用C8
-#define IOCTRL              // 使用IO控制
+//#define IOCTRL              // 使用IO控制
 //#define DEBUG               /* 调试信息输出 */
 
 /* 不同版本宏处理 = 板宏 + IO宏 */
+/* RS232_485_CONTROL 是否启用232/485 */
+// RS232_485_CONTROL 1 (232/485)
+// RS232_485_CONTROL 0 (IO)
 /* IO_RS IO_IN 和 IO_OUT是否取反 */
-// 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反)
-// 0 B (IO)           IO_IN高 IO_OUT高 (同电平)
-#ifdef  A_901
-#define IO_RS       1   /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+// IO_RS 1 A (IO)   IO_IN高 IO_OUT低 (取反)
+// IO_RS 0 B (IO)   IO_IN高 IO_OUT高 (同电平)
+#ifdef O_901
+#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
 #define A12_901
+#define RS232_485_CONTROL   /* 232/485 */
+#undef  IOCTRL
+#endif
+#ifdef O_906
+#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+#define A12_906
+#define RS232_485_CONTROL   /* 232/485 */
+#undef  IOCTRL
+#endif
+#ifdef O_909
+#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+#define A12_909
+#define RS232_485_CONTROL   /* 232/485 */
+#undef  IOCTRL
+#endif
+#ifdef  A_901
+#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+#define A12_901
+#undef  RS232_485_CONTROL
+#define IOCTRL
 #endif
 #ifdef  A_906
-#define IO_RS       1   /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
 #define A12_906
+#undef  RS232_485_CONTROL
+#define IOCTRL
 #endif
 #ifdef  A_909
-#define IO_RS       1   /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
-#define A12_909         /* 909需要注意输出反向 */
+#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+#define A12_909             /* 909需要注意输出反向 */
+#undef  RS232_485_CONTROL
+#define IOCTRL
 #endif
 #ifdef  B_901
-#define IO_RS       0   /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
+#define IO_RS       0       /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
 #define A12_901
+#undef  RS232_485_CONTROL
+#define IOCTRL
 #endif
 #ifdef  B_906
-#define IO_RS       0   /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
+#define IO_RS       0       /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
 #define A12_906
+#undef  RS232_485_CONTROL
+#define IOCTRL
 #endif
 
 // PCB引脚配置相同,驱动芯片不同
