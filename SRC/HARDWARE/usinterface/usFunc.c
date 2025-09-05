@@ -614,20 +614,21 @@ void TermMovesCnt(char rw)
 void TermInspection(char rw)
 {
     printd("\r\n");
-    /* 点检参数： 版本号 地址 通道数 波特率 速度 减速比 半通道 IO */
-    printd("\r\n VR   : %s", SOFT_VER_C);   /* 版本号 */
-    printd("\r\n TIME : %s %s", __DATE__, __TIME__);   /* 版本号 */
-    printd("\r\n ADDR : %d", ModbusPara.mAddrs);      /* 地址 */
-    printd("\r\n CNT  : %d", valveFix.fix.portCnt);    /* 通道数 */
-    printd("\r\n BAUD : %d", bdrate);                 /* 波特率 */
-    printd("\r\n SPD  : %d", spdVx2);                  /* 速度 */
-    printd("\r\n IOE  : %d", bIoCtrl);                 /* IO */
-    printd("\r\n ISET : %d", valve.iSet);             /* 电流设置 */
-    printd("\r\n RDCR : %d", rdc.rate);               /* 减速比 */
-    printd("\r\n HALF : %d", valve.bHalfSeal);        /* 半通道 */
-    printd("\r\n MOVES: %d", syspara.totalCnt);      /* 切换次数 */
-    printd("\r\n FIXO : %d", valveFix.fix.org);       /* 原点补偿 */
-    printd("\r\n FIXG : %d", valveFix.fix.dirGap);    /* 方向补偿 */
+    /* 点检参数 */
+    printd("\r\n VR   : %s", SOFT_VER_C);               /* 版本号 */
+    printd("\r\n PCB  : %s", PCB_VR);                   /* PCB版本号 */
+    printd("\r\n TIME : %s %s", __DATE__, __TIME__);    /* 时间 */
+    printd("\r\n ADDR : %d", ModbusPara.mAddrs);        /* 地址 */
+    printd("\r\n CNT  : %d", valveFix.fix.portCnt);     /* 通道数 */
+    printd("\r\n BAUD : %d", bdrate);                   /* 波特率 */
+    printd("\r\n SPD  : %d", spdVx2);                   /* 速度 */
+    printd("\r\n IOE  : %d", bIoCtrl);                  /* IO */
+    printd("\r\n ISET : %d", valve.iSet);               /* 电流设置 */
+    printd("\r\n RDCR : %d", rdc.rate);                 /* 减速比 */
+    printd("\r\n HALF : %d", valve.bHalfSeal);          /* 半通道 */
+    printd("\r\n MOVES: %d", syspara.totalCnt);         /* 切换次数 */
+    printd("\r\n FIXO : %d", valveFix.fix.org);         /* 原点补偿 */
+    printd("\r\n FIXG : %d", valveFix.fix.dirGap);      /* 方向补偿 */
     /* 序列号 */
     printd("\r\n SN   : %02X %02X %02X %02X %02X", 
         valve.SnCode[0], valve.SnCode[1], valve.SnCode[2], valve.SnCode[3], valve.SnCode[4]);
