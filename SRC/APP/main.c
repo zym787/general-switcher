@@ -293,6 +293,10 @@ void ParameterInit(void)
                 rdc.stepP1dgr = STEPS_1_DEGREE_RD16;
                 rdc.stepP01dgr = STEPS_01_DEGREE_RD16;
                 break;
+            case RDC20:
+                rdc.stepP1dgr = STEPS_1_DEGREE_RD20;
+                rdc.stepP01dgr = STEPS_01_DEGREE_RD20;
+                break;
             default:
                 printd("\r 减速比参数错误,缺省写入4");
                 rdc.rate = RDC04;

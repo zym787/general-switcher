@@ -109,35 +109,41 @@ enum OPTO_STATE
 #define RT_INIT             2
 
 
-#ifdef A12_901
-#define STEPS_1_DEGREE_RD01      (35.6)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD01     (3.6)                  //每0.1度需走的步数为12800/3600=3.555~
-#define STEPS_1_DEGREE_RD04      (142.2)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD04     (14.2)                  //每0.1度需走的步数为12800/3600=3.555~
-#define STEPS_1_DEGREE_RD10      (355.6)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD10     (35.6)                  //每0.1度需走的步数为12800/3600=3.555~
-#define STEPS_1_DEGREE_RD16      (568.9)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD16     (56.9)                  //每0.1度需走的步数为12800/3600=3.555~
+#ifdef A12_901  /* A12_901 64细分 64*200=12800 */
+#define STEPS_1_DEGREE_RD01      (35.6)     // 每1度需走的步数为    12800/360=35.555~
+#define STEPS_01_DEGREE_RD01     (3.6)      // 每0.1度需走的步数为  12800/3600=3.555~
+#define STEPS_1_DEGREE_RD04      (142.2)    // 每1度需走的步数为    12800*4/360=142.222~
+#define STEPS_01_DEGREE_RD04     (14.2)     // 每0.1度需走的步数为  12800*4/3600=14.222~
+#define STEPS_1_DEGREE_RD10      (355.6)    // 每1度需走的步数为    12800*10/360=355.555~
+#define STEPS_01_DEGREE_RD10     (35.6)     // 每0.1度需走的步数为  12800*10/3600=35.555~
+#define STEPS_1_DEGREE_RD16      (568.9)    // 每1度需走的步数为    12800*16/360=568.888~
+#define STEPS_01_DEGREE_RD16     (56.9)     // 每0.1度需走的步数为  12800*16/3600=56.888~
+#define STEPS_1_DEGREE_RD20      (711.1)    // 每1度需走的步数为    12800*20/360=711.111~
+#define STEPS_01_DEGREE_RD20     (71.1)     // 每0.1度需走的步数为  12800*20/3600=71.111~
 #endif
-#ifdef A12_909
-#define STEPS_1_DEGREE_RD01      (35.6)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD01     (3.6)                  //每0.1度需走的步数为12800/3600=3.555~
-#define STEPS_1_DEGREE_RD04      (142.2)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD04     (14.2)                  //每0.1度需走的步数为12800/3600=3.555~
-#define STEPS_1_DEGREE_RD10      (355.6)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD10     (35.6)                  //每0.1度需走的步数为12800/3600=3.555~
-#define STEPS_1_DEGREE_RD16      (568.9)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD16     (56.9)                  //每0.1度需走的步数为12800/3600=3.555~
+#ifdef A12_909  /* A12_909 64细分 64*200=12800 */
+#define STEPS_1_DEGREE_RD01      (35.6)     // 每1度需走的步数为    12800/360=35.555~
+#define STEPS_01_DEGREE_RD01     (3.6)      // 每0.1度需走的步数为  12800/3600=3.555~
+#define STEPS_1_DEGREE_RD04      (142.2)    // 每1度需走的步数为    12800*4/360=142.222~
+#define STEPS_01_DEGREE_RD04     (14.2)     // 每0.1度需走的步数为  12800*4/3600=14.222~
+#define STEPS_1_DEGREE_RD10      (355.6)    // 每1度需走的步数为    12800*10/360=355.555~
+#define STEPS_01_DEGREE_RD10     (35.6)     // 每0.1度需走的步数为  12800*10/3600=35.555~
+#define STEPS_1_DEGREE_RD16      (568.9)    // 每1度需走的步数为    12800*16/360=568.888~
+#define STEPS_01_DEGREE_RD16     (56.9)     // 每0.1度需走的步数为  12800*16/3600=56.888~
+#define STEPS_1_DEGREE_RD20      (711.1)    // 每1度需走的步数为    12800*20/360=711.111~
+#define STEPS_01_DEGREE_RD20     (71.1)     // 每0.1度需走的步数为  12800*20/3600=71.111~
 #endif
-#ifdef A12_906
-#define STEPS_1_DEGREE_RD01      (8.9)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD01     (0.9)                  //每0.1度需走的步数为12800/3600=3.555~
-#define STEPS_1_DEGREE_RD04      (35.6)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD04     (3.6)                  //每0.1度需走的步数为12800/3600=3.555~
-#define STEPS_1_DEGREE_RD10      (88.9)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD10     (8.9)                  //每0.1度需走的步数为12800/3600=3.555~
-#define STEPS_1_DEGREE_RD16      (142.2)                 //每度需走的步数为12800/360=35.555~
-#define STEPS_01_DEGREE_RD16     (14.2)                  //每0.1度需走的步数为12800/3600=3.555~
+#ifdef A12_906  /* A12_906 16细分 16*200=3200 */
+#define STEPS_1_DEGREE_RD01      (8.9)      // 每1度需走的步数为    3200/360=8.888~
+#define STEPS_01_DEGREE_RD01     (0.9)      // 每0.1度需走的步数为  3200/3600=0.888~
+#define STEPS_1_DEGREE_RD04      (35.6)     // 每1度需走的步数为    3200*4/360=35.555~
+#define STEPS_01_DEGREE_RD04     (3.6)      // 每0.1度需走的步数为  3200*4/3600=3.555~
+#define STEPS_1_DEGREE_RD10      (88.9)     // 每1度需走的步数为    3200*10/360=88.888~
+#define STEPS_01_DEGREE_RD10     (8.9)      // 每0.1度需走的步数为  3200*10/3600=8.888~
+#define STEPS_1_DEGREE_RD16      (142.2)    // 每1度需走的步数为    3200*16/360=142.222~
+#define STEPS_01_DEGREE_RD16     (14.2)     // 每0.1度需走的步数为  3200*16/3600=14.222~
+#define STEPS_1_DEGREE_RD20      (177.8)    // 每1度需走的步数为    3200*20/360=177.777~
+#define STEPS_01_DEGREE_RD20     (17.8)     // 每0.1度需走的步数为  3200*20/3600=17.777~
 #endif
 
 

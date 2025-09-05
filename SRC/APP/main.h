@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0012    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r12"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0013    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r13"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #define SOFT_NAME   "v1.3.1"
@@ -73,6 +73,7 @@
 //                                1.3.1   232/485版本屏蔽IO,仅支持串口
 //                                1.3.1AB 默认打开IO,区分不同电平标准
 //  v1.3.1AB-r12    2025.09.05  增加下载口点检指令INSP,会打印出所有参数
+//  v1.3.1-r13      2025.09.05  修复20减速比支持
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)
