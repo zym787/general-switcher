@@ -1,0 +1,189 @@
+version: "4.1"
+name: ValveX2
+type: ARM
+deviceName: null
+packDir: null
+srcDirs: []
+virtualFolder:
+  name: <virtual_root>
+  files: []
+  folders:
+    - name: StartUp
+      files:
+        - path: ../SRC/CMSIS/DeviceSupport/StartUp/startup_stm32f10x_md.s
+      folders: []
+    - name: APP
+      files:
+        - path: ../SRC/APP/main.c
+        - path: ../SRC/APP/app.h
+      folders: []
+    - name: HW
+      files:
+        - path: ../SRC/HARDWARE/stmFlash/stmflash.c
+        - path: ../SRC/HARDWARE/motor/motor.c
+        - path: ../SRC/HARDWARE/usinterface/usFunc.c
+        - path: ../SRC/HARDWARE/motor/Smotor.lib
+        - path: ../SRC/HARDWARE/usinterface/USINTF_CR.lib
+        - path: ../SRC/HARDWARE/EEPROM/EEP24Serial.c
+        - path: ../SRC/HARDWARE/Modbus/modbus.c
+        - path: ../SRC/HARDWARE/Modbus/ModBusCrc16.c
+      folders: []
+    - name: SYS
+      files:
+        - path: ../SRC/SYSTEM/delay/delay.c
+        - path: ../SRC/SYSTEM/sys/sys.c
+        - path: ../SRC/SYSTEM/timer/timer.c
+        - path: ../SRC/SYSTEM/usart/usart.c
+      folders: []
+    - name: Doc
+      files:
+        - path: ../Doc/ValveX2_v1.3.1修改说明.md
+      folders: []
+dependenceList: []
+outDir: build
+miscInfo:
+  uid: 01926f2a5e70ea743d17e90a109d84d3
+targets:
+  ValveX2:
+    cppPreprocessAttrs:
+      defineList:
+        - STM32F10X_MD
+      incList:
+        - ../SRC/APP
+        - ../SRC/HARDWARE/stmFlash
+        - ../SRC/HARDWARE/usinterface
+        - ../SRC/SYSTEM/delay
+        - ../SRC/SYSTEM/sys
+        - ../SRC/SYSTEM/timer
+        - ../SRC/SYSTEM/usart
+        - ../SRC/CMSIS/CoreSupport
+        - ../SRC/CMSIS/DeviceSupport
+        - ../SRC/HARDWARE/motor
+        - ../SRC/HARDWARE/EEPROM
+        - ../SRC/HARDWARE/Modbus
+        - .cmsis/include
+        - ../USER/RTE/_ValveX2
+      libList: []
+    excludeList: []
+    toolchain: AC5
+    toolchainConfigMap:
+      AC5:
+        archExtensions: ""
+        cpuType: Cortex-M3
+        floatingPointHardware: none
+        options:
+          version: 4
+          afterBuildTasks:
+            - name: "[Copy linker output for Keil User Commands]"
+              abortAfterFailed: true
+              command: cd .\..\USER && mkdir ${KEIL_OUTPUT_DIR} & copy "${OutDir}\${ProjectName}.axf" "${KEIL_OUTPUT_DIR}\${ProjectName}.axf"
+              disable: true
+            - name: ..\rename2.bat
+              abortAfterFailed: true
+              command: cd .\..\USER && ..\rename2.bat
+              disable: true
+          asm-compiler: {}
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: --diag_suppress=1 --diag_suppress=1295
+            C_FLAGS: --diag_suppress=1 --diag_suppress=1295
+            c99-mode: true
+            one-elf-section-per-function: true
+            optimization: level-0
+            warnings: all-warnings
+          global:
+            output-debug-info: enable
+            use-microLIB: false
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            output-format: elf
+            ro-base: "0x08000000"
+            rw-base: "0x20000000"
+            xo-base: ""
+        scatterFilePath: ""
+        storageLayout:
+          RAM:
+            - id: 1
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 3
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 1
+              isChecked: true
+              mem:
+                size: "0x5000"
+                startAddr: "0x20000000"
+              noInit: false
+              tag: IRAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: IRAM
+          ROM:
+            - id: 1
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 3
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 1
+              isChecked: true
+              isStartup: true
+              mem:
+                size: "0x10000"
+                startAddr: "0x8000000"
+              tag: IROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: IROM
+        useCustomScatterFile: false
+    uploadConfigMap:
+      JLink:
+        baseAddr: ""
+        bin: ""
+        cpuInfo:
+          cpuName: "null"
+          vendor: "null"
+        otherCmds: ""
+        proType: 1
+        speed: 8000
+    uploader: JLink
