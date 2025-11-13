@@ -7,8 +7,6 @@
 #define PEXT extern
 #endif
 
-//#define DEBUG_MODBUS    /* AGS */
-
 //======================  参数宏定义=================================
 #define MAX_ADDR                    1
 #define	MB_SALVE_DEF_ADDR           1

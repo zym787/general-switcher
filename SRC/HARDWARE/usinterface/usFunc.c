@@ -613,26 +613,61 @@ void TermMovesCnt(char rw)
  */
 void TermInspection(char rw)
 {
-    printd("\r\n");
+    printd("\r\n ***************< 点检模式 >***************\r\n");
     /* 点检参数 */
-    printd("\r\n VR   : %s", SOFT_VER_C);               /* 版本号 */
-    printd("\r\n PCB  : %s", PCB_VR);                   /* PCB版本号 */
-    printd("\r\n TIME : %s %s", __DATE__, __TIME__);    /* 时间 */
-    printd("\r\n ADDR : %d", ModbusPara.mAddrs);        /* 地址 */
-    printd("\r\n CNT  : %d", valveFix.fix.portCnt);     /* 通道数 */
-    printd("\r\n BAUD : %d", bdrate);                   /* 波特率 */
-    printd("\r\n SPD  : %d", spdVx2);                   /* 速度 */
-    printd("\r\n IOE  : %d", bIoCtrl);                  /* IO */
-    printd("\r\n ISET : %d", valve.iSet);               /* 电流设置 */
-    printd("\r\n RDCR : %d", rdc.rate);                 /* 减速比 */
-    printd("\r\n HALF : %d", valve.bHalfSeal);          /* 半通道 */
-    printd("\r\n MOVES: %d", syspara.totalCnt);         /* 切换次数 */
-    printd("\r\n FIXO : %d", valveFix.fix.org);         /* 原点补偿 */
-    printd("\r\n FIXG : %d", valveFix.fix.dirGap);      /* 方向补偿 */
+    printd("\r\n 版本       (VR)   : %s", SOFT_VER_C);               /* 版本号 */
+    printd("\r\n 电路板     (PCB)  : %s", PCB_VR);                   /* PCB版本号 */
+    printd("\r\n 编译时间   (TIME) : %s %s", __DATE__, __TIME__);    /* 时间 */
+    printd("\r\n 地址       (ADDR) : %d", ModbusPara.mAddrs);        /* 地址 */
+    printd("\r\n 通道数     (CNT)  : %d", valveFix.fix.portCnt);     /* 通道数 */
+    printd("\r\n 波特率     (BAUD) : %d", bdrate);                   /* 波特率 */
+    printd("\r\n 速度       (SPD)  : %d", spdVx2);                   /* 速度 */
+    printd("\r\n 减速比     (RDCR) : %d", rdc.rate);                 /* 减速比 */
+    printd("\r\n 半通道     (HALF) : %d", valve.bHalfSeal);          /* 半通道 */
+    printd("\r\n 原点补偿   (FIXO) : %d", valveFix.fix.org);         /* 原点补偿 */
+    printd("\r\n 方向补偿   (FIXG) : %d", valveFix.fix.dirGap);      /* 方向补偿 */
+    printd("\r\n IO控制     (IOE)  : %d", bIoCtrl);                  /* IO */
+    printd("\r\n 电流       (ISET) : %d", valve.iSet);               /* 电流设置 */
+    printd("\r\n 切换次数   (MOVES): %d", syspara.totalCnt);         /* 切换次数 */
+    printd("\r\n 回复方式   (REPLY): %d", syspara.replyMode);        /* 回复方式 */
     /* 序列号 */
-    printd("\r\n SN   : %02X %02X %02X %02X %02X", 
+    printd("\r\n 序列号     (SN)   : %02X %02X %02X %02X %02X", 
         valve.SnCode[0], valve.SnCode[1], valve.SnCode[2], valve.SnCode[3], valve.SnCode[4]);
-    printd("\r\n");
+    printd("\r\n ***************< 点检模式 >***************\r\n");
+}
+
+/*
+ * 回复模式：AGS协议栈回复模式 0,AGS标准 不回复  1,定制 运动指令不回复
+ */
+void TermReply(char rw)
+{
+    int getInt = 0;
+    printd("\r\n func %s", __func__);
+    if (rw == READ_ACT)
+    {
+        I2CPageRead_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);
+        printd("\r 回复方式:%d", syspara.replyMode);
+    }
+    else
+    {
+        unsigned char ret = FetchInt(5, 0, rcvStr, &getInt);
+        if (ret)
+        {
+            printd("\r Err code %d", ret);
+            return;
+        }
+        if (REPLYMODE_AGS <= getInt && REPLYMODE_CUSTOM_3 >= getInt)
+        {
+            syspara.replyMode = getInt;
+            printd("\r 写入回复方式:%d", syspara.replyMode);
+        }
+        else
+        {
+            syspara.replyMode = REPLYMODE_AGS;
+            printd("\r\n %d 回复方式不存在 使用AGS标准 (范围%d-%d)", getInt, REPLYMODE_AGS, REPLYMODE_CUSTOM_3);
+        }
+        I2CPageWrite_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);
+    }
 }
 
 void TermList(char rw);
@@ -641,10 +676,10 @@ static _CMD_T cmds[] =
 {
     {"/?",      2,  TermList},
     {"VR",      2,  TermVR},
-    {"MAP",     3,  TermMap},
+    // {"MAP",     3,  TermMap},
     {"IIC",     3,  TermIIC},
     {"RST",     3,  TermReset},
-    {"MOT",     3,  TermMotorX},
+    // {"MOT",     3,  TermMotorX},
     {"FIXO",    4,  TermFixO},
     {"FIXG",    4,  TermFixG},
     {"ADDR",    4,  TermAddr},
@@ -660,21 +695,35 @@ static _CMD_T cmds[] =
     {"HALF",    4,  TermHalf},
     {"MOVES",   5,  TermMovesCnt},
     {"INSP",    4,  TermInspection},
+    {"REPLY",   5,  TermReply},
 };
 
 static char* comment[] =
 {
-    "display all commands",
-    "display version",
-    "write value into specify address",
-    "operate storage like eeprom or factory set",
-    "MOTORX",
-
+    "显示所有指令",
+    "显示版本",
+    "擦除EEPROM",
+    "设置/显示原点补偿",
+    "设置/显示方向补偿",
+    "设置/显示地址",
+    "设置/显示通道数",
+    "移动到指定位置",
+    "设置/显示波特率",
+    "设置/显示速度",
+    "设置IO",
+    "设置/显示间隔",
+    "设置/显示电流",
+    "IO输出引脚翻转",
+    "设置/显示减速比",
+    "设置/显示半通道",
+    "设置/显示切换次数",
+    "点检模式",
+    "设置/显示回复模式",
 };
 
 /*
-
-*/
+ * 显示所有指令
+ */
 void TermList(char rw)
 {
     if(rw==READ_ACT)
@@ -701,5 +750,3 @@ void UsrCmdInit(void)
 {
     RegisterCmds(cmds, ARRAY_SIZE(cmds));
 }
-
-

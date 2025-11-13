@@ -21,9 +21,15 @@ typedef enum
 //#define B_901
 #define B_906
 
+#define RELEASE         /* 发布模式 */
+
+#ifndef RELEASE
+#define DEBUG           /* 调试信息输出 */
+#define DEBUG_MODBUS    /* AGS */
+#endif
+
 #define STM32_RC_C8     0   // 1-使用RC 0使用C8
 //#define IOCTRL              // 使用IO控制
-//#define DEBUG               /* 调试信息输出 */
 
 /* 不同版本宏处理 = 板宏 + IO宏 */
 /* RS232_485_CONTROL 是否启用232/485 */

@@ -24,4 +24,13 @@
 #define AGS_W_RESET             0x59    /* 'Y' 写复位地址 */
 #define AGS_RW_P_ABS_STEP       0x61    /* 'a' 读写泵绝对步数位置地址 */
 
+/// 回复方式
+enum AGS_REPLY_MODE
+{
+    REPLYMODE_AGS = 0ul,      /* AGS标准回复方式 */
+    REPLYMODE_CUSTOM_1 = 1ul, /* 定制回复方式1 */
+    REPLYMODE_CUSTOM_2 = 2ul, /* 保留 */
+    REPLYMODE_CUSTOM_3 = 3ul, /* 保留 */
+};
+
 #endif

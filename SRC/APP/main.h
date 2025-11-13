@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0013    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r13"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0014    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r14"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #define SOFT_NAME   "v1.3.1"
@@ -74,6 +74,8 @@
 //                                1.3.1AB 默认打开IO,区分不同电平标准
 //  v1.3.1AB-r12    2025.09.05  增加下载口点检指令INSP,会打印出所有参数
 //  v1.3.1-r13      2025.09.05  修复20减速比支持
+//  v1.3.1-r14      2025.11.13  新增0B回复方式设置，移动指令可以屏蔽回复
+//                              汉化部分指令，点检模式支持中文，支持中文显示所有指令
 
 #ifdef A12_901
 #define IO_OUT          PAout(8)
@@ -135,6 +137,9 @@
 #define ADDR_TOTAL_CNT        	(ADDR_HALF_SEAL+LEN_HALF_SEAL)
 #define LEN_TOTAL_CNT           4
 
+#define ADDR_REPLY_MODE        	(ADDR_TOTAL_CNT+LEN_TOTAL_CNT)
+#define LEN_REPLY_MODE          1
+
 #define NORMAL_BLINK            1500       // 正常运行的闪烁间隔
 #define RETRY_TIME_OUT          1100       // 重试的闪烁间隔
 #define ERROR_BLINK             400
@@ -148,6 +153,7 @@ typedef struct
     uint32_t    totalCntLst;
     uint16_t    lastTime;           /* 上次切换时间 */
     uint32_t    protectTimeOut;     /* 超时保护时间 */
+    uint8_t     replyMode;          /* 回复方式 */
 } _SYS_T;
 PEXT _SYS_T syspara;
 

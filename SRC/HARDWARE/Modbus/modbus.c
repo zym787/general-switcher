@@ -270,8 +270,15 @@ void MB_ReadHoldingRegisters(void)
             if(syspara.totalCnt != syspara.totalCntLst)
             {
                 I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8*)&syspara.totalCnt));
+                syspara.totalCntLst = syspara.totalCnt;
             }
             byteCount = 7;
+        }
+        else if (0x0B == op_addr) /* 读回复方式 */
+        {
+            I2CPageRead_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);
+            ModbusPara.tBuf[3] = syspara.replyMode;
+            byteCount = 4;
         }
         else if(0x99 == op_addr)        /* 读通道数 */
         {
@@ -329,6 +336,10 @@ void MB_PresetSingleHoldingRegister(void)
                 if(valve.status==VALVE_RUN_END)
                 {
                     valve.portDes = ModbusPara.rBuf[3];
+                    if (REPLYMODE_CUSTOM_1 == syspara.replyMode)
+                    {
+                        return;
+                    }
                 }
                 else
                 {
@@ -422,6 +433,20 @@ void MB_PresetSingleHoldingRegister(void)
             else
             {
                 ModbusPara.sERR = ERR_MB_DATA;   /* 操作数据无效 */
+            }
+        }
+        else if (0x0B == op_addr)   /* 设置通道状态指令回复方式 */
+        {
+            if (REPLYMODE_AGS <= ModbusPara.rBuf[3] && 
+                REPLYMODE_CUSTOM_3 >= ModbusPara.rBuf[3] && 
+                6 == ModbusPara.rCnt)
+            {
+                syspara.replyMode = ModbusPara.rBuf[3];
+                I2CPageWrite_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);
+            }
+            else
+            {
+                ModbusPara.sERR = ERR_MB_DATA; /* 操作数据无效 */
             }
         }
         else if(0x99 == op_addr)        /* 写通道数 */
