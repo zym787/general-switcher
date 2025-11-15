@@ -8,12 +8,17 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0014    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r14"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0015    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r15"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
-  #define SOFT_NAME   "v1.3.1"
-  #define SOFT_VER_NUM    (uint32_t)0x13100000 
+  #ifndef C_901
+    #define SOFT_NAME   "v1.3.1"
+    #define SOFT_VER_NUM    (uint32_t)0x13100000
+  #else
+    #define SOFT_NAME   "v1.3.1C"
+    #define SOFT_VER_NUM    (uint32_t)0x131C0000
+  #endif
 #else
   #if IO_RS  // IO_RS 1 A IO
     #define CONTROL     "IO 232/485"
@@ -76,18 +81,25 @@
 //  v1.3.1-r13      2025.09.05  修复20减速比支持
 //  v1.3.1-r14      2025.11.13  新增0B回复方式设置，移动指令可以屏蔽回复
 //                              汉化部分指令，点检模式支持中文，支持中文显示所有指令
+//  v1.3.1-r15      2025.11.15  新增灯状态输出 C版本
+//                              A:IN 1  OUT 0,B:IN 0  OUT 1,
+//                              M:IN 0  OUT 0,ERROR:IN 1 OUT 1
 
 #ifdef A12_901
-#define IO_OUT          PAout(8)
-#define IO_IN           PBin(3)
+    #define IO_OUT          PAout(8)
+    #ifndef C_901
+        #define IO_IN           PBin(3)
+    #else
+        #define IO_IN           PBout(3)
+    #endif
 #endif
 #ifdef A12_909
-#define IO_OUT          PBout(13)
-#define IO_IN           PBin(5)
+    #define IO_OUT          PBout(13)
+    #define IO_IN           PBin(5)
 #endif
 #ifdef A12_906
-#define IO_OUT          PBout(13)
-#define IO_IN           PBin(14)
+    #define IO_OUT          PBout(13)
+    #define IO_IN           PBin(14)
 #endif
 
 //----EEPROM存储地址分配---//

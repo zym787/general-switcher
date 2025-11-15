@@ -20,6 +20,7 @@ typedef enum
 //#define A_909
 //#define B_901
 #define B_906
+//#define C_901
 
 #define RELEASE         /* 发布模式 */
 
@@ -39,66 +40,77 @@ typedef enum
 // IO_RS 1 A (IO)   IO_IN高 IO_OUT低 (取反)
 // IO_RS 0 B (IO)   IO_IN高 IO_OUT高 (同电平)
 #ifdef O_901
-#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
-#define A12_901
-#define RS232_485_CONTROL   /* 232/485 */
-#undef  IOCTRL
+    #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+    #define A12_901
+    #define RS232_485_CONTROL   /* 232/485 */
+    #undef  IOCTRL
 #endif
 #ifdef O_906
-#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
-#define A12_906
-#define RS232_485_CONTROL   /* 232/485 */
-#undef  IOCTRL
+    #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+    #define A12_906
+    #define RS232_485_CONTROL   /* 232/485 */
+    #undef  IOCTRL
 #endif
 #ifdef O_909
-#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
-#define A12_909
-#define RS232_485_CONTROL   /* 232/485 */
-#undef  IOCTRL
+    #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+    #define A12_909
+    #define RS232_485_CONTROL   /* 232/485 */
+    #undef  IOCTRL
 #endif
 #ifdef  A_901
-#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
-#define A12_901
-#undef  RS232_485_CONTROL
-#define IOCTRL
+    #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+    #define A12_901
+    #undef  RS232_485_CONTROL
+    #define IOCTRL
 #endif
 #ifdef  A_906
-#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
-#define A12_906
-#undef  RS232_485_CONTROL
-#define IOCTRL
+    #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+    #define A12_906
+    #undef  RS232_485_CONTROL
+    #define IOCTRL
 #endif
 #ifdef  A_909
-#define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
-#define A12_909             /* 909需要注意输出反向 */
-#undef  RS232_485_CONTROL
-#define IOCTRL
+    #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+    #define A12_909             /* 909需要注意输出反向 */
+    #undef  RS232_485_CONTROL
+    #define IOCTRL
 #endif
 #ifdef  B_901
-#define IO_RS       0       /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
-#define A12_901
-#undef  RS232_485_CONTROL
-#define IOCTRL
+    #define IO_RS       0       /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
+    #define A12_901
+    #undef  RS232_485_CONTROL
+    #define IOCTRL
 #endif
 #ifdef  B_906
-#define IO_RS       0       /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
-#define A12_906
-#undef  RS232_485_CONTROL
-#define IOCTRL
+    #define IO_RS       0       /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
+    #define A12_906
+    #undef  RS232_485_CONTROL
+    #define IOCTRL
+#endif
+#ifdef  C_901
+    #undef IO_RS
+    // #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+    #define A12_901
+    #define RS232_485_CONTROL   /* 232/485 */
+    #undef  IOCTRL
 #endif
 
 // PCB引脚配置相同,驱动芯片不同
 #ifdef A12_901
-#define PCB_VR                  "A12-901"
-#define HARDWARE_DESCRIPTION     "Mini Version (1.6A Max)"
+    #define PCB_VR                  "A12-901"
+    #ifndef C_901
+        #define HARDWARE_DESCRIPTION     "Mini Version (1.6A Max)"
+    #else
+        #define HARDWARE_DESCRIPTION     "Mini Version (1.6A Max) with LED Instruct"
+    #endif
 #endif
 #ifdef A12_906
-#define PCB_VR                  "A12-906"
-#define HARDWARE_DESCRIPTION     "Horizontal Version (2.5A Max)"
+    #define PCB_VR                  "A12-906"
+    #define HARDWARE_DESCRIPTION     "Horizontal Version (2.5A Max)"
 #endif
 #ifdef A12_909
-#define PCB_VR                  "A12-909"
-#define HARDWARE_DESCRIPTION     "Vertical Version (2.2A Max)"
+    #define PCB_VR                  "A12-909"
+    #define HARDWARE_DESCRIPTION     "Vertical Version (2.2A Max)"
 #endif
 
 

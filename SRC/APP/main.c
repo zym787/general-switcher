@@ -18,9 +18,16 @@ void IOconfig(void)
     GPIOA->CRH &= (GPIO_Crh_P8);
     GPIOA->CRH |= (GPIO_Mode_Out_PP_50MHz_P8);
     GPIOA->ODR |= (GPIO_Pin_8);
+    #ifndef C_901
     // KEY IN
     GPIOB->CRL &= (GPIO_Crl_P3);
     GPIOB->CRL |= (GPIO_Mode_IN_PU_PD_P3);
+    #else
+    ///KEY OUT
+    GPIOB->CRL &= (GPIO_Crl_P3);
+    GPIOB->CRL |= (GPIO_Mode_Out_PP_50MHz_P3);
+    GPIOA->ODR |= (GPIO_Pin_8);
+#endif
     #endif
 
     #ifdef A12_909
@@ -123,6 +130,33 @@ void EveryHSec(void)
         }
     }
 #endif      /* IOCTRL */
+
+    ///IO输出灯状态
+#ifdef C_901
+    if (VALVE_RUN_END == valve.status)
+    {
+        switch (valve.portCur)
+        {
+        case POS_A:
+            IO_IN = ON;
+            IO_OUT = OFF;
+            break;
+        case POS_B:
+            IO_IN = OFF;
+            IO_OUT = ON;
+            break;
+        case POS_M:
+            IO_IN = OFF;
+            IO_OUT = OFF;
+            break;
+        default:
+            IO_IN = ON;
+            IO_OUT = ON;
+            break;
+        }
+    }
+#endif
+
     /* 每秒检测一次 */
     if(SEC < timerPara.sec)     /* 2 超时检测任务 (1s) */
     {

@@ -84,6 +84,7 @@
 !keilkill.bat
 !Smotor.lib
 !USINTF_CR-0.lib
+!USINTF_CR.lib
 !/SRC/*
 
 # Source Insight Project Files
