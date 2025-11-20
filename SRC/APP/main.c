@@ -451,22 +451,32 @@ int main(void)
     MotorCfg();
     IOconfig();
     delay_ms(100);
+#ifdef AGING_MODE
+    printd("\r\n Version:%s(%08X)  Time: %s %s \
+            \r\n 正反切换老化程序 仅支持下载口设置参数\
+            \r\n PCB:%s  %s \r\n",
+           SOFT_VER_C, SOFT_VER, __DATE__, __TIME__,
+           PCB_VR, HARDWARE_DESCRIPTION);
+#else
     printd("\r\n Version:%s(%08X)  Time: %s %s \
             \r\n Description:%s (%s)\
             \r\n PCB:%s  %s \r\n",
-        SOFT_VER_C, SOFT_VER, __DATE__, __TIME__,
-        DESCRIPTION, CONTROL,
-        PCB_VR, HARDWARE_DESCRIPTION);
+           SOFT_VER_C, SOFT_VER, __DATE__, __TIME__,
+           DESCRIPTION, CONTROL,
+           PCB_VR, HARDWARE_DESCRIPTION);
+#endif
     ParameterInit();
     UsrCmdInit();
     while(1)
     {
+#ifndef AGING_MODE
         InitValve();
         ProcessValve();
         ModbusProces();
         EveryHSec();
-        TestBurn();
         DebugOut();
+#endif
+        TestBurn();
         ErrBlink();
     }
 }

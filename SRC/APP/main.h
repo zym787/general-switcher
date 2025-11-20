@@ -8,13 +8,18 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0015    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r15"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0016    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r16"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #ifndef C_901
-    #define SOFT_NAME   "v1.3.1"
-    #define SOFT_VER_NUM    (uint32_t)0x13100000
+    #ifdef AGING_MODE
+        #define SOFT_NAME   "vA.A.1"
+        #define SOFT_VER_NUM    (uint32_t)0xAA100000
+    #else
+        #define SOFT_NAME   "v1.3.1"
+        #define SOFT_VER_NUM    (uint32_t)0x13100000
+    #endif
   #else
     #define SOFT_NAME   "v1.3.1C"
     #define SOFT_VER_NUM    (uint32_t)0x131C0000
@@ -79,11 +84,13 @@
 //                                1.3.1AB 默认打开IO,区分不同电平标准
 //  v1.3.1AB-r12    2025.09.05  增加下载口点检指令INSP,会打印出所有参数
 //  v1.3.1-r13      2025.09.05  修复20减速比支持
-//  v1.3.1-r14      2025.11.13  新增0B回复方式设置，移动指令可以屏蔽回复
-//                              汉化部分指令，点检模式支持中文，支持中文显示所有指令
+//  v1.3.1-r14      2025.11.13  新增0B回复方式设置,移动指令可以屏蔽回复
+//                              汉化部分指令,点检模式支持中文,支持中文显示所有指令
 //  v1.3.1-r15      2025.11.15  新增灯状态输出 C版本
 //                              A:IN 1  OUT 0,B:IN 0  OUT 1,
 //                              M:IN 0  OUT 0,ERROR:IN 1 OUT 1
+//  v1.3.1-r16      2025.11.20  新增电机老化模式,仅支持正反转,版本vA.A.1
+//                              使用dbg_printf替换调试输出,电机老化模式放开速度限制
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)

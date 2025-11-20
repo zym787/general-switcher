@@ -222,7 +222,7 @@ void TermAddr(char rw)
             printd("\r Err code %d", ret);
             return;
         }
-        if(AGS_ADDR_MIN <= getInt && BURN_ADDR >= getInt)
+        if (AGS_ADDR_MIN <= getInt && BURN_ADDR >= getInt || MOTOR_AGING_ADDR == getInt)
         {
             ModbusPara.mAddrs = getInt;
             printd("\r\n Set Addr to %d", ModbusPara.mAddrs);
@@ -377,6 +377,20 @@ void TermSpd(char rw)
             printd("\r Err code %d", ret);
             return;
         }
+#ifdef AGING_MODE
+        if(0 <= getInt && 255 >= getInt)
+        {
+            spdVx2 = getInt;
+            printd("\r\n set speed to %d", spdVx2);
+        }
+        else
+        {
+            printd("\r\n %d Speed out of range (%dRDCR: %d-%d)", 
+                getInt, rdc.rate, 0, 255);
+            spdVx2 = 30;
+            printd("\r\n Use default Speed %d", spdVx2);
+        }
+#else
         if(RDC20 == rdc.rate)
         {
             if(SPD_MIN_RDCR20 <= getInt && SPD_MAX_RDCR20 >= getInt)
@@ -407,6 +421,7 @@ void TermSpd(char rw)
                 printd("\r\n Use default Speed %d", spdVx2);
             }
         }
+#endif
         I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
     }
 }

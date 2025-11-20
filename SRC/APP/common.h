@@ -23,7 +23,9 @@ typedef enum
 //#define C_901
 
 #define RELEASE         /* 发布模式 */
+// #define AGING_MODE      /* 老化模式 仅支持正反转 */
 
+///发布模式
 #ifndef RELEASE
 #define DEBUG           /* 调试信息输出 */
 #define DEBUG_MODBUS    /* AGS */
@@ -131,12 +133,20 @@ typedef enum
 
 
 //STM32F10X_HD,USE_STDPERIPH_DRIVER
-
+//正常的开关定义
 #define OFF 0
 #define ON  1
-
+//反相的开关定义
 #define FALSE 0
 #define TRUE  1
+
+/// 调试printd  屏蔽DEBUG时无效
+#ifdef DEBUG
+#define dbg_printf(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#else
+#define dbg_printf(...)
+#endif
+
 
 //-------------------------rcc----------------------------------
 #define RCC_APB1Periph_TIM2              ((vu32)0x00000001)

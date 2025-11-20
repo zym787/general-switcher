@@ -111,9 +111,7 @@ void InitValve(void)
                     {
                         AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);    /* 电机相对移动一圈 */
                         valve.initStep = 3;
-                        #ifdef DEBUG
-                        printd("\r + CW (%d)", valve.initStep);
-                        #endif
+                        dbg_printf("\r + CW (%d)", valve.initStep);
                     }
                     /* 挡住,或者挡住了但上一个位置是A */
 //                    else if ((OPT_BLOCKER == VALVE_OPT) ||
@@ -126,9 +124,7 @@ void InitValve(void)
                         ftemp /= 2;
                         AxisMoveRel(AXSV, -ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
                         valve.initStep = 2;
-                        #ifdef DEBUG
-                        printd("\r - CCW (%d)", valve.initStep);
-                        #endif
+                        dbg_printf("\r - CCW (%d)", valve.initStep);
                     }
                 }
                 break;
@@ -138,17 +134,13 @@ void InitValve(void)
                     srd[AXSV].accel_count = -rdc.stepP1dgr;
                     srd[AXSV].run_state = DECEL;
                     valve.initStep = 1;
-                    #ifdef DEBUG
-                    printd("\r Decel (%d)", valve.initStep);
-                    #endif
+                    dbg_printf("\r Decel (%d)", valve.initStep);
                 }
                 else                        /* 回转一个角度后还是触发光耦 */
                 {
                     valve.portLast = POS_B;
                     valve.initStep = 1;
-                    #ifdef DEBUG
-                    printd("\r Pos B (%d)", valve.initStep);
-                    #endif
+                    dbg_printf("\r Pos B (%d)", valve.initStep);
                 }
                 break;
             case 3:
@@ -174,9 +166,7 @@ void InitValve(void)
                             // 复位密封 半通道
                             ftemp = (float)rdc.stepRound / valveFix.fix.portCnt / 2;
                             AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
-                            #ifdef DEBUG
-                            printd("\r Half Seal (%d)", valve.initStep);
-                            #endif
+                            dbg_printf("\r Half Seal (%d)", valve.initStep);
                         }
                         valve.bNewInit = 1;
                         valve.initStep = 6;
@@ -191,9 +181,7 @@ void InitValve(void)
                         // 复位密封 半通道
                         ftemp = (float)rdc.stepRound / valveFix.fix.portCnt / 2;
                         AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
-                        #ifdef DEBUG
-                        printd("\r Half Seal (%d)", valve.initStep);
-                        #endif
+                        dbg_printf("\r Half Seal (%d)", valve.initStep);
                     }
                     valve.bNewInit = 1;
                     valve.initStep = 6;
@@ -267,8 +255,8 @@ void InitValve(void)
         #ifdef DEBUG
         if (stepTemp != valve.initStep)
         {
-            printd("\r >%d< %d %d %02x", 
-                    valve.initStep, valve.bNewInit, valve.bReInit, valve.status);
+            dbg_printf("\r >%d< %d %d %02x",
+                       valve.initStep, valve.bNewInit, valve.bReInit, valve.status);
             stepTemp = valve.initStep;
         }
         #endif
@@ -323,10 +311,8 @@ void ProcessValve(void)
                 valve.status |= VALVE_RUNNING;      /* 置位运行标志 */
                 valve.statusLast = VALVE_RUNNING;
                 syspara.protectTimeOut = 0;         /* 重新开始单次保护计时 */
-                #ifdef DEBUG
-                printd("\r\n %s initstep%d (%d) ststus%02x",
-                       __FUNCTION__, valve.initStep, syspara.protectTimeOut, valve.status);
-                #endif
+                dbg_printf("\r\n %s initstep%d (%d) ststus%02x",
+                           __FUNCTION__, valve.initStep, syspara.protectTimeOut, valve.status);
             }
         }
         else if(VALVE_RUNNING == valve.statusLast)  /* 阀组上次运行状态 */
@@ -390,6 +376,7 @@ void ValveOrg(void)
 void TestBurn(void)
 {
     static uint8 tmWait=0;
+    static uint8_t dirFlag = 0;     /* 方向标志位,0:正转,1:反转 */
     if(BURN_ADDR == ModbusPara.mAddrs)
     {
         if(timerPara.timeWaitMill>SEC)
@@ -412,4 +399,47 @@ void TestBurn(void)
             }
         }
     }
+#ifdef AGING_MODE
+    else if (MOTOR_AGING_ADDR == ModbusPara.mAddrs)
+    {
+        if (timerPara.timeWaitMill > SEC)
+        {
+            timerPara.timeWaitMill = 0;
+            speed[AXSV] = 100;
+            accel[AXSV] = 100;
+            decel[AXSV] = 200;
+            speed[AXSV] *= (spdVx2);
+            speed[AXSV] *= (rdc.rate);
+            accel[AXSV] *= (spdVx2);
+            accel[AXSV] *= (rdc.rate);
+            decel[AXSV] *= (spdVx2);
+            decel[AXSV] *= (rdc.rate);
+            if (++tmWait > intCtrl)
+            {
+                // n秒间隔,启动模块运转到下一个通道
+                tmWait = 0;
+                if (0 == dirFlag)
+                {
+                    /* 正传转一圈 */
+                    dirFlag = 1;
+                    ++syspara.totalCnt;
+                    AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]); /* 电机相对移动一圈 */
+                    VALVE_ENA = ENABLE;
+                    printd("\r\n + 正转1圈  CW (%d)", rdc.stepRound);
+                }
+                else if (1 == dirFlag)
+                {
+                    /* 反转一圈 */
+                    dirFlag = 0;
+                    ++syspara.totalCnt;
+                    AxisMoveRel(AXSV, -rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);
+                    VALVE_ENA = ENABLE;
+                    printd("\r\n - 反转1圈  CCW (%d)", -rdc.stepRound);
+                }
+                printd("  切换次数:%d", syspara.totalCnt);
+                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8 *)&syspara.totalCnt);
+            }
+        }
+    }
+#endif
 }

@@ -77,6 +77,7 @@ enum OPTO_STATE
 #define AGS_ADDR_MIN        0       /* AGS地址最小 0 */
 #define AGS_ADDR_MAX        63      /* AGS地址最大 63 */
 #define BURN_ADDR           64      /* 老化地址 64 */
+#define MOTOR_AGING_ADDR    65      /* 电机老化地址 65 */
 #define AGS_ADDR_DEF        1       /* 默认地址 1 */
 #define INIT_SPD            20      /* 初始化找位速度 */
 #define SPD_MIN             1       /* 最小速度 */
