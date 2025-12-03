@@ -9,6 +9,19 @@ uint8_t valveFixDflt    = 5,    /* Ä¬ÈÏÔ­µã²¹³¥ */
 
 void IOconfig(void)
 {
+#ifdef C_901
+    RCC->APB2ENR |= RCC_APB2Periph_AFIO;
+    RCC->APB2ENR |= (RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB);
+    // FB OUT
+    GPIOA->CRH &= (GPIO_Crh_P8);
+    GPIOA->CRH |= (GPIO_Mode_Out_PP_50MHz_P8);
+    GPIOA->ODR |= (GPIO_Pin_8);
+    /// KEY OUT
+    GPIOB->CRL &= (GPIO_Crl_P3);
+    GPIOB->CRL |= (GPIO_Mode_Out_PP_50MHz_P3);
+    GPIOA->ODR |= (GPIO_Pin_8);
+#endif
+
 #ifdef IOCTRL
     RCC->APB2ENR |= RCC_APB2Periph_AFIO;
     RCC->APB2ENR |= (RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB);
@@ -18,16 +31,9 @@ void IOconfig(void)
     GPIOA->CRH &= (GPIO_Crh_P8);
     GPIOA->CRH |= (GPIO_Mode_Out_PP_50MHz_P8);
     GPIOA->ODR |= (GPIO_Pin_8);
-    #ifndef C_901
     // KEY IN
     GPIOB->CRL &= (GPIO_Crl_P3);
     GPIOB->CRL |= (GPIO_Mode_IN_PU_PD_P3);
-    #else
-    ///KEY OUT
-    GPIOB->CRL &= (GPIO_Crl_P3);
-    GPIOB->CRL |= (GPIO_Mode_Out_PP_50MHz_P3);
-    GPIOA->ODR |= (GPIO_Pin_8);
-#endif
     #endif
 
     #ifdef A12_909

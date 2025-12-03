@@ -12,14 +12,14 @@ typedef enum
 } bool;
 
 /* 版本选择 */
-//#define O_901
+#define O_901
 //#define O_906
 //#define O_909
 //#define A_901
 //#define A_906
 //#define A_909
 //#define B_901
-#define B_906
+// #define B_906
 //#define C_901
 
 #define RELEASE         /* 发布模式 */
@@ -94,7 +94,8 @@ typedef enum
     // #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
     #define A12_901
     #define RS232_485_CONTROL   /* 232/485 */
-    #undef  IOCTRL
+    #undef IOCTRL
+
 #endif
 
 // PCB引脚配置相同,驱动芯片不同
