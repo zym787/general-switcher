@@ -93,6 +93,7 @@
 //                              使用dbg_printf替换调试输出,电机老化模式放开速度限制
 //  v1.3.1-r17      2025.12.03  仅修复C版本IO IN无法输出错误
 //  v1.3.1-r18      2025.12.03  仅降低LED优先级，提高通信性能
+//  v1.3.1-r19      2025.12.04  仅修改 LED输出检测210ms执行一次
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)
@@ -165,7 +166,8 @@
 #define RETRY_TIME_OUT          1100       // 重试的闪烁间隔
 #define ERROR_BLINK             400
 
-PEXT uint8_t bdrate, bIoCtrl, intCtrl, spdVx2;
+    PEXT uint8_t bdrate,
+    bIoCtrl, intCtrl, spdVx2;
 
 typedef struct
 {

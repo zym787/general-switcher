@@ -139,7 +139,7 @@ void EveryHSec(void)
 
     ///IOÊä³öµÆ×´Ì¬
 #ifdef C_901
-    if (150 == timerPara.timeLedDetect)
+    if (210 == timerPara.timeLedDetect)
     {
         timerPara.timeLedDetect = 0;
         if (VALVE_RUN_END == valve.status)
