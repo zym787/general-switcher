@@ -29,6 +29,7 @@ void TIM2_IRQHandler(void)
         ++timerPara.timeWaitMill;
         ++timerPara.timeOut;
         ++timerPara.sec;
+        ++timerPara.timeLedDetect;
         /* 切换时间计时 */
         if(true == syspara.bCountLastTime)
             ++syspara.lastTime;

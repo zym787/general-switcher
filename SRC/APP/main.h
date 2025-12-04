@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0017    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r17"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0019    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r19"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #ifndef C_901
@@ -92,7 +92,7 @@
 //  v1.3.1-r16      2025.11.20  仅新增电机老化模式,仅支持正反转,版本vA.A.1
 //                              使用dbg_printf替换调试输出,电机老化模式放开速度限制
 //  v1.3.1-r17      2025.12.03  仅修复C版本IO IN无法输出错误
-
+//  v1.3.1-r18      2025.12.03  仅降低LED优先级，提高通信性能
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)

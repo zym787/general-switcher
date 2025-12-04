@@ -18,6 +18,7 @@ typedef struct
     unsigned short timeOut;
     unsigned short intDelay;
     unsigned short sec;
+    uint8_t timeLedDetect;
 }_TIMER_T;
 
 PEXT _TIMER_T timerPara;

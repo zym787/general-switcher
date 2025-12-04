@@ -139,26 +139,30 @@ void EveryHSec(void)
 
     ///IOÊä³öµÆ×´Ì¬
 #ifdef C_901
-    if (VALVE_RUN_END == valve.status)
+    if (150 == timerPara.timeLedDetect)
     {
-        switch (valve.portCur)
+        timerPara.timeLedDetect = 0;
+        if (VALVE_RUN_END == valve.status)
         {
-        case POS_A:
-            IO_IN = ON;
-            IO_OUT = OFF;
-            break;
-        case POS_B:
-            IO_IN = OFF;
-            IO_OUT = ON;
-            break;
-        case POS_M:
-            IO_IN = OFF;
-            IO_OUT = OFF;
-            break;
-        default:
-            IO_IN = ON;
-            IO_OUT = ON;
-            break;
+            switch (valve.portCur)
+            {
+            case POS_A:
+                IO_IN = ON;
+                IO_OUT = OFF;
+                break;
+            case POS_B:
+                IO_IN = OFF;
+                IO_OUT = ON;
+                break;
+            case POS_M:
+                IO_IN = OFF;
+                IO_OUT = OFF;
+                break;
+            default:
+                IO_IN = ON;
+                IO_OUT = ON;
+                break;
+            }
         }
     }
 #endif
