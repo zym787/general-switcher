@@ -109,9 +109,14 @@ void InitValve(void)
 //                        ((OPT_BLOCKER == VALVE_OPT) && (valve.portLast != POS_A)))
                     if (OPT_GAP == VALVE_OPT)
                     {
+                        #if DIRECTION_SWITCH == 1
+                        AxisMoveRel(AXSV, -rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);    /* 电机相对移动一圈 */
+                        dbg_printf("\r - CCW (%d) step%d", valve.initStep, -rdc.stepRound);
+                        #else
                         AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);    /* 电机相对移动一圈 */
+                        dbg_printf("\r + CW (%d) step%d", valve.initStep, rdc.stepRound);
+                        #endif
                         valve.initStep = 3;
-                        dbg_printf("\r + CW (%d)", valve.initStep);
                     }
                     /* 挡住,或者挡住了但上一个位置是A */
 //                    else if ((OPT_BLOCKER == VALVE_OPT) ||
@@ -122,9 +127,14 @@ void InitValve(void)
                         /* 反转半个通道角度值 */
                         ftemp = (float)rdc.stepRound/valveFix.fix.portCnt;
                         ftemp /= 2;
+                        #if DIRECTION_SWITCH == 1
+                        AxisMoveRel(AXSV, ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                        dbg_printf("\r + CW (%d) step%d", valve.initStep, ftemp);
+                        #else
                         AxisMoveRel(AXSV, -ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                        dbg_printf("\r - CCW (%d) step%d", valve.initStep, -ftemp);
+                        #endif
                         valve.initStep = 2;
-                        dbg_printf("\r - CCW (%d)", valve.initStep);
                     }
                 }
                 break;
@@ -165,8 +175,13 @@ void InitValve(void)
                         {
                             // 复位密封 半通道
                             ftemp = (float)rdc.stepRound / valveFix.fix.portCnt / 2;
+                            #if DIRECTION_SWITCH == 1
+                            AxisMoveRel(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                            dbg_printf("\r Half Seal (%d) step%d", valve.initStep, (int)ftemp);
+                            #else
                             AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
-                            dbg_printf("\r Half Seal (%d)", valve.initStep);
+                            dbg_printf("\r Half Seal (%d) step%d", valve.initStep, -(int)ftemp);
+                            #endif
                         }
                         valve.bNewInit = 1;
                         valve.initStep = 6;
@@ -180,8 +195,13 @@ void InitValve(void)
                     {
                         // 复位密封 半通道
                         ftemp = (float)rdc.stepRound / valveFix.fix.portCnt / 2;
+                        #if DIRECTION_SWITCH == 1
+                        AxisMoveRel(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                        dbg_printf("\r Half Seal (%d) step%d", valve.initStep, (int)ftemp);
+                        #else
                         AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
-                        dbg_printf("\r Half Seal (%d)", valve.initStep);
+                        dbg_printf("\r Half Seal (%d) step%d", valve.initStep, -(int)ftemp);
+                        #endif
                     }
                     valve.bNewInit = 1;
                     valve.initStep = 6;
@@ -300,11 +320,23 @@ void ProcessValve(void)
                 if(valve.bNewInit)  /* 刚复位完成,用相对移动 */
                 {
                     valve.bNewInit = 0;
+                    #if DIRECTION_SWITCH == 1
+                    AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                    dbg_printf("\r New Init Rel (%d) step%d", valve.initStep, -(int)ftemp);
+                    #else
                     AxisMoveRel(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                    dbg_printf("\r New Init Rel (%d) step%d", valve.initStep, (int)ftemp);
+                    #endif
                 }
                 else                /* 否则绝对移动 */
                 {
+                    #if DIRECTION_SWITCH == 1
+                    AxisMoveAbs(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                    dbg_printf("\r No New Init Abs (%d) step%d", valve.initStep, -(int)ftemp);
+                    #else
                     AxisMoveAbs(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                    dbg_printf("\r No New Init Abs (%d) step%d", valve.initStep, (int)ftemp);
+                    #endif
                 }
                 // 清空计数,避免数据暂留
                 valve.status &= ~VALVE_RUN_END;     /* 清除运行结束标志 */
@@ -420,21 +452,31 @@ void TestBurn(void)
                 tmWait = 0;
                 if (0 == dirFlag)
                 {
-                    /* 正传转一圈 */
+                    /* 正转一圈 */
                     dirFlag = 1;
                     ++syspara.totalCnt;
+                    #if DIRECTION_SWITCH == 1
+                    AxisMoveRel(AXSV, -rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]); /* 电机相对移动一圈 */
+                    printd("\r\n - 反转1圈  CCW step%d", -rdc.stepRound);
+                    #else
                     AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]); /* 电机相对移动一圈 */
+                    printd("\r\n + 正转1圈  CW step%d", rdc.stepRound);
+                    #endif
                     VALVE_ENA = ENABLE;
-                    printd("\r\n + 正转1圈  CW (%d)", rdc.stepRound);
                 }
                 else if (1 == dirFlag)
                 {
                     /* 反转一圈 */
                     dirFlag = 0;
                     ++syspara.totalCnt;
+                    #if DIRECTION_SWITCH == 1
+                    AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);
+                    printd("\r\n + 正转1圈  CW step%d", rdc.stepRound);
+                    #else
                     AxisMoveRel(AXSV, -rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);
+                    printd("\r\n - 反转1圈  CCW step%d", -rdc.stepRound);
+                    #endif
                     VALVE_ENA = ENABLE;
-                    printd("\r\n - 反转1圈  CCW (%d)", -rdc.stepRound);
                 }
                 printd("  切换次数:%d", syspara.totalCnt);
                 I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8 *)&syspara.totalCnt);

@@ -95,6 +95,7 @@
 //  v1.3.1-r18      2025.12.03  仅降低LED优先级，提高通信性能
 //  v1.3.1-r19      2025.12.04  仅修改 LED输出检测210ms执行一次
 //  v1.3.1-r20      2026.03.04  调整906方向,点检指令增加波特率值显示
+//  v1.3.1-r21      2026.03.04  增加DIRECTION_SWITCH宏调整906方向
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)
@@ -103,14 +104,17 @@
     #else
         #define IO_IN           PBout(3)
     #endif
+    #define DIRECTION_SWITCH 0
 #endif
 #ifdef A12_909
     #define IO_OUT          PBout(13)
     #define IO_IN           PBin(5)
+    #define DIRECTION_SWITCH  0
 #endif
 #ifdef A12_906
     #define IO_OUT          PBout(13)
     #define IO_IN           PBin(14)
+    #define DIRECTION_SWITCH  1
 #endif
 
 //----EEPROM存储地址分配---//
@@ -162,6 +166,9 @@
 
 #define ADDR_REPLY_MODE        	(ADDR_TOTAL_CNT+LEN_TOTAL_CNT)
 #define LEN_REPLY_MODE          1
+
+#define ADDR_INIT_STATE        	(ADDR_REPLY_MODE+LEN_REPLY_MODE)
+#define LEN_INIT_STATE          1
 
 #define NORMAL_BLINK            1500       // 正常运行的闪烁间隔
 #define RETRY_TIME_OUT          1100       // 重试的闪烁间隔

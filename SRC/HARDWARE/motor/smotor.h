@@ -22,10 +22,12 @@
 #define CW                  0   //clock wise顺时针
 #define CCW                 1   //counter clock wise逆时针
 #define DIR_FLAG            printd("\r 电机CW0 顺时针! CCW1 逆时针!")
+#define DIRECTION_SWITCH    0   /* 901/909 */
 #else
 #define CW                  1   //clock wise顺时针
 #define CCW                 0   //counter clock wise逆时针
 #define DIR_FLAG            printd("\r 电机CW1 顺时针! CCW0 逆时针!")
+#define DIRECTION_SWITCH    1   /* 为统一电机线906反向 */
 #endif
 
 #define FALSE               0
