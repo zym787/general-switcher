@@ -17,9 +17,16 @@
 #define POSITIVE            1
 #define NEGATIVE            -1
 
+#ifndef A12_906
 //从电机屁股的方向看,顺时针与逆时针
 #define CW                  0   //clock wise顺时针
 #define CCW                 1   //counter clock wise逆时针
+#define DIR_FLAG            printd("\r 电机CW0 顺时针! CCW1 逆时针!")
+#else
+#define CW                  1   //clock wise顺时针
+#define CCW                 0   //counter clock wise逆时针
+#define DIR_FLAG            printd("\r 电机CW1 顺时针! CCW0 逆时针!")
+#endif
 
 #define FALSE               0
 #define TRUE                1

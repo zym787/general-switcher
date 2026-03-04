@@ -9,7 +9,7 @@
 
 #define DESCRIPTION         "Switch Valve"
 #define SOFT_REVISION       (uint16_t)0x0019    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r19"                /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r20"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #ifndef C_901
@@ -94,6 +94,7 @@
 //  v1.3.1-r17      2025.12.03  仅修复C版本IO IN无法输出错误
 //  v1.3.1-r18      2025.12.03  仅降低LED优先级，提高通信性能
 //  v1.3.1-r19      2025.12.04  仅修改 LED输出检测210ms执行一次
+//  v1.3.1-r20      2026.03.04  调整906方向,点检指令增加波特率值显示
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)
@@ -187,6 +188,6 @@ PEXT uint8_t IntDly(uint16_t intMs);
 PEXT void EnableReceive(void);
 PEXT void DisableReceive(void);
 PEXT void ErrBlink(void);
-
+PEXT void ee_ReadTest(void);
 #undef PEXT
 #endif

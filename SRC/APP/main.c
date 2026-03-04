@@ -273,8 +273,7 @@ void ParameterInit(void)
         I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
         if (BAUD_MIN <= bdrate && BAUD_MAX >= bdrate)
         {
-            printd("\r 波特率:%d %sbps", bdrate,
-                (bdrate == 1 ? "9600" : (bdrate == 2 ? "19200" : "38400")));
+            printd("\r 波特率:%d %sbps", bdrate, getBaudRateString(bdrate));
         }
         else
         {
@@ -447,6 +446,8 @@ void ParameterInit(void)
     valve.bReInit = 1;
 }
 
+// #define EE_READTEST_DEMO      /* 是否开启读取EEPROM测试 */
+
 int main(void)
 {
     Stm32_Clock_Init(9);            /* 系统时钟设置 */
@@ -475,8 +476,12 @@ int main(void)
            DESCRIPTION, CONTROL,
            PCB_VR, HARDWARE_DESCRIPTION);
 #endif
+    DIR_FLAG;
     ParameterInit();
     UsrCmdInit();
+#ifdef EE_READTEST_DEMO
+    ee_ReadTest();
+#endif
     while(1)
     {
 #ifndef AGING_MODE
@@ -515,3 +520,39 @@ void ErrBlink(void)
         LED_WORK = !LED_WORK;
     }
 }
+
+#ifdef EE_READTEST_DEMO
+void ee_ReadTest(void) {
+    uint16_t i;
+    uint8 ReadBuf[512] = {0};
+    I2CPageRead_Nbytes(0, 512, ReadBuf);
+    
+    printd("字节数:%d\r\n", 512);
+    for (i = 0; i < 512; ++i) {
+        
+        if (i % 128 == 0) {
+            printd("1KBit %d~%d \r\n", ReadBuf[i], i, i+127);
+            ///索引
+            for (uint8_t _i = 1; _i < 17; ++_i) {
+                printd("   %-2d ", _i);
+                if (_i == 8) {
+                    printd(" - ");
+                }
+            }
+            printd("\r\n");
+        }
+        
+        printd(" %02X", ReadBuf[i]);
+        
+        if ((i & 31) == 31)
+		{
+			printd(" (%d)\r\n", i);	/* 每行显示32字节数据 */
+		}
+		else if ((i & 31) == 15)
+		{
+			printd(" - ");
+		}
+    }
+    
+}
+#endif
