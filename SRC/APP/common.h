@@ -22,6 +22,11 @@ typedef enum
 // #define B_906
 //#define C_901
 
+/* 程序反向 */
+// #define O_906_N
+// #define A_906_N
+// #define B_906_N
+
 #define RELEASE         /* 发布模式 */
 // #define AGING_MODE      /* 老化模式 仅支持正反转 */
 
@@ -46,48 +51,77 @@ typedef enum
     #define A12_901
     #define RS232_485_CONTROL   /* 232/485 */
     #undef  IOCTRL
+        #define DIRECTION_SWITCH 0
 #endif
 #ifdef O_906
     #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
     #define A12_906
     #define RS232_485_CONTROL   /* 232/485 */
     #undef  IOCTRL
+        #define DIRECTION_SWITCH 0
+#endif
+#ifdef O_906_N
+    #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+    #define A12_906
+    #define RS232_485_CONTROL   /* 232/485 */
+    #undef  IOCTRL
+        #define DIRECTION_SWITCH 1
 #endif
 #ifdef O_909
     #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
     #define A12_909
     #define RS232_485_CONTROL   /* 232/485 */
     #undef  IOCTRL
+        #define DIRECTION_SWITCH 0
 #endif
 #ifdef  A_901
     #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
     #define A12_901
     #undef  RS232_485_CONTROL
     #define IOCTRL
+        #define DIRECTION_SWITCH 0
 #endif
 #ifdef  A_906
     #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
     #define A12_906
     #undef  RS232_485_CONTROL
     #define IOCTRL
+        #define DIRECTION_SWITCH 0
+#endif
+#ifdef  A_906_N
+    #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
+    #define A12_906
+    #undef  RS232_485_CONTROL
+    #define IOCTRL
+        #define DIRECTION_SWITCH 1
 #endif
 #ifdef  A_909
     #define IO_RS       1       /* 1 A (232/485/IO)   IO_IN高 IO_OUT低 (取反) */
     #define A12_909             /* 909需要注意输出反向 */
     #undef  RS232_485_CONTROL
     #define IOCTRL
+        #define DIRECTION_SWITCH 0
 #endif
 #ifdef  B_901
     #define IO_RS       0       /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
     #define A12_901
     #undef  RS232_485_CONTROL
     #define IOCTRL
+        #define DIRECTION_SWITCH 0
 #endif
 #ifdef  B_906
     #define IO_RS       0       /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
     #define A12_906
     #undef  RS232_485_CONTROL
     #define IOCTRL
+        #define DIRECTION_SWITCH 0
+#endif
+#ifdef  B_906_N
+    #define IO_RS       0       /* 0 B (IO)           IO_IN高 IO_OUT高 (同电平) */
+    #define A12_906
+    #undef  RS232_485_CONTROL
+    #define IOCTRL
+        #define DIRECTION_SWITCH 1
 #endif
 #ifdef  C_901
     #undef IO_RS
@@ -95,7 +129,7 @@ typedef enum
     #define A12_901
     #define RS232_485_CONTROL   /* 232/485 */
     #undef IOCTRL
-
+        #define DIRECTION_SWITCH 0
 #endif
 
 // PCB引脚配置相同,驱动芯片不同

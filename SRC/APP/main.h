@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0019    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r20"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0022    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r22"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #ifndef C_901
@@ -96,6 +96,7 @@
 //  v1.3.1-r19      2025.12.04  仅修改 LED输出检测210ms执行一次
 //  v1.3.1-r20      2026.03.04  调整906方向,点检指令增加波特率值显示
 //  v1.3.1-r21      2026.03.04  增加DIRECTION_SWITCH宏调整906方向
+//  v1.3.1-r22      2026.03.09  串口新增0D功能码读写半通道功能
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)
@@ -104,17 +105,14 @@
     #else
         #define IO_IN           PBout(3)
     #endif
-    #define DIRECTION_SWITCH 0
 #endif
 #ifdef A12_909
     #define IO_OUT          PBout(13)
     #define IO_IN           PBin(5)
-    #define DIRECTION_SWITCH  0
 #endif
 #ifdef A12_906
     #define IO_OUT          PBout(13)
     #define IO_IN           PBin(14)
-    #define DIRECTION_SWITCH  1
 #endif
 
 //----EEPROM存储地址分配---//

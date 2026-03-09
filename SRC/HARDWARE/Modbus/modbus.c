@@ -15,7 +15,7 @@ void ModbusInit(void)
     RX_EN();        /* 开机为接收模式 */
 
     I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
-    printd("\r baud:%d", bdrate);
+    // printd("\r baud:%d", bdrate);
     if(!bdrate||bdrate>3)
         bdrate = 2;
 
@@ -280,6 +280,12 @@ void MB_ReadHoldingRegisters(void)
             ModbusPara.tBuf[3] = syspara.replyMode;
             byteCount = 4;
         }
+        else if (0x0D == op_addr)        /* 读半通道 */
+        {
+                I2CPageRead_Nbytes(ADDR_HALF_SEAL, LEN_HALF_SEAL, &valve.bHalfSeal);
+                ModbusPara.tBuf[3] = valve.bHalfSeal;
+                byteCount = 4;
+        }
         else if(0x99 == op_addr)        /* 读通道数 */
         {
             I2CPageRead_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
@@ -448,6 +454,19 @@ void MB_PresetSingleHoldingRegister(void)
             {
                 ModbusPara.sERR = ERR_MB_DATA; /* 操作数据无效 */
             }
+        }
+        else if (0x0D == op_addr)        /* 写半通道 */
+        {
+                if (OFF == ModbusPara.rBuf[3] || ON == ModbusPara.rBuf[3] &&
+                    6 == ModbusPara.rCnt)
+                {
+                    valve.bHalfSeal = ModbusPara.rBuf[3];
+                    I2CPageWrite_Nbytes(ADDR_HALF_SEAL, LEN_HALF_SEAL, &valve.bHalfSeal);
+                }
+                else
+                {
+                    ModbusPara.sERR = ERR_MB_DATA;  /* 操作数据无效 */
+                }
         }
         else if(0x99 == op_addr)        /* 写通道数 */
         {

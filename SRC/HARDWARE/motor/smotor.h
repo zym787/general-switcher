@@ -17,17 +17,17 @@
 #define POSITIVE            1
 #define NEGATIVE            -1
 
-#ifndef A12_906
+#if DIRECTION_SWITCH == 0
 //从电机屁股的方向看,顺时针与逆时针
 #define CW                  0   //clock wise顺时针
 #define CCW                 1   //counter clock wise逆时针
-#define DIR_FLAG            printd("\r 电机CW0 顺时针! CCW1 逆时针!")
-#define DIRECTION_SWITCH    0   /* 901/909 */
-#else
+#define DIR_FLAG            printd("\r 程序不变  电机CW0 顺时针!  CCW1 逆时针!\r\n")
+// #define DIRECTION_SWITCH    0   /* 901/909 */
+#elif DIRECTION_SWITCH == 1
 #define CW                  1   //clock wise顺时针
 #define CCW                 0   //counter clock wise逆时针
-#define DIR_FLAG            printd("\r 电机CW1 顺时针! CCW0 逆时针!")
-#define DIRECTION_SWITCH    1   /* 为统一电机线906反向 */
+#define DIR_FLAG            printd("\r 程序反向  电机CW1 顺时针!  CCW0 逆时针!\r\n")
+// #define DIRECTION_SWITCH    1   /* 为统一电机线906反向 */
 #endif
 
 #define FALSE               0

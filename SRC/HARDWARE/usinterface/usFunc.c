@@ -1,7 +1,23 @@
 #define _USFUNC_GLOBALS_
 #include "common.h"
 
-
+/**
+ * @brief 获取UART波特率字符串描述
+ * @param bdrate 波特率枚举值
+ * @return 对应波特率的字符串，无效值返回"Error"
+ */
+const char* getBaudRateString(int bdrate) {
+  // 检查波特率值并返回对应字符串
+  if (bdrate == UART_BAUD_9600) {
+    return "9600";
+  } else if (bdrate == UART_BAUD_19200) {
+    return "19200";
+  } else if (bdrate == UART_BAUD_38400) {
+    return "38400";
+  } else {
+    return "Error";
+  }
+}
 
 /*
 
@@ -321,7 +337,7 @@ void TermBaud(char rw)
     if(rw == READ_ACT)
     {
         I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
-        printd("\r\n Baud:%d", bdrate);
+        printd("\r 波特率:%d %sbps", bdrate, getBaudRateString(bdrate));
     }
     else
     {
@@ -623,23 +639,6 @@ void TermMovesCnt(char rw)
     }
 }
 
-/**
- * @brief 获取UART波特率字符串描述
- * @param bdrate 波特率枚举值
- * @return 对应波特率的字符串，无效值返回"Error"
- */
-const char* getBaudRateString(int bdrate) {
-  // 检查波特率值并返回对应字符串
-  if (bdrate == UART_BAUD_9600) {
-    return "9600";
-  } else if (bdrate == UART_BAUD_19200) {
-    return "19200";
-  } else if (bdrate == UART_BAUD_38400) {
-    return "38400";
-  } else {
-    return "Error";
-  }
-}
 
 /*
  * 点检模式：打印出所有关键参数
@@ -647,7 +646,7 @@ const char* getBaudRateString(int bdrate) {
 void TermInspection(char rw)
 {
         const char* rateStr = getBaudRateString(bdrate);
-    printd("\r\n ***************< 点检模式 >***************\r\n");
+    printd("\r\n ***************< 点检模式 >***************");
     /* 点检参数 */
     printd("\r\n 版本       (VR)   : %s", SOFT_VER_C);               /* 版本号 */
     printd("\r\n 电路板     (PCB)  : %s", PCB_VR);                   /* PCB版本号 */
