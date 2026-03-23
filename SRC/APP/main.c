@@ -452,7 +452,11 @@ int main(void)
 {
     Stm32_Clock_Init(9);            /* 系统时钟设置 */
     delay_init(72);                 /* 延时初始化 */
+#ifdef RELEASE
     JTAG_Set(JTAG_SWD_DISABLE);
+#else
+    JTAG_Set(JTAG_SWD_ENABLE);
+#endif
     delay_ms(100);
     Usart1_Init(72, 115200);        /* 串口初始化为115200 */
     iic_INIT();

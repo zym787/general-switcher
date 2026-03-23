@@ -653,13 +653,13 @@ void TermInspection(char rw)
     printd("\r\n 编译时间   (TIME) : %s %s", __DATE__, __TIME__);    /* 时间 */
     printd("\r\n 地址       (ADDR) : %d", ModbusPara.mAddrs);        /* 地址 */
     printd("\r\n 通道数     (CNT)  : %d", valveFix.fix.portCnt);     /* 通道数 */
-    printd("\r\n 波特率     (BAUD) : %d %sbps", bdrate, rateStr);                   /* 波特率 */
+    printd("\r\n 波特率     (BAUD) : %d %sbps", bdrate, rateStr);    /* 波特率 */
     printd("\r\n 速度       (SPD)  : %d", spdVx2);                   /* 速度 */
     printd("\r\n 减速比     (RDCR) : %d", rdc.rate);                 /* 减速比 */
     printd("\r\n 半通道     (HALF) : %d", valve.bHalfSeal);          /* 半通道 */
     printd("\r\n 原点补偿   (FIXO) : %d", valveFix.fix.org);         /* 原点补偿 */
     printd("\r\n 方向补偿   (FIXG) : %d", valveFix.fix.dirGap);      /* 方向补偿 */
-    printd("\r\n IO控制     (IOE)  : %d", bIoCtrl);                  /* IO */
+    printd("\r\n IO控制     (IOE)  : %d %s", bIoCtrl, (0 == bIoCtrl ? "关" : "开")); /* IO */
     printd("\r\n 电流       (ISET) : %d", valve.iSet);               /* 电流设置 */
     printd("\r\n 切换次数   (MOVES): %d", syspara.totalCnt);         /* 切换次数 */
     printd("\r\n 回复方式   (REPLY): %d", syspara.replyMode);        /* 回复方式 */
