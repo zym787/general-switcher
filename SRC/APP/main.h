@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0023    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r23"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0025    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r25"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #ifndef C_901
@@ -98,6 +98,9 @@
 //  v1.3.1-r21      2026.03.04  增加DIRECTION_SWITCH宏调整906方向
 //  v1.3.1-r22      2026.03.09  串口新增0D功能码读写半通道功能
 //  v1.3.1-r23      2026.03.23  AGS增加读指令长度限制
+//  v1.3.1-r24      2026.03.26  屏蔽AGS增加读指令长度限制
+//  v1.3.1-r25      2026.03.26  优化AGS读指令长度限制,减少冗余
+
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)

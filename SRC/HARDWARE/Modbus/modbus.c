@@ -206,9 +206,6 @@ void MB_ReadHoldingRegisters(void)
 
     dvc_addr = ModbusPara.rBuf[0];      /* 模块地址 */
     op_addr = ModbusPara.rBuf[2];       /* 操作码/操作地址 */
-    if (5 != ModbusPara.rCnt) {
-        return;
-    }
     /* 地址判断 */
     if(ModbusPara.mAddrs == dvc_addr || MB_Broadcast_ADDR == dvc_addr)
     {
@@ -552,9 +549,16 @@ void ModbusProces(void)
                 switch(ModbusPara.rBuf[1])
                 {
                     case GET_HOLDING_REGT:          /* 功能码03 */
+#if 0
                         if (ModbusPara.rCnt == 5) {
                             MB_ReadHoldingRegisters();
                         }
+#else
+                      if (ModbusPara.rCnt != 5) {
+                        return;
+                      }
+                        MB_ReadHoldingRegisters();
+#endif
                         break;
                     case PRESET_HOLDING_sREGT:      /* 功能码06 */
                         MB_PresetSingleHoldingRegister();
