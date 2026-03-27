@@ -8,8 +8,8 @@
 #endif
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0025    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r25"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0026    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r26"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #ifndef C_901
@@ -100,7 +100,7 @@
 //  v1.3.1-r23      2026.03.23  AGS增加读指令长度限制
 //  v1.3.1-r24      2026.03.26  屏蔽AGS增加读指令长度限制
 //  v1.3.1-r25      2026.03.26  优化AGS读指令长度限制,减少冗余
-
+//  v1.3.1-r26      2026.03.27  修复错误长度读指令使设备死机问题
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)

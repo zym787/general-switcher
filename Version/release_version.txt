@@ -1,0 +1,240 @@
+=== 编译日志开始 (2026-03-27 16:29:53) ===
+Keil路径: D:\toolchain\Keil_v5\UV4\UV4.exe
+工程路径: .\USER\QHF.uvprojx
+版次号: 28
+变更记录: 测试_加入自动化编译
+日期: 260327
+Targets: O_901, O_906, O_909, A_901, A_906, A_909, B_901, B_906, C_901
+
+
+
+
+**********************************************************************************************
+[#........] 1/9 - 正在编译 target: O_901
+✅ 已清空 OBJ 文件夹: OBJ
+=========== 1 已清空OBJ目录: OBJ===========
+
+🔃开始编译 target: O_901
+🛠️使用工具: Keil-Autopiler.exe D:\toolchain\Keil_v5\UV4\UV4.exe .\USER\QHF.uvprojx O_901
+✅ 编译成功: O_901
+=========== 2 已编译target: O_901===========
+👌 O_901  Board:|901|  Flag:||  Note:||
+✅ 已复制: keil_compile_log.txt -> .\Version\QHF_v1.3.1-r28_901_260327_keil_compile_log.txt
+=========== 3 已复制编译日志文件===========
+=========== 4 已找到.hex文件: OBJ\QHF.hex===========
+👌 O_901  Board:|901|  Flag:||  Note:||
+✅ 已复制: OBJ\QHF.hex -> .\Version\QHF_v1.3.1-r28_901_260327_(测试_加入自动化编译)_.hex
+=========== 5 已重命名并复制文件: .\Version\QHF_v1.3.1-r28_901_260327_(测试_加入自动化编译)_.hex===========
+👌 O_901  Board:|901|  Flag:||  Note:||
+✅ 已压缩: OBJ -> .\Version\output\QHF_v1.3.1-r28_901_260327_(测试_加入自动化编译)__output.zip
+=========== 6 已压缩OBJ目录并复制文件: .\Version\output\QHF_v1.3.1-r28_901_260327_(测试_加入自动化编译)__output.zip===========
+🗑️ 已删除: keil_compile_log.txt
+🗑️ 已删除: QHF.hex
+=========== 7 已清除hex及log文件===========
+
+
+
+**********************************************************************************************
+[##.......] 2/9 - 正在编译 target: O_906
+✅ 已清空 OBJ 文件夹: OBJ
+=========== 1 已清空OBJ目录: OBJ===========
+
+🔃开始编译 target: O_906
+🛠️使用工具: Keil-Autopiler.exe D:\toolchain\Keil_v5\UV4\UV4.exe .\USER\QHF.uvprojx O_906
+✅ 编译成功: O_906
+=========== 2 已编译target: O_906===========
+👌 O_906  Board:|906|  Flag:||  Note:||
+✅ 已复制: keil_compile_log.txt -> .\Version\QHF_v1.3.1-r28_906_260327_keil_compile_log.txt
+=========== 3 已复制编译日志文件===========
+=========== 4 已找到.hex文件: OBJ\QHF.hex===========
+👌 O_906  Board:|906|  Flag:||  Note:||
+✅ 已复制: OBJ\QHF.hex -> .\Version\QHF_v1.3.1-r28_906_260327_(测试_加入自动化编译)_.hex
+=========== 5 已重命名并复制文件: .\Version\QHF_v1.3.1-r28_906_260327_(测试_加入自动化编译)_.hex===========
+👌 O_906  Board:|906|  Flag:||  Note:||
+✅ 已压缩: OBJ -> .\Version\output\QHF_v1.3.1-r28_906_260327_(测试_加入自动化编译)__output.zip
+=========== 6 已压缩OBJ目录并复制文件: .\Version\output\QHF_v1.3.1-r28_906_260327_(测试_加入自动化编译)__output.zip===========
+🗑️ 已删除: keil_compile_log.txt
+🗑️ 已删除: QHF.hex
+=========== 7 已清除hex及log文件===========
+
+
+
+**********************************************************************************************
+[###......] 3/9 - 正在编译 target: O_909
+✅ 已清空 OBJ 文件夹: OBJ
+=========== 1 已清空OBJ目录: OBJ===========
+
+🔃开始编译 target: O_909
+🛠️使用工具: Keil-Autopiler.exe D:\toolchain\Keil_v5\UV4\UV4.exe .\USER\QHF.uvprojx O_909
+✅ 编译成功: O_909
+=========== 2 已编译target: O_909===========
+👌 O_909  Board:|909|  Flag:||  Note:||
+✅ 已复制: keil_compile_log.txt -> .\Version\QHF_v1.3.1-r28_909_260327_keil_compile_log.txt
+=========== 3 已复制编译日志文件===========
+=========== 4 已找到.hex文件: OBJ\QHF.hex===========
+👌 O_909  Board:|909|  Flag:||  Note:||
+✅ 已复制: OBJ\QHF.hex -> .\Version\QHF_v1.3.1-r28_909_260327_(测试_加入自动化编译)_.hex
+=========== 5 已重命名并复制文件: .\Version\QHF_v1.3.1-r28_909_260327_(测试_加入自动化编译)_.hex===========
+👌 O_909  Board:|909|  Flag:||  Note:||
+✅ 已压缩: OBJ -> .\Version\output\QHF_v1.3.1-r28_909_260327_(测试_加入自动化编译)__output.zip
+=========== 6 已压缩OBJ目录并复制文件: .\Version\output\QHF_v1.3.1-r28_909_260327_(测试_加入自动化编译)__output.zip===========
+🗑️ 已删除: keil_compile_log.txt
+🗑️ 已删除: QHF.hex
+=========== 7 已清除hex及log文件===========
+
+
+
+**********************************************************************************************
+[####.....] 4/9 - 正在编译 target: A_901
+✅ 已清空 OBJ 文件夹: OBJ
+=========== 1 已清空OBJ目录: OBJ===========
+
+🔃开始编译 target: A_901
+🛠️使用工具: Keil-Autopiler.exe D:\toolchain\Keil_v5\UV4\UV4.exe .\USER\QHF.uvprojx A_901
+✅ 编译成功: A_901
+=========== 2 已编译target: A_901===========
+👌 A_901  Board:|901|  Flag:|A|  Note:|A状态IN高OUT高_B状态IN低OUT低|
+✅ 已复制: keil_compile_log.txt -> .\Version\QHF_v1.3.1A-r28_901_260327_keil_compile_log.txt
+=========== 3 已复制编译日志文件===========
+=========== 4 已找到.hex文件: OBJ\QHF.hex===========
+👌 A_901  Board:|901|  Flag:|A|  Note:|A状态IN高OUT高_B状态IN低OUT低|
+✅ 已复制: OBJ\QHF.hex -> .\Version\QHF_v1.3.1A-r28_901_260327_(测试_加入自动化编译)_A状态IN高OUT高_B状态IN低OUT低.hex
+=========== 5 已重命名并复制文件: .\Version\QHF_v1.3.1A-r28_901_260327_(测试_加入自动化编译)_A状态IN高OUT高_B状态IN低OUT低.hex===========
+👌 A_901  Board:|901|  Flag:|A|  Note:|A状态IN高OUT高_B状态IN低OUT低|
+✅ 已压缩: OBJ -> .\Version\output\QHF_v1.3.1A-r28_901_260327_(测试_加入自动化编译)_A状态IN高OUT高_B状态IN低OUT低_output.zip
+=========== 6 已压缩OBJ目录并复制文件: .\Version\output\QHF_v1.3.1A-r28_901_260327_(测试_加入自动化编译)_A状态IN高OUT高_B状态IN低OUT低_output.zip===========
+🗑️ 已删除: keil_compile_log.txt
+🗑️ 已删除: QHF.hex
+=========== 7 已清除hex及log文件===========
+
+
+
+**********************************************************************************************
+[#####....] 5/9 - 正在编译 target: A_906
+✅ 已清空 OBJ 文件夹: OBJ
+=========== 1 已清空OBJ目录: OBJ===========
+
+🔃开始编译 target: A_906
+🛠️使用工具: Keil-Autopiler.exe D:\toolchain\Keil_v5\UV4\UV4.exe .\USER\QHF.uvprojx A_906
+✅ 编译成功: A_906
+=========== 2 已编译target: A_906===========
+👌 A_906  Board:|906|  Flag:|A|  Note:|A状态BI高BO低_B状态BI低BO高|
+✅ 已复制: keil_compile_log.txt -> .\Version\QHF_v1.3.1A-r28_906_260327_keil_compile_log.txt
+=========== 3 已复制编译日志文件===========
+=========== 4 已找到.hex文件: OBJ\QHF.hex===========
+👌 A_906  Board:|906|  Flag:|A|  Note:|A状态BI高BO低_B状态BI低BO高|
+✅ 已复制: OBJ\QHF.hex -> .\Version\QHF_v1.3.1A-r28_906_260327_(测试_加入自动化编译)_A状态BI高BO低_B状态BI低BO高.hex
+=========== 5 已重命名并复制文件: .\Version\QHF_v1.3.1A-r28_906_260327_(测试_加入自动化编译)_A状态BI高BO低_B状态BI低BO高.hex===========
+👌 A_906  Board:|906|  Flag:|A|  Note:|A状态BI高BO低_B状态BI低BO高|
+✅ 已压缩: OBJ -> .\Version\output\QHF_v1.3.1A-r28_906_260327_(测试_加入自动化编译)_A状态BI高BO低_B状态BI低BO高_output.zip
+=========== 6 已压缩OBJ目录并复制文件: .\Version\output\QHF_v1.3.1A-r28_906_260327_(测试_加入自动化编译)_A状态BI高BO低_B状态BI低BO高_output.zip===========
+🗑️ 已删除: keil_compile_log.txt
+🗑️ 已删除: QHF.hex
+=========== 7 已清除hex及log文件===========
+
+
+
+**********************************************************************************************
+[######...] 6/9 - 正在编译 target: A_909
+✅ 已清空 OBJ 文件夹: OBJ
+=========== 1 已清空OBJ目录: OBJ===========
+
+🔃开始编译 target: A_909
+🛠️使用工具: Keil-Autopiler.exe D:\toolchain\Keil_v5\UV4\UV4.exe .\USER\QHF.uvprojx A_909
+✅ 编译成功: A_909
+=========== 2 已编译target: A_909===========
+👌 A_909  Board:|909|  Flag:|A|  Note:|A状态BI高BO低_B状态BI低BO高|
+✅ 已复制: keil_compile_log.txt -> .\Version\QHF_v1.3.1A-r28_909_260327_keil_compile_log.txt
+=========== 3 已复制编译日志文件===========
+=========== 4 已找到.hex文件: OBJ\QHF.hex===========
+👌 A_909  Board:|909|  Flag:|A|  Note:|A状态BI高BO低_B状态BI低BO高|
+✅ 已复制: OBJ\QHF.hex -> .\Version\QHF_v1.3.1A-r28_909_260327_(测试_加入自动化编译)_A状态BI高BO低_B状态BI低BO高.hex
+=========== 5 已重命名并复制文件: .\Version\QHF_v1.3.1A-r28_909_260327_(测试_加入自动化编译)_A状态BI高BO低_B状态BI低BO高.hex===========
+👌 A_909  Board:|909|  Flag:|A|  Note:|A状态BI高BO低_B状态BI低BO高|
+✅ 已压缩: OBJ -> .\Version\output\QHF_v1.3.1A-r28_909_260327_(测试_加入自动化编译)_A状态BI高BO低_B状态BI低BO高_output.zip
+=========== 6 已压缩OBJ目录并复制文件: .\Version\output\QHF_v1.3.1A-r28_909_260327_(测试_加入自动化编译)_A状态BI高BO低_B状态BI低BO高_output.zip===========
+🗑️ 已删除: keil_compile_log.txt
+🗑️ 已删除: QHF.hex
+=========== 7 已清除hex及log文件===========
+
+
+
+**********************************************************************************************
+[#######..] 7/9 - 正在编译 target: B_901
+✅ 已清空 OBJ 文件夹: OBJ
+=========== 1 已清空OBJ目录: OBJ===========
+
+🔃开始编译 target: B_901
+🛠️使用工具: Keil-Autopiler.exe D:\toolchain\Keil_v5\UV4\UV4.exe .\USER\QHF.uvprojx B_901
+✅ 编译成功: B_901
+=========== 2 已编译target: B_901===========
+👌 B_901  Board:|901|  Flag:|B|  Note:|A状态IN高OUT低_B状态IN低OUT高|
+✅ 已复制: keil_compile_log.txt -> .\Version\QHF_v1.3.1B-r28_901_260327_keil_compile_log.txt
+=========== 3 已复制编译日志文件===========
+=========== 4 已找到.hex文件: OBJ\QHF.hex===========
+👌 B_901  Board:|901|  Flag:|B|  Note:|A状态IN高OUT低_B状态IN低OUT高|
+✅ 已复制: OBJ\QHF.hex -> .\Version\QHF_v1.3.1B-r28_901_260327_(测试_加入自动化编译)_A状态IN高OUT低_B状态IN低OUT高.hex
+=========== 5 已重命名并复制文件: .\Version\QHF_v1.3.1B-r28_901_260327_(测试_加入自动化编译)_A状态IN高OUT低_B状态IN低OUT高.hex===========
+👌 B_901  Board:|901|  Flag:|B|  Note:|A状态IN高OUT低_B状态IN低OUT高|
+✅ 已压缩: OBJ -> .\Version\output\QHF_v1.3.1B-r28_901_260327_(测试_加入自动化编译)_A状态IN高OUT低_B状态IN低OUT高_output.zip
+=========== 6 已压缩OBJ目录并复制文件: .\Version\output\QHF_v1.3.1B-r28_901_260327_(测试_加入自动化编译)_A状态IN高OUT低_B状态IN低OUT高_output.zip===========
+🗑️ 已删除: keil_compile_log.txt
+🗑️ 已删除: QHF.hex
+=========== 7 已清除hex及log文件===========
+
+
+
+**********************************************************************************************
+[########.] 8/9 - 正在编译 target: B_906
+✅ 已清空 OBJ 文件夹: OBJ
+=========== 1 已清空OBJ目录: OBJ===========
+
+🔃开始编译 target: B_906
+🛠️使用工具: Keil-Autopiler.exe D:\toolchain\Keil_v5\UV4\UV4.exe .\USER\QHF.uvprojx B_906
+✅ 编译成功: B_906
+=========== 2 已编译target: B_906===========
+👌 B_906  Board:|906|  Flag:|B|  Note:|A状态BI高BO高_B状态BI低BO低|
+✅ 已复制: keil_compile_log.txt -> .\Version\QHF_v1.3.1B-r28_906_260327_keil_compile_log.txt
+=========== 3 已复制编译日志文件===========
+=========== 4 已找到.hex文件: OBJ\QHF.hex===========
+👌 B_906  Board:|906|  Flag:|B|  Note:|A状态BI高BO高_B状态BI低BO低|
+✅ 已复制: OBJ\QHF.hex -> .\Version\QHF_v1.3.1B-r28_906_260327_(测试_加入自动化编译)_A状态BI高BO高_B状态BI低BO低.hex
+=========== 5 已重命名并复制文件: .\Version\QHF_v1.3.1B-r28_906_260327_(测试_加入自动化编译)_A状态BI高BO高_B状态BI低BO低.hex===========
+👌 B_906  Board:|906|  Flag:|B|  Note:|A状态BI高BO高_B状态BI低BO低|
+✅ 已压缩: OBJ -> .\Version\output\QHF_v1.3.1B-r28_906_260327_(测试_加入自动化编译)_A状态BI高BO高_B状态BI低BO低_output.zip
+=========== 6 已压缩OBJ目录并复制文件: .\Version\output\QHF_v1.3.1B-r28_906_260327_(测试_加入自动化编译)_A状态BI高BO高_B状态BI低BO低_output.zip===========
+🗑️ 已删除: keil_compile_log.txt
+🗑️ 已删除: QHF.hex
+=========== 7 已清除hex及log文件===========
+
+
+
+**********************************************************************************************
+[#########] 9/9 - 正在编译 target: C_901
+✅ 已清空 OBJ 文件夹: OBJ
+=========== 1 已清空OBJ目录: OBJ===========
+
+🔃开始编译 target: C_901
+🛠️使用工具: Keil-Autopiler.exe D:\toolchain\Keil_v5\UV4\UV4.exe .\USER\QHF.uvprojx C_901
+✅ 编译成功: C_901
+=========== 2 已编译target: C_901===========
+👌 C_901  Board:|901|  Flag:|C|  Note:|带灯输出A状态IN高OUT高_B状态IN低OUT低_半通道全低_错误全高|
+✅ 已复制: keil_compile_log.txt -> .\Version\QHF_v1.3.1C-r28_901_260327_keil_compile_log.txt
+=========== 3 已复制编译日志文件===========
+=========== 4 已找到.hex文件: OBJ\QHF.hex===========
+👌 C_901  Board:|901|  Flag:|C|  Note:|带灯输出A状态IN高OUT高_B状态IN低OUT低_半通道全低_错误全高|
+✅ 已复制: OBJ\QHF.hex -> .\Version\QHF_v1.3.1C-r28_901_260327_(测试_加入自动化编译)_带灯输出A状态IN高OUT高_B状态IN低OUT低_半通道全低_错误全高.hex
+=========== 5 已重命名并复制文件: .\Version\QHF_v1.3.1C-r28_901_260327_(测试_加入自动化编译)_带灯输出A状态IN高OUT高_B状态IN低OUT低_半通道全低_错误全高.hex===========
+👌 C_901  Board:|901|  Flag:|C|  Note:|带灯输出A状态IN高OUT高_B状态IN低OUT低_半通道全低_错误全高|
+✅ 已压缩: OBJ -> .\Version\output\QHF_v1.3.1C-r28_901_260327_(测试_加入自动化编译)_带灯输出A状态IN高OUT高_B状态IN低OUT低_半通道全低_错误全高_output.zip
+=========== 6 已压缩OBJ目录并复制文件: .\Version\output\QHF_v1.3.1C-r28_901_260327_(测试_加入自动化编译)_带灯输出A状态IN高OUT高_B状态IN低OUT低_半通道全低_错误全高_output.zip===========
+🗑️ 已删除: keil_compile_log.txt
+🗑️ 已删除: QHF.hex
+=========== 7 已清除hex及log文件===========
+
+=== 编译日志结束 (2026-03-27 16:30:53) ===
+
+✅ 所有target处理完成！
+💯 产物已存放在: .\Version
+📄 编译日志文件: .\Version\release_version.txt
+示例文件名: QHF_v1.3.1-r1_O_901_260327_(fix_bug).hex

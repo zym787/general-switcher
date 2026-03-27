@@ -12,13 +12,13 @@ typedef enum
 } bool;
 
 /* °æ±¾Ñ¡Ôñ */
-#define O_901
+// #define O_901
 // #define O_906
-//#define O_909
-//#define A_901
+// #define O_909
+// #define A_901
 // #define A_906
 // #define A_909
-//#define B_901
+// #define B_901
 // #define B_906
 // #define C_901
 

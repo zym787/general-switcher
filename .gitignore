@@ -86,6 +86,7 @@
 !USINTF_CR-0.lib
 !USINTF_CR.lib
 !/SRC/*
+!/Version/release_version.txt
 
 # Source Insight Project Files
 *si4project*/
@@ -94,3 +95,5 @@
 Utils.em
 /.history/*
 OBJ
+Version/output/*
+Version/**keil_compile_log.txt
