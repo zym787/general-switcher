@@ -270,16 +270,13 @@ void ParameterInit(void)
             I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
         }
         /* 波特率 */
-        I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
-        if (BAUD_MIN <= bdrate && BAUD_MAX >= bdrate)
-        {
-            printd("\r 波特率:%d %sbps", bdrate, getBaudRateString(bdrate));
-        }
-        else
-        {
-            bdrate = BAUD_DEF;
-            printd("\r 波特率超限,默认写入%d 9600bps 请重新设置!", bdrate);
-            I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
+        I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
+        if (BAUD_9600 <= syspara.baudrate && BAUD_38400 >= syspara.baudrate) {
+                printd("\r 波特率:%d %dbps", syspara.baudrate, BaudRate_V[syspara.baudrate]);
+        } else {
+                syspara.baudrate = BAUD_9600;
+                printd("\r 波特率超限,默认写入%d 9600bps 请重新设置!", syspara.baudrate);
+                I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
         }
         /* 速度 */
         I2CPageRead_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
@@ -299,7 +296,7 @@ void ParameterInit(void)
 #endif
         /* 老化间隔 */
         I2CPageRead_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
-        printd("\r 老化间隔:%d Sec", intCtrl);
+        printd("\r 老化间隔:%d 秒", intCtrl);
         /* 电流设置 */
         /* 906/909 支持电流设置 */
 #ifndef A12_901
@@ -353,7 +350,7 @@ void ParameterInit(void)
         printd("\r 减速比:%d 一圈步数:%d", rdc.rate, rdc.stepRound);
         /* 半通道 */
         I2CPageRead_Nbytes(ADDR_HALF_SEAL, LEN_HALF_SEAL, &valve.bHalfSeal);
-        printd("\r 半通道:%d", valve.bHalfSeal);
+        printd("\r 半通道:%d %s", valve.bHalfSeal, (0 == valve.bHalfSeal ? "关" : "开"));
         /* 补偿 */
         // printd("\r Fix:");
         // for(uint32 i=0; i<valveFix.fix.portCnt; i++)
@@ -386,8 +383,8 @@ void ParameterInit(void)
         valveFix.fix.portCnt = CHANNEL_DEF;
         I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
         /* 波特率 1 9600 */
-        bdrate = BAUD_DEF;
-        I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
+        syspara.baudrate = BAUD_DEF;
+        I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
         /* 速度 20 */
         spdVx2 = INIT_SPD;
         I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
@@ -437,7 +434,7 @@ void ParameterInit(void)
     accel[AXSV] *= (rdc.rate);
     decel[AXSV] *= (INIT_SPD);
     decel[AXSV] *= (rdc.rate);
-    printd("\r\n Init motion!  Slow Down!  (%d) spd%d acc%d dec%d",
+    printd("\r\n 初始化电机!   减速!  (%d) spd%d acc%d dec%d",
         INIT_SPD, speed[AXSV], accel[AXSV], decel[AXSV]);
 
     valve.status = VALVE_INITING;
@@ -452,7 +449,7 @@ int main(void)
 {
     Stm32_Clock_Init(9);            /* 系统时钟设置 */
     delay_init(72);                 /* 延时初始化 */
-#ifdef RELEASE
+#if 0
     JTAG_Set(JTAG_SWD_DISABLE);
 #else
     JTAG_Set(JTAG_SWD_ENABLE);
@@ -480,7 +477,9 @@ int main(void)
            DESCRIPTION, CONTROL,
            PCB_VR, HARDWARE_DESCRIPTION);
 #endif
+#ifndef RELEASE
     DIR_FLAG;
+#endif
     ParameterInit();
     UsrCmdInit();
 #ifdef EE_READTEST_DEMO
@@ -505,12 +504,14 @@ void DebugOut(void)
     if(timerPara.timeDbg > SEC*3)
     {
         timerPara.timeDbg = 0;
+#if 0
 #ifdef IOCTRL
         printd("\r\n >>状态:%02x  当前位:%02x 目标位:%02x  光感:%02x  IO_IN:%02x IO_OUT:%02x",
             valve.status, valve.portCur, valve.portDes, VALVE_OPT, IO_IN, IO_OUT);
 #else
         printd("\r\n >>状态:%02x  当前位:%02x 目标位:%02x  光感:%02x",
             valve.status, valve.portCur, valve.portDes, VALVE_OPT);
+#endif
 #endif
     }
 }

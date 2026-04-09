@@ -266,7 +266,7 @@ void InitValve(void)
                 accel[AXSV] *= (rdc.rate);
                 decel[AXSV] *= (spdVx2);
                 decel[AXSV] *= (rdc.rate);
-                printd("\r\n Restore motion speed  (%d) spd%d acc%d dec%d",
+                printd("\r\n 恢复电机速度  (%d) spd%d acc%d dec%d",
                        spdVx2, speed[AXSV], accel[AXSV], decel[AXSV]);
                 break;
             default:

@@ -4,41 +4,56 @@
 #define RX_EN() (PBout(1) = 0)
 #define TX_EN() (PBout(1) = 1)
 
+uint16_t BaudRate_V[BAUD_NUM] = {9600, 9600, 19200, 38400};
+uint16_t BaudRate_Time[BAUD_NUM] = {520, 520, 260, 130};
+
 void ModbusInit(void)
 {
-        unsigned char cnt;
+        uint8_t cnt;
 
+        /* PB1 为485芯片收发切换引脚 */
         RCC->APB2ENR |= (RCC_APB2Periph_GPIOB);
         GPIOB->CRL &= (GPIO_Crl_P1);
         GPIOB->CRL |= (GPIO_Mode_Out_PP_50MHz_P1);
 
         RX_EN(); /* 开机为接收模式 */
 
-        I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
-        // printd("\r baud:%d", bdrate);
-        if (!bdrate || bdrate > 3)
-                bdrate = 2;
+        I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
+        // if (!syspara.baudrate || syspara.baudrate > 3)
+        //         syspara.baudrate = 2;
 
-        if (bdrate == 1) {
-                Usart2_Init(36, BAUD_RATE_9600);  // 串口初始化默认为9600
-                delay_ms(100);
-                Usart3_Init(36, BAUD_RATE_9600);  // 串口2 485初始化为9600
-                delay_ms(100);
-                TIM3_Init(MODBUS_TIME_9600, 71);  // 45us--0.45ms
-        } else if (bdrate == 2) {
-                Usart2_Init(36, BAUD_RATE_19200);  // 串口初始化默认为19200
-                delay_ms(100);
-                Usart3_Init(36, BAUD_RATE_19200);  // 串口2 485初始化为19200
-                delay_ms(100);
-                TIM3_Init(MODBUS_TIME_19200, 71);  // 45us--0.45ms
-        } else if (bdrate == 3) {
-                Usart2_Init(36, BAUD_RATE_38400);  // 串口初始化默认为38400
-                delay_ms(100);
-                Usart3_Init(36, BAUD_RATE_38400);  // 串口2 485初始化为38400
-                delay_ms(100);
-                TIM3_Init(MODBUS_TIME_38400, 71);  // 45us--0.45ms
+        // if (syspara.baudrate == 1) {
+        //         Usart2_Init(36, BAUD_RATE_9600);  // 串口初始化默认为9600
+        //         delay_ms(100);
+        //         Usart3_Init(36, BAUD_RATE_9600);  // 串口2 485初始化为9600
+        //         delay_ms(100);
+        //         TIM3_Init(MODBUS_TIME_9600, 71);  // 45us--0.45ms
+        // } else if (syspara.baudrate == 2) {
+        //         Usart2_Init(36, BAUD_RATE_19200);  // 串口初始化默认为19200
+        //         delay_ms(100);
+        //         Usart3_Init(36, BAUD_RATE_19200);  // 串口2 485初始化为19200
+        //         delay_ms(100);
+        //         TIM3_Init(MODBUS_TIME_19200, 71);  // 45us--0.45ms
+        // } else if (syspara.baudrate == 3) {
+        //         Usart2_Init(36, BAUD_RATE_38400);  // 串口初始化默认为38400
+        //         delay_ms(100);
+        //         Usart3_Init(36, BAUD_RATE_38400);  // 串口2 485初始化为38400
+        //         delay_ms(100);
+        //         TIM3_Init(MODBUS_TIME_38400, 71);  // 45us--0.45ms
+        // }
+        // delay_ms(100);
+
+        if (BAUD_38400 < syspara.baudrate) {
+                syspara.baudrate = BAUD_9600; /* 9600 */
         }
+        Usart2_Init(36, BaudRate_V[syspara.baudrate]); /* UART2 19200bps */
         delay_ms(100);
+        Usart3_Init(36, BaudRate_V[syspara.baudrate]); /* UART3 19200bps */
+        delay_ms(100);
+        TIM3_Init(BaudRate_Time[syspara.baudrate], 71);  // 45us--0.45ms
+        delay_ms(100);
+
+        printd("USART2/3 Init, baudrate: %d", BaudRate_V[syspara.baudrate]);
 
         // 参数配置
         ModbusPara.sRUN = MB_IDEL;
@@ -86,9 +101,9 @@ void ModbusTimesProcess(void)
         }
 }
 
-void ModbusSend(unsigned char length)
+void ModbusSend(uint8_t length)
 {
-        unsigned char cnt;
+        uint8_t cnt;
 
         TX_EN();
         if (length) {
@@ -119,7 +134,7 @@ void ModbusSend(unsigned char length)
         ModbusPara.rCnt = 0;
 }
 
-void ModbusReceive(unsigned char res)
+void ModbusReceive(uint8_t res)
 {
         ModbusPara.times = 0;  // 重新计时
         if (ModbusPara.sRUN == MB_IDEL && !ModbusPara.rCnt) {
@@ -173,7 +188,7 @@ void Modbus_ERROR(void)
 void MB_ReadHoldingRegisters(void)
 {
         unsigned short reg_num;
-        unsigned char dvc_addr, op_addr, byteCount;
+        uint8_t dvc_addr, op_addr, byteCount;
 
         dvc_addr = ModbusPara.rBuf[0]; /* 模块地址 */
         op_addr = ModbusPara.rBuf[2];  /* 操作码/操作地址 */
@@ -209,7 +224,7 @@ void MB_ReadHoldingRegisters(void)
                         byteCount = 7;
                 } else if (0x07 == op_addr) /* 读波特率 */
                 {
-                        ModbusPara.tBuf[3] = bdrate;  // 波特率
+                        ModbusPara.tBuf[3] = syspara.baudrate;  // 波特率
                         byteCount = 4;
                 } else if (0x08 == op_addr) /* 读序列号 */
                 {
@@ -323,8 +338,8 @@ void MB_PresetSingleHoldingRegister(void)
                 } else if (0x07 == op_addr) /* 写波特率 */
                 {
                         if (BAUD_MIN <= ModbusPara.rBuf[3] && BAUD_MAX >= ModbusPara.rBuf[3] && 6 == ModbusPara.rCnt) {
-                                bdrate = ModbusPara.rBuf[3];
-                                I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
+                                syspara.baudrate = ModbusPara.rBuf[3];
+                                I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
                         } else {
                                 ModbusPara.sERR = ERR_MB_DATA; /* 操作数据无效 */
                         }
@@ -386,25 +401,6 @@ void MB_PresetSingleHoldingRegister(void)
                                 ModbusPara.sERR = ERR_MB_DATA; /* 操作数据无效 */
                         }
                 }
-                //        else if(0xFF == op_addr)        /* 高级写入 */
-                //        {
-                //            printd("\r\n rcv para: %02x %02x %02x %02x %02x %02x %02x %02x",
-                //                ModbusPara.rBuf[3], ModbusPara.rBuf[4], ModbusPara.rBuf[5], ModbusPara.rBuf[6],
-                //                ModbusPara.rBuf[7], ModbusPara.rBuf[8], ModbusPara.rBuf[9], ModbusPara.rBuf[10]);
-
-                //            I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.rBuf[3]);
-                //            I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &ModbusPara.rBuf[4]);
-                //            I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &ModbusPara.rBuf[5]);
-                //            I2CPageWrite_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &ModbusPara.rBuf[6]);
-                //            I2CPageWrite_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &ModbusPara.rBuf[7]);
-
-                //            uint8 ReadBuf[2]={0,0};
-                //            ReadBuf[0] = 0x00;
-                //            ReadBuf[1] = ModbusPara.rBuf[8];
-                //            I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, ReadBuf);
-                //            I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &ModbusPara.rBuf[9]);
-                //            I2CPageWrite_Nbytes(ADDR_INTVL, LEN_INTVL, &ModbusPara.rBuf[10]);
-                //        }
                 else {
                         ModbusPara.sERR = ERR_MB_ADDR; /* 超出操作地址范围或者操作地址无效 */
                 }

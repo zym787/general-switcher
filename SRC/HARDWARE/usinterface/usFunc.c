@@ -1,24 +1,6 @@
 #define _USFUNC_GLOBALS_
 #include "common.h"
 
-/**
- * @brief 获取UART波特率字符串描述
- * @param bdrate 波特率枚举值
- * @return 对应波特率的字符串，无效值返回"Error"
- */
-const char* getBaudRateString(int bdrate) {
-  // 检查波特率值并返回对应字符串
-  if (bdrate == UART_BAUD_9600) {
-    return "9600";
-  } else if (bdrate == UART_BAUD_19200) {
-    return "19200";
-  } else if (bdrate == UART_BAUD_38400) {
-    return "38400";
-  } else {
-    return "Error";
-  }
-}
-
 /*
 
 */
@@ -336,8 +318,8 @@ void TermBaud(char rw)
     int getInt = 0;
     if(rw == READ_ACT)
     {
-        I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
-        printd("\r 波特率:%d %sbps", bdrate, getBaudRateString(bdrate));
+        I2CPageRead_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
+        printd("\r 波特率:%d %dbps", syspara.baudrate, BaudRate_V[syspara.baudrate]);
     }
     else
     {
@@ -354,23 +336,23 @@ void TermBaud(char rw)
         }
         if(9600 == getInt)
         {
-            bdrate = 1;
+            syspara.baudrate = 1;
         }
         else if(19200 == getInt)
         {
-            bdrate = 2;
+            syspara.baudrate = 2;
         }
         else if(38400 == getInt)
         {
-            bdrate = 3;
+            syspara.baudrate = 3;
         }
         else
         {
             printd("\r\n baud rate overflow");
             return;
         }
-        printd("\r set baud rate to %d %dbps", bdrate, getInt);
-        I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &bdrate);
+        printd("\r set baud rate to %d %dbps", syspara.baudrate, getInt);
+        I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
     }
 }
 
@@ -645,28 +627,31 @@ void TermMovesCnt(char rw)
  */
 void TermInspection(char rw)
 {
-        const char* rateStr = getBaudRateString(bdrate);
-    printd("\r\n ***************< 点检模式 >***************");
-    /* 点检参数 */
-    printd("\r\n 版本       (VR)   : %s", SOFT_VER_C);               /* 版本号 */
-    printd("\r\n 电路板     (PCB)  : %s", PCB_VR);                   /* PCB版本号 */
-    printd("\r\n 编译时间   (TIME) : %s %s", __DATE__, __TIME__);    /* 时间 */
-    printd("\r\n 地址       (ADDR) : %d", ModbusPara.mAddrs);        /* 地址 */
-    printd("\r\n 通道数     (CNT)  : %d", valveFix.fix.portCnt);     /* 通道数 */
-    printd("\r\n 波特率     (BAUD) : %d %sbps", bdrate, rateStr);    /* 波特率 */
-    printd("\r\n 速度       (SPD)  : %d", spdVx2);                   /* 速度 */
-    printd("\r\n 减速比     (RDCR) : %d", rdc.rate);                 /* 减速比 */
-    printd("\r\n 半通道     (HALF) : %d", valve.bHalfSeal);          /* 半通道 */
-    printd("\r\n 原点补偿   (FIXO) : %d", valveFix.fix.org);         /* 原点补偿 */
-    printd("\r\n 方向补偿   (FIXG) : %d", valveFix.fix.dirGap);      /* 方向补偿 */
-    printd("\r\n IO控制     (IOE)  : %d %s", bIoCtrl, (0 == bIoCtrl ? "关" : "开")); /* IO */
-    printd("\r\n 电流       (ISET) : %d", valve.iSet);               /* 电流设置 */
-    printd("\r\n 切换次数   (MOVES): %d", syspara.totalCnt);         /* 切换次数 */
-    printd("\r\n 回复方式   (REPLY): %d", syspara.replyMode);        /* 回复方式 */
-    /* 序列号 */
-    printd("\r\n 序列号     (SN)   : %02X %02X %02X %02X %02X", 
-        valve.SnCode[0], valve.SnCode[1], valve.SnCode[2], valve.SnCode[3], valve.SnCode[4]);
-    printd("\r\n ***************< 点检模式 >***************\r\n");
+        printd("\r\n ------------------------------------------");
+        printd("\r\n                 请 注 意 !                ");
+        printd("\r\n      未 使 用 变 量 请 勿 自 行 识 别      ");
+        printd("\r\n ------------------------------------------\r\n");
+        printd("\r\n ***************< 点检模式 >***************");
+        /* 点检参数 */
+        printd("\r\n 版本       (VR)   : %s", SOFT_VER_C);                                               /* 版本号 */
+        printd("\r\n 电路板     (PCB)  : %s", PCB_VR);                                                   /* PCB版本号 */
+        printd("\r\n 编译时间   (TIME) : %s %s", __DATE__, __TIME__);                                    /* 时间 */
+        printd("\r\n 地址       (ADDR) : %d", ModbusPara.mAddrs);                                        /* 地址 */
+        printd("\r\n 通道数     (CNT)  : %d", valveFix.fix.portCnt);                                     /* 通道数 */
+        printd("\r\n 波特率     (BAUD) : %d %dbps", syspara.baudrate, BaudRate_V[syspara.baudrate]);     /* 波特率 */
+        printd("\r\n 速度       (SPD)  : %d RPM", spdVx2);                                               /* 速度 */
+        printd("\r\n 减速比     (RDCR) : %d", rdc.rate);                                                 /* 减速比 */
+        printd("\r\n 半通道     (HALF) : %d %s", valve.bHalfSeal, (0 == valve.bHalfSeal ? "关" : "开")); /* 半通道 */
+        printd("\r\n 原点补偿   (FIXO) : %d (1度)", valveFix.fix.org);                                   /* 原点补偿 */
+        printd("\r\n 方向补偿   (FIXG) : %d (0.1度)", valveFix.fix.dirGap);                              /* 方向补偿 */
+        printd("\r\n IO控制     (IOE)  : %d %s", bIoCtrl, (0 == bIoCtrl ? "关" : "开"));                 /* IO */
+        printd("\r\n 电流       (ISET) : %d", valve.iSet);                                               /* 电流设置 */
+        printd("\r\n 切换次数   (MOVES): %d", syspara.totalCnt);                                         /* 切换次数 */
+        printd("\r\n 回复方式   (REPLY): %d", syspara.replyMode);                                        /* 回复方式 */
+        /* 序列号 */
+        printd("\r\n 序列号     (SN)   : %02X %02X %02X %02X %02X", valve.SnCode[0], valve.SnCode[1], valve.SnCode[2],
+               valve.SnCode[3], valve.SnCode[4]);
+        printd("\r\n ***************< 点检模式 >***************\r\n");
 }
 
 /*

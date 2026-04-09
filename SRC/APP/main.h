@@ -7,6 +7,8 @@
 #define PEXT extern
 #endif
 
+// clang-format off
+
 #define DESCRIPTION         "Switch Valve"
 #define SOFT_REVISION       (uint16_t)0x0026    /* 软件修改版次 */
 #define SOFTWARE_VERSION    "r26"                /* 软件修改版次 */
@@ -101,6 +103,7 @@
 //  v1.3.1-r24      2026.03.26  屏蔽AGS增加读指令长度限制
 //  v1.3.1-r25      2026.03.26  优化AGS读指令长度限制,减少冗余
 //  v1.3.1-r26      2026.03.27  修复错误长度读指令使设备死机问题
+//                  2026.04.09  统一波特率显示,优化下载口显示及点检模式
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)
@@ -172,21 +175,49 @@
 #define ADDR_INIT_STATE        	(ADDR_REPLY_MODE+LEN_REPLY_MODE)
 #define LEN_INIT_STATE          1
 
+// clang-format on
+
 #define NORMAL_BLINK            1500       // 正常运行的闪烁间隔
 #define RETRY_TIME_OUT          1100       // 重试的闪烁间隔
 #define ERROR_BLINK             400
 
-    PEXT uint8_t bdrate,
-    bIoCtrl, intCtrl, spdVx2;
+PEXT uint8_t bdrate, bIoCtrl, intCtrl, spdVx2;
 
-typedef struct
-{
-    bool        bCountLastTime;     /* 切换时间计时标志 */
-    uint32_t    totalCnt;           /* 切换次数 */
-    uint32_t    totalCntLst;
-    uint16_t    lastTime;           /* 上次切换时间 */
-    uint32_t    protectTimeOut;     /* 超时保护时间 */
-    uint8_t     replyMode;          /* 回复方式 */
+/**
+ * @brief     : 控制协议枚举
+ */
+typedef enum PROTOCOL {
+        AGS_MODBUS, /* AGS协议 基于Modbus魔改 */
+        EXT_COMM,   /* HX协议 帧头+帧尾 */
+        MODBUS,     /* Modbus协议 */
+
+        PROTOCOL_NUM
+} Protocol_T;
+
+/**
+ * @brief     : 波特率枚举
+ */
+typedef enum BAUDRATETYPE {
+        BAUD_NONE = 0u,
+        BAUD_9600 = 1u,
+        BAUD_19200 = 2u,
+        BAUD_38400 = 3u,
+
+        BAUD_NUM
+} BaudRate_T;
+
+extern uint16_t BaudRate_V[BAUD_NUM];
+extern uint16_t BaudRate_Time[BAUD_NUM];
+
+typedef struct {                  /* 系统参数 */
+        Protocol_T protocol_type; /* 协议 */
+        BaudRate_T baudrate;      /* 波特率 */
+        bool bCountLastTime;      /* 切换时间计时标志 */
+        uint32_t totalCnt;        /* 切换次数 */
+        uint32_t totalCntLst;
+        uint16_t lastTime;       /* 上次切换时间 */
+        uint32_t protectTimeOut; /* 超时保护时间 */
+        uint8_t replyMode;       /* 回复方式 */
 } _SYS_T;
 PEXT _SYS_T syspara;
 
