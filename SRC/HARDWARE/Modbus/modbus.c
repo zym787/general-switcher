@@ -105,6 +105,7 @@ void ModbusSend(uint8_t length)
 {
         uint8_t cnt;
 
+        /* 485串口 */
         TX_EN();
         if (length) {
                 ModbusPara.sRUN = MB_SEND;
@@ -119,6 +120,7 @@ void ModbusSend(uint8_t length)
                 ;  // 等待发送结束
         RX_EN();
 
+        /* 232串口 */
         if (length) {
                 ModbusPara.sRUN = MB_SEND;
                 for (cnt = 0; cnt < length; cnt++) {

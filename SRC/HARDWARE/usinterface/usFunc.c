@@ -21,51 +21,52 @@ void TermVR(char rw)
     }
 }
 
+/**
+ * @brief     : 任意地址读写接口
+ * @param     : rw
+ */
+// void TermMap(char rw)
+// {
+//     char getChar[2][P_LEN+1];
+//     int getInt=0;
+//     int *getAddr=NULL;
 
-/*
-
-*/
-void TermMap(char rw)
-{
-    char getChar[2][P_LEN+1];
-    int getInt=0;
-    int *getAddr=NULL;
-
-    memset(getChar, 0, sizeof(getChar));
-    if(rw==READ_ACT)
-    {
-        printd("\r\n No para");
-    }
-    else
-    {
-        unsigned char ret = FetchChar(3, 0, rcvStr, *getChar);
-        if(ret)
-        {
-            printd("\r\n Err code %d", ret);
-            return;
-        }
-        getAddr = (int *)strtohex(*getChar);
-        if(**(getChar+1))
-        {
-            //判断是否有参数写入
-            getInt = str2int(*(getChar+1));
-            *getAddr = getInt;
-            printd("\r\n Wr 0x%08x to 0x%08x", getInt, getAddr);
-        }
-        else
-        {
-            //无参数,取指
-            getInt = (int)(*getAddr);
-            printd("\r\n Rd 0x[%02x %02x %02x %02x] from 0x%08x",
-                   (char)(getInt>>24), (char)(getInt>>16), (char)(getInt>>8), (char)(getInt>>0), getAddr);
-        }
-    }
-}
+//     memset(getChar, 0, sizeof(getChar));
+//     if(rw==READ_ACT)
+//     {
+//         printd("\r\n No para");
+//     }
+//     else
+//     {
+//         unsigned char ret = FetchChar(3, 0, rcvStr, *getChar);
+//         if(ret)
+//         {
+//             printd("\r\n Err code %d", ret);
+//             return;
+//         }
+//         getAddr = (int *)strtohex(*getChar);
+//         if(**(getChar+1))
+//         {
+//             //判断是否有参数写入
+//             getInt = str2int(*(getChar+1));
+//             *getAddr = getInt;
+//             printd("\r\n Wr 0x%08x to 0x%08x", getInt, getAddr);
+//         }
+//         else
+//         {
+//             //无参数,取指
+//             getInt = (int)(*getAddr);
+//             printd("\r\n Rd 0x[%02x %02x %02x %02x] from 0x%08x",
+//                    (char)(getInt>>24), (char)(getInt>>16), (char)(getInt>>8), (char)(getInt>>0), getAddr);
+//         }
+//     }
+// }
 
 
-/*
-
-*/
+/**
+ * @brief     : 擦除EEPROM内数据
+ * @param     : rw
+ */
 void TermIIC(char rw)
 {
     unsigned char rwBuf[4]= {0, 0, 0, 0};
@@ -245,7 +246,7 @@ void TermCnt(char rw)
     if(rw == READ_ACT)
     {
         I2CPageRead_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
-        (CHANNEL_MIN > valveFix.fix.portCnt && CHANNEL_MAX < valveFix.fix.portCnt) ? 
+        (CHANNEL_MIN > valveFix.fix.portCnt || CHANNEL_MAX < valveFix.fix.portCnt) ? 
             (valveFix.fix.portCnt = CHANNEL_DEF) : (valveFix.fix.portCnt);
         printd("\r Port Cnt:%d", valveFix.fix.portCnt);
     }
@@ -364,8 +365,8 @@ void TermSpd(char rw)
     int getInt = 0;
     if(rw == READ_ACT)
     {
-        I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
-        printd("\r\n Speed %d", spdVx2);
+            I2CPageRead_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
+            printd("\r\n Speed %d", spdVx2);
     }
     else
     {
@@ -424,30 +425,44 @@ void TermSpd(char rw)
     }
 }
 
-/*
-
-*/
+/**
+ * @brief     : IO控制开关
+ * @param     : rw
+ */
 void TermIO(char rw)
 {
-    if(rw == READ_ACT)
-    {
-        bIoCtrl = !bIoCtrl;
+        int getInt = 0;
+        /* 无参数时直接切换IO状态 */
+        if (rw == READ_ACT) {
+                bIoCtrl = !bIoCtrl;
+        } else {
+                unsigned char ret = FetchInt(2, 0, rcvStr, &getInt);
+                if (ret) {
+                        printd("\r Err code %d", ret);
+                        return;
+                }
+                if (0 == getInt || 1 == getInt) {
+                        bIoCtrl = getInt;
+                } else {
+                        printd("\r\n IO control overflow");
+                        return;
+                }
+        }
+        printd("\r set IO to %d %s", bIoCtrl, (0 == bIoCtrl ? "关" : "开"));
         I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
-        printd("\r IO:%d %s", bIoCtrl, (0 == bIoCtrl ? "OFF" : "ON"));
-    }
 }
 
-
-/*
-
-*/
+/**
+ * @brief     : 老化间隔
+ * @param     : rw
+ */
 void TermInterval(char rw)
 {
     int getInt = 0;
     if(rw == READ_ACT)
     {
-        I2CPageWrite_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
-        printd("Interval %d Sec", intCtrl);
+            I2CPageRead_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
+            printd("Interval %d Sec", intCtrl);
     }
     else
     {
@@ -471,9 +486,10 @@ void TermInterval(char rw)
     }
 }
 
-/*
-
-*/
+/**
+ * @brief     : 电流设置
+ * @param     : rw
+ */
 void TermISet(char rw)
 {
     int getInt = 0;

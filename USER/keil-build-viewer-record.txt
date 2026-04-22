@@ -9,7 +9,7 @@
        474          0          0          0          0          0   sys.o
        500          0          0          1         16          0   timer.o
        844          0          0          8          0          0   usart.o
-      5304          0        321        636        164          0   usfunc.o
+      5416          0        321        636        164          0   usfunc.o
       2384          0          0        185        300          0   smotor.o
       2384          0          0        185        300          0   Smotor.lib
       1026          0        378         12       1796          0   USINTF_CR.lib
@@ -19,7 +19,7 @@ Memory Map of the image
 
 	Load Region LR_IROM1 
 
-		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x000062D8, Max: 0x00010000, END)
+		Execution Region ER_IROM1 (Exec base: 0x08000000, Size: 0x0000634C, Max: 0x00010000, END)
 
 		Execution Region RW_IRAM1 (Exec base: 0x20000000, Size: 0x00001628, Max: 0x00005000, END)
 

@@ -5,11 +5,11 @@ typedef unsigned char  uint8;                    /* Unsigned  8 bit quantity    
 typedef unsigned short uint16;                   /* Unsigned 16 bit quantity                           */
 typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity                           */
 
-typedef enum
-{
-    false,
-    true
-} bool;
+// typedef enum
+// {
+//     false,
+//     true
+// } bool;
 
 /* °æ±¾Ñ¡Ôñ */
 // #define O_901
@@ -150,6 +150,7 @@ typedef enum
     #define HARDWARE_DESCRIPTION     "Vertical Version (2.2A Max)"
 #endif
 
+#include <stdbool.h>
 
 #include <stm32f10x.h>
 #include "usinterface.h"

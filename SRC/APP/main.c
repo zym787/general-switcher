@@ -12,14 +12,14 @@ void IOconfig(void)
 #ifdef C_901
     RCC->APB2ENR |= RCC_APB2Periph_AFIO;
     RCC->APB2ENR |= (RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB);
-    // FB OUT
+    // FB OUT  1
     GPIOA->CRH &= (GPIO_Crh_P8);
     GPIOA->CRH |= (GPIO_Mode_Out_PP_50MHz_P8);
     GPIOA->ODR |= (GPIO_Pin_8);
-    /// KEY OUT
+    /// KEY OUT 1
     GPIOB->CRL &= (GPIO_Crl_P3);
     GPIOB->CRL |= (GPIO_Mode_Out_PP_50MHz_P3);
-    GPIOA->ODR |= (GPIO_Pin_8);
+    GPIOB->ODR |= (GPIO_Pin_3);
 #endif
 
 #ifdef IOCTRL
@@ -226,8 +226,8 @@ void DisableReceive(void)
     USART2->CR1 &= ~(1<<8);              //PE中断失能,接收缓冲区非空中断使能
     USART2->CR1 &= ~(1<<5);              //接收缓冲区非空中断失能
 
-    USART3->CR1 &= ~(1<<8);              //PE中断使能,接收缓冲区非空中断使能
-    USART3->CR1 &= ~(1<<5);              //接收缓冲区非空中断使能
+    USART3->CR1 &= ~(1<<8);              //PE中断失能,接收缓冲区非空中断使能
+    USART3->CR1 &= ~(1 << 5);            //接收缓冲区非空中断失能
 }
 
 void ParameterInit(void)

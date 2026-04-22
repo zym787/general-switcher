@@ -43,7 +43,7 @@
 
 [region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00010000, 0x000062D8 [memory type] 2 [memory ID] 3
+	[execution region] ER_IROM1, 0x08000000, 0x00010000, 0x0000634C [memory type] 2 [memory ID] 3
 
 	[execution region] RW_IRAM1, 0x20000000, 0x00005000, 0x00001628 [memory type] 1 [memory ID] 2
 		[ZI block] addr: 0x2000037C, size: 0x000012AC (4780)
@@ -86,7 +86,7 @@
 
 [record region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00010000, 0x000062CC [type] 2 [ID] 3
+	[execution region] ER_IROM1, 0x08000000, 0x00010000, 0x00006348 [type] 2 [ID] 3
 	[execution region] RW_IRAM1, 0x20000000, 0x00005000, 0x00001628 [type] 1 [ID] 2
 ---------------------------------------------------------------------------------------------------------------------
                             FILE(s)                           |         RAM (byte)       |       FLASH (byte)       |
@@ -101,7 +101,7 @@
 ..\SRC\SYSTEM\sys\sys.c():                                    |           0              |         474              |
 ..\SRC\SYSTEM\timer\timer.c():                                |          17              |         501              |
 ..\SRC\SYSTEM\usart\usart.c():                                |           8              |         852              |
-..\SRC\HARDWARE\usinterface\usFunc.c():                       |         800              |        6261  [+12]       |
+..\SRC\HARDWARE\usinterface\usFunc.c():                       |         800              |        6373              |
 ..\SRC\HARDWARE\motor\Smotor.lib():                           |         485              |        2569              |
 ..\SRC\HARDWARE\usinterface\USINTF_CR.lib():                  |        1808              |        1416              |
 ---------------------------------------------------------------------------------------------------------------------
@@ -112,11 +112,11 @@ LR_IROM1
                 RW_IRAM1  [0x20000000]|¡ö¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ_____________________________________| (   5.5 KB /  20.0 KB )  27.7%  
  
         FLASH 1           [0x08000000 | 0x00010000 (65536)]
-                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö_______________________________| (  24.7 KB /  64.0 KB )  38.6%  [+12]
+                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö_______________________________| (  24.8 KB /  64.0 KB )  38.8%  [+4]
  
 [htm file path] e:\workdir\zym_new\general-switcher\OBJ\QHF.htm
 Maximum Stack Usage =        236 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)
  
 =============================================================================================================================
 
-run time: 0.099 s
+run time: 0.070 s
