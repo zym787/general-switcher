@@ -223,16 +223,16 @@ void TermAddr(char rw)
         }
         if (AGS_ADDR_MIN <= getInt && BURN_ADDR >= getInt || MOTOR_AGING_ADDR == getInt)
         {
-            ModbusPara.mAddrs = getInt;
-            printd("\r\n Set Addr to %d", ModbusPara.mAddrs);
+            ags_mbParam.mAddrs = getInt;
+            printd("\r\n Set Addr to %d", ags_mbParam.mAddrs);
         }
         else
         {
             printd("\r\n %d Address out of range (%d-%d)", getInt, AGS_ADDR_MIN, BURN_ADDR);
-            ModbusPara.mAddrs = AGS_ADDR_DEF;
-            printd("\r\n Use default Address %d", ModbusPara.mAddrs);
+            ags_mbParam.mAddrs = AGS_ADDR_DEF;
+            printd("\r\n Use default Address %d", ags_mbParam.mAddrs);
         }
-        I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ModbusPara.mAddrs);
+        I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ags_mbParam.mAddrs);
     }
 }
 
@@ -652,7 +652,7 @@ void TermInspection(char rw)
         printd("\r\n 版本       (VR)   : %s", SOFT_VER_C);                                               /* 版本号 */
         printd("\r\n 电路板     (PCB)  : %s", PCB_VR);                                                   /* PCB版本号 */
         printd("\r\n 编译时间   (TIME) : %s %s", __DATE__, __TIME__);                                    /* 时间 */
-        printd("\r\n 地址       (ADDR) : %d", ModbusPara.mAddrs);                                        /* 地址 */
+        printd("\r\n 地址       (ADDR) : %d", ags_mbParam.mAddrs);                                        /* 地址 */
         printd("\r\n 通道数     (CNT)  : %d", valveFix.fix.portCnt);                                     /* 通道数 */
         printd("\r\n 波特率     (BAUD) : %d %dbps", syspara.baudrate, BaudRate_V[syspara.baudrate]);     /* 波特率 */
         printd("\r\n 速度       (SPD)  : %d RPM", spdVx2);                                               /* 速度 */

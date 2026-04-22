@@ -1,5 +1,5 @@
-#ifndef _MODBUS_H_
-#define _MODBUS_H_
+#ifndef _AGS_MB_H_
+#define _AGS_MB_H_
 
 #ifdef _MODBUS_GLOBALS_
 #define PEXT
@@ -76,7 +76,7 @@ typedef struct
     uint8_t     res;				    // 保留---凑2的倍数
     uint8_t     rBuf[LENGTH_MB_DATA];	// 待解析的接收数据
     uint8_t     tBuf[LENGTH_MB_DATA];	// 待发送数据
-} _MB_PRAR_T;
+} _AGS_MB_PRARM_T;
 
 /* 波特率 */
 enum {
@@ -137,7 +137,7 @@ enum {
 #define	HMI_DisIN_BIT7		0x80	// 
 
 //----变量声明----------------
-PEXT _MB_PRAR_T	    ModbusPara;
+PEXT _AGS_MB_PRARM_T	    ags_mbParam;
 PEXT uint8_t 	CoilBitPara[LENGTH_COIL_REG];
 PEXT uint8_t 	DiscreteBitPara[LENGTH_DiscreteREG];
 PEXT uint8_t 	HoldingREGPara[LENGTH_HoldingREG];
@@ -145,15 +145,15 @@ PEXT uint8_t 	InputREGPara[LENGTH_InputREG];
 
 //----函数声明----------------
 PEXT uint16_t  ModbusCRC16( uint8_t  *puchMsg, uint16_t usDataLen) ;
-PEXT void ModbusInit(void);
-PEXT void ModbusSend(uint8_t length) ;
-PEXT void ModbusReceive(uint8_t res);
-PEXT void ModbusTimesProcess(void);
-PEXT void Modbus_ERROR(void) ;
-PEXT void MB_ReadHoldingRegisters(void) ;
-PEXT void MB_PresetSingleHoldingRegister(void);
+PEXT void ags_mbInit(void);
+PEXT void ags_mbSend(uint8_t length) ;
+PEXT void ags_mbReceive(uint8_t res);
+PEXT void ags_mbTimesProcess(void);
+PEXT void ags_mbError(void) ;
+PEXT void ags_mbReadHoldingRegisters(void) ;
+PEXT void ags_mbPresetSingleHoldingRegister(void);
 PEXT void MB_PresetMultipleHoldingRegisters(void);
-PEXT void ModbusProces(void);
+PEXT void ags_mbProcess(void);
 PEXT void ModbusRequest(uint8_t style, uint8_t sAdd,uint16_t val);
 
 #undef PEXT

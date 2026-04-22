@@ -64,7 +64,11 @@ void TIM3_IRQHandler(void)
     if(TIM3->SR&0X0001)//溢出中断
     {
         TIM3->SR &= ~0x0001 ;//清除中断标志位
-        ModbusTimesProcess();
+        if (syspara.protocol_type == AGS_MODBUS) {
+                ags_mbTimesProcess();
+        } else if (syspara.protocol_type == MODBUS) {
+                // mb_TimesProcess();
+        }
     }
 }
 

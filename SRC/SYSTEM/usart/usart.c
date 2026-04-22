@@ -142,7 +142,11 @@ void USART2_IRQHandler(void)
     if(USART2->SR&(1<<5))//接收到数据
     {
         res=USART2->DR;
-        ModbusReceive(res);
+        if (syspara.protocol_type == AGS_MODBUS) {
+                ags_mbReceive(res);
+        } else if (syspara.protocol_type == MODBUS) {
+                // mb_Receive(res);
+        }
     }
 }
 
@@ -208,7 +212,11 @@ void USART3_IRQHandler(void)
     if(USART3->SR&(1<<5))//接收到数据
     {
         res = USART3->DR;
-        ModbusReceive(res);
+        if (syspara.protocol_type == AGS_MODBUS) {
+                ags_mbReceive(res);
+        } else if (syspara.protocol_type == MODBUS) {
+                // mb_Receive(res);
+        }
     }
 }
 

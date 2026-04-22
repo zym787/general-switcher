@@ -175,6 +175,9 @@
 #define ADDR_INIT_STATE        	(ADDR_REPLY_MODE+LEN_REPLY_MODE)
 #define LEN_INIT_STATE          1
 
+#define ADDR_PROTOCOL             (ADDR_INIT_STATE+LEN_INIT_STATE)
+#define LEN_PROTOCOL             1
+
 // clang-format on
 
 #define NORMAL_BLINK            1500       // 正常运行的闪烁间隔

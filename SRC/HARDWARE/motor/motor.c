@@ -409,7 +409,7 @@ void TestBurn(void)
 {
     static uint8 tmWait=0;
     static uint8_t dirFlag = 0;     /* 方向标志位,0:正转,1:反转 */
-    if(BURN_ADDR == ModbusPara.mAddrs)
+    if(BURN_ADDR == ags_mbParam.mAddrs)
     {
         if(timerPara.timeWaitMill>SEC)
         {
@@ -432,7 +432,7 @@ void TestBurn(void)
         }
     }
 #ifdef AGING_MODE
-    else if (MOTOR_AGING_ADDR == ModbusPara.mAddrs)
+    else if (MOTOR_AGING_ADDR == ags_mbParam.mAddrs)
     {
         if (timerPara.timeWaitMill > SEC)
         {

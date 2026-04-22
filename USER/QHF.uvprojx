@@ -439,14 +439,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -820,7 +820,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,O_901</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -920,14 +920,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1301,7 +1301,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,O_906</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\Modbus</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1401,14 +1401,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1782,7 +1782,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,O_909</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1882,14 +1882,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2263,7 +2263,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,A_901</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2363,14 +2363,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2744,7 +2744,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,A_906</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2844,14 +2844,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3225,7 +3225,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,A_909</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -3325,14 +3325,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3706,7 +3706,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,B_901</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -3806,14 +3806,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4187,7 +4187,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,B_906</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -4287,14 +4287,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4668,7 +4668,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,C_901</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\Modbus</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -4768,14 +4768,14 @@
               <FilePath>..\SRC\HARDWARE\EEPROM\EEP24Serial.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>ags_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\modbus.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ags_mb.c</FilePath>
             </File>
             <File>
               <FileName>ModBusCrc16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SRC\HARDWARE\Modbus\ModBusCrc16.c</FilePath>
+              <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
           </Files>
         </Group>
