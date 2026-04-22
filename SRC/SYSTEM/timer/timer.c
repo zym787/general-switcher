@@ -67,7 +67,7 @@ void TIM3_IRQHandler(void)
         if (syspara.protocol_type == AGS_MODBUS) {
                 ags_mbTimesProcess();
         } else if (syspara.protocol_type == MODBUS) {
-                // mb_TimesProcess();
+                mb_TimesProcess();
         }
     }
 }

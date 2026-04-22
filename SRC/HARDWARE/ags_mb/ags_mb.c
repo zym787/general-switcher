@@ -1,20 +1,12 @@
 #define _MODBUS_GLOBALS_
 #include "common.h"
 
-#define RX_EN() (PBout(1) = 0)
-#define TX_EN() (PBout(1) = 1)
-
 uint16_t BaudRate_V[BAUD_NUM] = {9600, 9600, 19200, 38400};
 uint16_t BaudRate_Time[BAUD_NUM] = {520, 520, 260, 130};
 
 void ags_mbInit(void)
 {
         uint8_t cnt;
-
-        /* PB1 为485芯片收发切换引脚 */
-        RCC->APB2ENR |= (RCC_APB2Periph_GPIOB);
-        GPIOB->CRL &= (GPIO_Crl_P1);
-        GPIOB->CRL |= (GPIO_Mode_Out_PP_50MHz_P1);
 
         RX_EN(); /* 开机为接收模式 */
 
@@ -56,7 +48,7 @@ void ags_mbInit(void)
         printd("USART2/3 Init, baudrate: %d", BaudRate_V[syspara.baudrate]);
 
         // 参数配置
-        ags_mbParam.sRUN = MB_IDEL;
+        ags_mbParam.sRUN = MB_IDLE;
         ags_mbParam.sERR = ERR_NOT;
         ags_mbParam.times = 0;
         ags_mbParam.rCnt = 0;
@@ -91,9 +83,9 @@ void ags_mbTimesProcess(void)
                         if (ags_mbParam.sRUN == MB_RECIVE_ERR) {
                                 // 接收过程中 有出现数据存储空间溢出或间隔时间超过T1.5
                                 ags_mbParam.sERR = ERR_MB_DEVICE;
-                                ags_mbParam.sRUN = MB_IDEL;
+                                ags_mbParam.sRUN = MB_IDLE;
                         } else if (ags_mbParam.sRUN == MB_NO_RESPONSE) {
-                                ags_mbParam.sRUN = MB_IDEL;
+                                ags_mbParam.sRUN = MB_IDLE;
                         } else if (ags_mbParam.sRUN == MB_RECIVE) {
                                 ags_mbParam.sRUN = MB_RECIVE_END;
                         }
@@ -132,14 +124,14 @@ void ags_mbSend(uint8_t length)
         }
         while ((USART2->SR & 0X40) == 0)
                 ;  // 等待发送结束
-        ags_mbParam.sRUN = MB_IDEL;
+        ags_mbParam.sRUN = MB_IDLE;
         ags_mbParam.rCnt = 0;
 }
 
 void ags_mbReceive(uint8_t res)
 {
         ags_mbParam.times = 0;  // 重新计时
-        if (ags_mbParam.sRUN == MB_IDEL && !ags_mbParam.rCnt) {
+        if (ags_mbParam.sRUN == MB_IDLE && !ags_mbParam.rCnt) {
                 // 空闲并且数据处理结束,可以进行新的接收
                 if (ags_mbParam.mAddrs == res || MB_Broadcast_ADDR == res) {
                         // 开始接收数据
@@ -179,7 +171,7 @@ void ags_mbError(void)
                 if (ags_mbParam.tBuf[0] != MB_Broadcast_ADDR) {
                         ags_mbSend(5);
                 }
-#ifdef DEBUG_MODBUS
+#ifdef DEBUG_AGS_MB
                 printd("\r\n [%02x]error reply Func:%02x", ags_mbParam.sERR, ags_mbParam.tBuf[1]);
 #endif
         }
@@ -207,7 +199,7 @@ void ags_mbReadHoldingRegisters(void)
                         ags_mbParam.tBuf[6] = valveFix.fix.portCnt; /* 模块通道数 */
                         ags_mbParam.tBuf[7] = valve.fixOrg;         /* 原点补偿值 */
                         ags_mbParam.tBuf[8] = valveFix.fix.org;     /* 方向补偿值 */
-                        ags_mbParam.tBuf[9] = spdVx2;               /* 速度 */
+                        ags_mbParam.tBuf[9] = valve.spd;               /* 速度 */
                         byteCount = 10;
                 } else if (0x01 == op_addr) /* 读当前通道 */
                 {
@@ -239,7 +231,7 @@ void ags_mbReadHoldingRegisters(void)
                         byteCount = 8;
                 } else if (0x09 == op_addr) /* 读速度 */
                 {
-                        ags_mbParam.tBuf[3] = spdVx2; /* 转动速度 */
+                        ags_mbParam.tBuf[3] = valve.spd; /* 转动速度 */
                         byteCount = 4;
                 } else if (0x0A == op_addr) /* 读切换次数 */
                 {
@@ -282,7 +274,7 @@ void ags_mbReadHoldingRegisters(void)
                     (ERR_NOT == ags_mbParam.sERR)) {
                         ags_mbSend(byteCount); /* 回复 */
                 }
-#ifdef DEBUG_MODBUS
+#ifdef DEBUG_AGS_MB
                 printd("\r s:");
                 for (uint8 i = 0; i < byteCount; i++)
                         printd(" %02x", ags_mbParam.tBuf[i]);
@@ -360,8 +352,8 @@ void ags_mbPresetSingleHoldingRegister(void)
                 } else if (0x09 == op_addr) /* 写速度 */
                 {
                         if (SPD_MIN <= ags_mbParam.rBuf[3] && SPD_MAX >= ags_mbParam.rBuf[3] && 6 == ags_mbParam.rCnt) {
-                                spdVx2 = ags_mbParam.rBuf[3];
-                                I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
+                                valve.spd = ags_mbParam.rBuf[3];
+                                I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &valve.spd);
                         } else {
                                 ags_mbParam.sERR = ERR_MB_DATA; /* 操作数据无效 */
                         }
@@ -418,7 +410,7 @@ void ags_mbPresetSingleHoldingRegister(void)
                 if ((MB_Broadcast_ADDR != ags_mbParam.tBuf[0]) && (ERR_NOT == ags_mbParam.sERR)) {
                         ags_mbSend(byteCount); /* 回复 */
                 }
-#ifdef DEBUG_MODBUS
+#ifdef DEBUG_AGS_MB
                 printd("\r s:");
                 for (uint8 i = 0; i < byteCount; i++)
                         printd(" %02x", ags_mbParam.tBuf[i]);
@@ -435,7 +427,7 @@ void ags_mbProcess(void)
                 if (LEAST_RCV_CNT < ags_mbParam.rCnt) {
                         LED_WORK = !LED_WORK;
                         if (0 == ModbusCRC16(&ags_mbParam.rBuf[0], ags_mbParam.rCnt)) {
-#ifdef DEBUG_MODBUS
+#ifdef DEBUG_AGS_MB
                                 printd("\r r:");
                                 for (uint8_t i = 0; i < ags_mbParam.rCnt; i++)
                                         printd(" %02x", ags_mbParam.rBuf[i]);
@@ -451,7 +443,7 @@ void ags_mbProcess(void)
                                                 /* 读指令长度不匹配 重新接收 */
                                                 if (ags_mbParam.rCnt != 5) {
                                                         ags_mbParam.rCnt = 0;
-                                                        ags_mbParam.sRUN = MB_IDEL;
+                                                        ags_mbParam.sRUN = MB_IDLE;
                                                         return;
                                                 }
                                                 ags_mbReadHoldingRegisters();
@@ -469,11 +461,11 @@ void ags_mbProcess(void)
                         }
                         ags_mbParam.rCnt = 0;
                         ags_mbError();
-                        ags_mbParam.sRUN = MB_IDEL;
+                        ags_mbParam.sRUN = MB_IDLE;
                 } else {
                         ags_mbParam.rCnt = 0;
                         ags_mbError();
-                        ags_mbParam.sRUN = MB_IDEL;
+                        ags_mbParam.sRUN = MB_IDLE;
                 }
         }
 }

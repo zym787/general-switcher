@@ -174,14 +174,14 @@ typedef struct
 
     uint8_t dirLast;          //
     uint8_t statusLast;       //
-    uint8_t passByOne;        //重新校准1号位标志
     uint8_t bStrtCnt;         //新一轮找位,丢弃首个滞留计步
     uint8_t bHalfSeal;        // 是否半通道
 
     uint8_t bNewInit;         // 刚复位完成
-    uint8_t bReInit;          // 再次复位转动
     uint8_t bEmgStopV;        // 再次复位转动
     uint8_t SnCode[LEN_SN];   // 序列码
+    uint8_t spd;              // 当前速度
+
 } _VALVE_T;
 PEXT _VALVE_T valve;
 

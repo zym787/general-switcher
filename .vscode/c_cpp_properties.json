@@ -116,7 +116,10 @@
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\ags_mb",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
                 "${default}"
             ],
             "defines": [
@@ -214,7 +217,10 @@
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
                 "${default}"
             ],
             "defines": [
@@ -313,7 +319,10 @@
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
                 "${default}"
             ],
             "defines": [
@@ -412,7 +421,10 @@
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
                 "${default}"
             ],
             "defines": [
@@ -511,7 +523,10 @@
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
                 "${default}"
             ],
             "defines": [
@@ -607,9 +622,14 @@
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\EEPROM",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\Modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\ags_mb",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_common",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
                 "${default}"
             ],
@@ -709,7 +729,10 @@
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
                 "${default}"
             ],
             "defines": [
@@ -808,7 +831,10 @@
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
                 "${default}"
             ],
             "defines": [
@@ -907,7 +933,10 @@
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
                 "${default}"
             ],
             "defines": [
@@ -1006,7 +1035,10 @@
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\Doc",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\xfusion\\xf_utils_log",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\3rd\\common",
                 "${default}"
             ],
             "defines": [

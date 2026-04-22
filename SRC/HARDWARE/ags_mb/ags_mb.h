@@ -7,6 +7,8 @@
 #define PEXT extern
 #endif
 
+// #define DEBUG_AGS_MB    /* AGS */
+
 //======================  参数宏定义=================================
 #define MAX_ADDR                    1
 #define	MB_SALVE_DEF_ADDR           1
@@ -43,7 +45,7 @@
 #define NO_RESPONSE_TIME			500		// 通讯中断超时 约500*MODBUS_TIME
 #define NO_RESPONSE_TIME_BC			500		// 通讯中断超时 约500*MODBUS_TIME
 //---- 通信状态参数-------------------------------------------------
-#define MB_IDEL						0X00	// 总线空闲、结束帧、起始帧
+#define MB_IDLE						0X00	// 总线空闲、结束帧、起始帧
 #define MB_WAIT_HOST				0X01	// 主设备等待响应
 #define MB_BUSY						0X50	// 总线忙
 #define MB_RECIVE					0X51	// 总线接收

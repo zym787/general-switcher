@@ -365,8 +365,8 @@ void TermSpd(char rw)
     int getInt = 0;
     if(rw == READ_ACT)
     {
-            I2CPageRead_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
-            printd("\r\n Speed %d", spdVx2);
+            I2CPageRead_Nbytes(ADDR_SPD, LEN_SPD, &valve.spd);
+            printd("\r\n Speed %d", valve.spd);
     }
     else
     {
@@ -379,49 +379,49 @@ void TermSpd(char rw)
 #ifdef AGING_MODE
         if(0 <= getInt && 255 >= getInt)
         {
-            spdVx2 = getInt;
-            printd("\r\n set speed to %d", spdVx2);
+            valve.spd = getInt;
+            printd("\r\n set speed to %d", valve.spd);
         }
         else
         {
             printd("\r\n %d Speed out of range (%dRDCR: %d-%d)", 
                 getInt, rdc.rate, 0, 255);
-            spdVx2 = 30;
-            printd("\r\n Use default Speed %d", spdVx2);
+            valve.spd = 30;
+            printd("\r\n Use default Speed %d", valve.spd);
         }
 #else
         if(RDC20 == rdc.rate)
         {
             if(SPD_MIN_RDCR20 <= getInt && SPD_MAX_RDCR20 >= getInt)
             {
-                spdVx2 = getInt;
-                printd("\r\n set speed to %d", spdVx2);
+                valve.spd = getInt;
+                printd("\r\n set speed to %d", valve.spd);
             }
             else
             {
                 printd("\r\n %d Speed out of range (%dRDCR: %d-%d)", 
                     getInt, rdc.rate, SPD_MIN_RDCR20, SPD_MAX_RDCR20);
-                spdVx2 = INIT_SPD / 2;
-                printd("\r\n Use default Speed %d", spdVx2);
+                valve.spd = INIT_SPD / 2;
+                printd("\r\n Use default Speed %d", valve.spd);
             }
         }
         else
         {
             if(SPD_MIN <= getInt && SPD_MAX >= getInt)
             {
-                spdVx2 = getInt;
-                printd("\r\n set speed to %d", spdVx2);
+                valve.spd = getInt;
+                printd("\r\n set speed to %d", valve.spd);
             }
             else
             {
                 printd("\r\n %d Speed out of range (%dRDCR: %d-%d)", 
                     getInt, rdc.rate, SPD_MIN, SPD_MAX);
-                spdVx2 = INIT_SPD;
-                printd("\r\n Use default Speed %d", spdVx2);
+                valve.spd = INIT_SPD;
+                printd("\r\n Use default Speed %d", valve.spd);
             }
         }
 #endif
-        I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
+        I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &valve.spd);
     }
 }
 
@@ -495,7 +495,7 @@ void TermISet(char rw)
     int getInt = 0;
     if(rw == READ_ACT)
     {
-        I2CPageWrite_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);
+        I2CPageRead_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);
         printd("\r Current:%d %sA ", valve.iSet, 
             (0 == valve.iSet ? "2.6" :
                 (1 == valve.iSet ? "2.2" :
@@ -655,7 +655,7 @@ void TermInspection(char rw)
         printd("\r\n 地址       (ADDR) : %d", ags_mbParam.mAddrs);                                        /* 地址 */
         printd("\r\n 通道数     (CNT)  : %d", valveFix.fix.portCnt);                                     /* 通道数 */
         printd("\r\n 波特率     (BAUD) : %d %dbps", syspara.baudrate, BaudRate_V[syspara.baudrate]);     /* 波特率 */
-        printd("\r\n 速度       (SPD)  : %d RPM", spdVx2);                                               /* 速度 */
+        printd("\r\n 速度       (SPD)  : %d RPM", valve.spd);                                            /* 速度 */
         printd("\r\n 减速比     (RDCR) : %d", rdc.rate);                                                 /* 减速比 */
         printd("\r\n 半通道     (HALF) : %d %s", valve.bHalfSeal, (0 == valve.bHalfSeal ? "关" : "开")); /* 半通道 */
         printd("\r\n 原点补偿   (FIXO) : %d (1度)", valveFix.fix.org);                                   /* 原点补偿 */
@@ -704,7 +704,51 @@ void TermReply(char rw)
     }
 }
 
+void TermProtocal(char rw)
+{
+        int getInt = 0;
+        if (rw == READ_ACT) {
+                I2CPageRead_Nbytes(ADDR_PROTOCOL, LEN_PROTOCOL, &syspara.protocol_type);
+                printd("\r\n now protocol is");
+                if (AGS_MODBUS == syspara.protocol_type) {
+                        printd(" AGS");
+                } else if (EXT_COMM == syspara.protocol_type) {
+                        printd(" HX");
+                } else if (MODBUS == syspara.protocol_type) {
+                        printd(" MODBUS");
+                } else {
+                        printd(" wrong type");
+                }
+        } else {
+                unsigned char ret = FetchInt(5, 0, rcvStr, &getInt);
+                if (ret) {
+                        printd("\r\n Err code %d", ret);
+                        return;
+                }
+
+                switch (getInt) {
+                        default:
+                                printd("\r\n wrong type set default AGS");
+                        case AGS_MODBUS:
+                                syspara.protocol_type = AGS_MODBUS;
+                                printd("\r\n set protocal to AGS");
+                                break;
+                        case EXT_COMM:
+                                syspara.protocol_type = EXT_COMM;
+                                printd("\r\n set protocal to HX");
+                                break;
+                        case MODBUS:
+                                syspara.protocol_type = MODBUS;
+                                printd("\r\n set protocal to MODBUS");
+                                break;
+                }
+                I2CPageWrite_Nbytes(ADDR_PROTOCOL, LEN_PROTOCOL, &syspara.protocol_type);
+        }
+}
+
 void TermList(char rw);
+
+// clang-format off
 /* 填充命令结构体数组 */
 static _CMD_T cmds[] =
 {
@@ -730,6 +774,7 @@ static _CMD_T cmds[] =
     {"MOVES",   5,  TermMovesCnt},
     {"INSP",    4,  TermInspection},
     {"REPLY",   5,  TermReply},
+    {"PRTCL",   5,  TermProtocal},
 };
 
 static char* comment[] =
@@ -753,7 +798,9 @@ static char* comment[] =
     "设置/显示切换次数",
     "点检模式",
     "设置/显示回复模式",
+    "设置/显示控制协议",
 };
+// clang-format on
 
 /*
  * 显示所有指令

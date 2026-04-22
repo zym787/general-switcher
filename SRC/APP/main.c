@@ -11,6 +11,12 @@ uint8_t valveFixDflt    = 5,    /* 默认原点补偿 */
 
 void IOconfig(void)
 {
+        /* PB1 为485芯片收发切换引脚 */
+        RCC->APB2ENR |= (RCC_APB2Periph_GPIOB);
+        GPIOB->CRL &= (GPIO_Crl_P1);
+        GPIOB->CRL |= (GPIO_Mode_Out_PP_50MHz_P1);
+        RX_EN();  // 开机为接收模式
+
 #ifdef C_901
         RCC->APB2ENR |= RCC_APB2Periph_AFIO;
         RCC->APB2ENR |= (RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB);
@@ -255,12 +261,12 @@ void ParameterInit(void)
                         I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
                 }
                 /* 速度 */
-                I2CPageRead_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
-                if (SPD_MIN <= spdVx2 && SPD_MAX >= spdVx2) {
-                        printd("\r 速度:%d 转/分钟", spdVx2);
+                I2CPageRead_Nbytes(ADDR_SPD, LEN_SPD, &valve.spd);
+                if (SPD_MIN <= valve.spd && SPD_MAX >= valve.spd) {
+                        printd("\r 速度:%d 转/分钟", valve.spd);
                 } else {
-                        spdVx2 = INIT_SPD;
-                        printd("\r 速度超限,默认写入%d 请重新设置!", spdVx2);
+                        valve.spd = INIT_SPD;
+                        printd("\r 速度超限,默认写入%d 请重新设置!", valve.spd);
                 }
 #ifdef IOCTRL
                 /* IO控制 */
@@ -365,8 +371,8 @@ void ParameterInit(void)
                 syspara.baudrate = BAUD_DEF;
                 I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
                 /* 速度 20 */
-                spdVx2 = INIT_SPD;
-                I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &spdVx2);
+                valve.spd = INIT_SPD;
+                I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &valve.spd);
 #ifdef IOCTRL
                 /* IO控制 1 开启 */
                 bIoCtrl = ON;
@@ -420,8 +426,6 @@ void ParameterInit(void)
 
         valve.status = VALVE_INITING;
         valve.ErrBlinkTime = NORMAL_BLINK;
-        valve.passByOne = 0;
-        valve.bReInit = 1;
 }
 
 // #define EE_READTEST_DEMO      /* 是否开启读取EEPROM测试 */
@@ -464,7 +468,7 @@ int main(void)
         if (syspara.protocol_type == AGS_MODBUS) {
                 ags_mbInit(); /* AGS协议 */
         } else if (syspara.protocol_type == MODBUS) {
-                //     mb_Init(); /* 初始化Modbus协议 */
+                    mb_Init(); /* 初始化Modbus协议 */
         }
         ParameterInit();
         UsrCmdInit();
@@ -479,7 +483,7 @@ int main(void)
                 if (syspara.protocol_type == AGS_MODBUS) {
                         ags_mbProcess(); /* AGS协议 */
                 } else if (syspara.protocol_type == MODBUS) {
-                        // mb_Poll(); /* 解析Modbus数据帧 */
+                        mb_Poll(); /* 解析Modbus数据帧 */
                 }
                 EveryHSec();
                 DebugOut();

@@ -33,7 +33,7 @@ typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity    
 ///发布模式
 #ifndef RELEASE
 #define DEBUG           /* 调试信息输出 */
-#define DEBUG_MODBUS    /* AGS */
+// #define DEBUG_MODBUS    /* AGS */
 #endif
 
 #define STM32_RC_C8     0   // 1-使用RC 0使用C8
@@ -164,9 +164,15 @@ typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity    
 #include "EEP24serial.h"
 #include "main.h"
 #include "ags_mb.h"
+#include "modbus.h"
 #include "motor.h"
 #include "app.h"
 
+#include "../3rd/common/elab_log.h"
+#include "../3rd/xfusion/xf_utils.h"
+
+#define RX_EN() (PBout(1) = 0)
+#define TX_EN() (PBout(1) = 1)
 
 //STM32F10X_HD,USE_STDPERIPH_DRIVER
 //正常的开关定义

@@ -10,8 +10,8 @@
 // clang-format off
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0026    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r26"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0027    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r27"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #ifndef C_901
@@ -104,6 +104,8 @@
 //  v1.3.1-r25      2026.03.26  优化AGS读指令长度限制,减少冗余
 //  v1.3.1-r26      2026.03.27  修复错误长度读指令使设备死机问题
 //                  2026.04.09  统一波特率显示,优化下载口显示及点检模式
+//  v1.3.1-r27      2026.04.22  支援modbus,修复485串口无法接收,修复下载口读电流错误,优化代码
+
 
 #ifdef A12_901
     #define IO_OUT          PAout(8)
@@ -178,6 +180,12 @@
 #define ADDR_PROTOCOL             (ADDR_INIT_STATE+LEN_INIT_STATE)
 #define LEN_PROTOCOL             1
 
+#define ADDR_BURN_CNT             (ADDR_PROTOCOL+LEN_PROTOCOL)
+#define LEN_BURN_CNT             4
+
+#define ADDR_GOD_MODE             (ADDR_BURN_CNT+LEN_BURN_CNT)
+#define LEN_GOD_MODE             1
+
 // clang-format on
 
 #define NORMAL_BLINK            1500       // 正常运行的闪烁间隔
@@ -209,6 +217,12 @@ typedef enum BAUDRATETYPE {
         BAUD_NUM
 } BaudRate_T;
 
+typedef enum GODMODE {
+        GD_NORMAL = 0u,
+        GD_FACTORY = 1u,
+        GD_AGING = 2u,
+} GodMode_T;
+
 extern uint16_t BaudRate_V[BAUD_NUM];
 extern uint16_t BaudRate_Time[BAUD_NUM];
 
@@ -218,9 +232,11 @@ typedef struct {                  /* 系统参数 */
         bool bCountLastTime;      /* 切换时间计时标志 */
         uint32_t totalCnt;        /* 切换次数 */
         uint32_t totalCntLst;
+        uint32_t burnCnt;        /* 烧机次数 */
         uint16_t lastTime;       /* 上次切换时间 */
         uint32_t protectTimeOut; /* 超时保护时间 */
         uint8_t replyMode;       /* 回复方式 */
+        GodMode_T GodMode;       /* 当前模式 */
 } _SYS_T;
 PEXT _SYS_T syspara;
 

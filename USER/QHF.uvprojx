@@ -448,6 +448,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -482,6 +487,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -929,6 +959,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -963,6 +998,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1410,6 +1470,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1444,6 +1509,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1891,6 +1981,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1925,6 +2020,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2372,6 +2492,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2406,6 +2531,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2744,7 +2894,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,A_906</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb;..\SRC\3rd\common;..\SRC\3rd\xfusion\xf_common;..\SRC\3rd\xfusion\xf_utils_log;..\SRC\3rd\xfusion</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2853,6 +3003,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2887,6 +3042,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3334,6 +3514,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3368,6 +3553,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3815,6 +4025,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3849,6 +4064,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4296,6 +4536,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4330,6 +4575,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4777,6 +5047,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\ags_mb\ModBusCrc16.c</FilePath>
             </File>
+            <File>
+              <FileName>modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4811,6 +5086,31 @@
               <FileName>ValveX2_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
               <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>3rd/xfusion</GroupName>
+          <Files>
+            <File>
+              <FileName>xf_utils_log_dump.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\xfusion\xf_utils_log\xf_utils_log_dump.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>elab/common</GroupName>
+          <Files>
+            <File>
+              <FileName>elab_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_log.c</FilePath>
+            </File>
+            <File>
+              <FileName>elab_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
             </File>
           </Files>
         </Group>
