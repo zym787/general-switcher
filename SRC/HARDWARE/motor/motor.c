@@ -156,7 +156,7 @@ void InitValve(void)
                                 //                break;
                         case 5: /* 是否执行半通道 */
 #ifdef IOCTRL
-                                if (ON == bIoCtrl) /* IO生效时无半通道 */
+                                if (ON == syspara.ioCtrl) /* IO生效时无半通道 */
                                 {
                                         valve.initStep = 6;
                                 } else /* IO不生效时才有半通道 */
@@ -205,7 +205,7 @@ void InitValve(void)
                                 if (!MotionStatus[AXSV]) {
                                         valve.portDes = 0; /* 清空 */
 #ifdef IOCTRL
-                                        if (ON == bIoCtrl) /* IO默认到A */
+                                        if (ON == syspara.ioCtrl) /* IO默认到A */
                                         {
                                                 valve.portCur = POS_A;
                                         } else {
@@ -392,7 +392,7 @@ void TestBurn(void)
         }
         if (timerPara.timeWaitMill > SEC) {
                 timerPara.timeWaitMill = 0;
-                if (++tmWait > intCtrl) {
+                if (++tmWait > syspara.agingInterval) {
                         // 30秒间隔,启动模块运转到下一个通道
                         tmWait = 0;
                         if (valve.status == VALVE_RUN_END) {
@@ -423,7 +423,7 @@ void TestBurn(void)
                         accel[AXSV] *= (rdc.rate);
                         decel[AXSV] *= (valve.spd);
                         decel[AXSV] *= (rdc.rate);
-                        if (++tmWait > intCtrl) {
+                        if (++tmWait > syspara.agingInterval) {
                                 // n秒间隔,启动模块运转到下一个通道
                                 tmWait = 0;
                                 if (0 == dirFlag) {

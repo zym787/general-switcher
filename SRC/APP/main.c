@@ -66,13 +66,9 @@ void IOconfig(void)
 #endif
 }
 
-/* 检测任务 */
-#define SINGLE_RUN_TIMEOUT    5   // 运行5秒超时
-#define SINGLE_INITING_TIMOUT 14  // 转一圈差不多3秒,复位单次是两圈
-void EveryHSec(void)
-{
+void io_Ctrl_Process(void) {
 #ifdef IOCTRL
-        if (bIoCtrl) /* 1 IO (100ms) */
+        if (true == syspara.ioCtrl) /* 1 IO (100ms) */
         {
                 if (timerPara.timeMilli > DCSEC) {
                         timerPara.timeMilli = 0;
@@ -138,6 +134,15 @@ void EveryHSec(void)
                 }
         }
 #endif /* IOCTRL */
+}
+
+/* 检测任务 */
+#define SINGLE_RUN_TIMEOUT    5   // 运行5秒超时
+#define SINGLE_INITING_TIMOUT 14  // 转一圈差不多3秒,复位单次是两圈
+void EveryHSec(void)
+{
+        /* IO */
+        io_Ctrl_Process();
 
         /// IO输出灯状态
 #ifdef C_901
@@ -270,12 +275,12 @@ void ParameterInit(void)
                 }
 #ifdef IOCTRL
                 /* IO控制 */
-                I2CPageRead_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
-                printd("\r IO控制:%d %s", bIoCtrl, (0 == bIoCtrl ? "关" : "开"));
+                I2CPageRead_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &syspara.ioCtrl);
+                printd("\r IO控制:%d %s", syspara.ioCtrl, (0 == syspara.ioCtrl ? "关" : "开"));
 #endif
                 /* 老化间隔 */
-                I2CPageRead_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
-                printd("\r 老化间隔:%d 秒", intCtrl);
+                I2CPageRead_Nbytes(ADDR_INTVL, LEN_INTVL, &syspara.agingInterval);
+                printd("\r 老化间隔:%d 秒", syspara.agingInterval);
                 /* 电流设置 */
                 /* 906/909 支持电流设置 */
 #ifndef A12_901
@@ -375,16 +380,16 @@ void ParameterInit(void)
                 I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &valve.spd);
 #ifdef IOCTRL
                 /* IO控制 1 开启 */
-                bIoCtrl = ON;
-                I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
+                syspara.ioCtrl = ON;
+                I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &syspara.ioCtrl);
 #else
                 /* IO控制 0 不开启 */
-                bIoCtrl = OFF;
-                I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
+                syspara.ioCtrl = OFF;
+                I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, (uint8_t *)&syspara.ioCtrl);
 #endif
                 /* 老化间隔 5秒 */
-                intCtrl = IntDflt;
-                I2CPageWrite_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
+                syspara.agingInterval = IntDflt;
+                I2CPageWrite_Nbytes(ADDR_INTVL, LEN_INTVL, &syspara.agingInterval);
                 /* 电流设置 906/909  0 最大 */
                 valve.iSet = IsetDflt;
                 I2CPageWrite_Nbytes(ADDR_ISET, LEN_ISET, &valve.iSet);

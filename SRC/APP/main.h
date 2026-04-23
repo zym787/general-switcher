@@ -192,8 +192,6 @@
 #define RETRY_TIME_OUT          1100       // 重试的闪烁间隔
 #define ERROR_BLINK             400
 
-PEXT uint8_t bdrate, bIoCtrl, intCtrl, spdVx2;
-
 /**
  * @brief     : 控制协议枚举
  */
@@ -237,6 +235,8 @@ typedef struct {                  /* 系统参数 */
         uint32_t protectTimeOut; /* 超时保护时间 */
         uint8_t replyMode;       /* 回复方式 */
         GodMode_T GodMode;       /* 当前模式 */
+        bool ioCtrl;             /* IO控制位 */
+        uint8_t agingInterval;   /* 老化间隔 */
 } _SYS_T;
 PEXT _SYS_T syspara;
 

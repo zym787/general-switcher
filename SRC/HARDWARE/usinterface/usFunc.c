@@ -434,7 +434,7 @@ void TermIO(char rw)
         int getInt = 0;
         /* 无参数时直接切换IO状态 */
         if (rw == READ_ACT) {
-                bIoCtrl = !bIoCtrl;
+                syspara.ioCtrl = !syspara.ioCtrl;
         } else {
                 unsigned char ret = FetchInt(2, 0, rcvStr, &getInt);
                 if (ret) {
@@ -442,14 +442,14 @@ void TermIO(char rw)
                         return;
                 }
                 if (0 == getInt || 1 == getInt) {
-                        bIoCtrl = getInt;
+                        syspara.ioCtrl = getInt;
                 } else {
                         printd("\r\n IO control overflow");
                         return;
                 }
         }
-        printd("\r set IO to %d %s", bIoCtrl, (0 == bIoCtrl ? "关" : "开"));
-        I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, &bIoCtrl);
+        printd("\r set IO to %d %s", syspara.ioCtrl, (0 == syspara.ioCtrl ? "关" : "开"));
+        I2CPageWrite_Nbytes(ADDR_IO_CTRL, LEN_IO_CTRL, (uint8_t *)&syspara.ioCtrl);
 }
 
 /**
@@ -461,8 +461,8 @@ void TermInterval(char rw)
     int getInt = 0;
     if(rw == READ_ACT)
     {
-            I2CPageRead_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
-            printd("Interval %d Sec", intCtrl);
+            I2CPageRead_Nbytes(ADDR_INTVL, LEN_INTVL, &syspara.agingInterval);
+            printd("Interval %d Sec", syspara.agingInterval);
     }
     else
     {
@@ -474,9 +474,9 @@ void TermInterval(char rw)
         }
         if(BYTE_RANGE_MIN <= getInt && BYTE_RANGE_MAX >= getInt)
         {
-            intCtrl = getInt;
-            printd("\r\n set interval to %d Sec", intCtrl);
-            I2CPageWrite_Nbytes(ADDR_INTVL, LEN_INTVL, &intCtrl);
+            syspara.agingInterval = getInt;
+            printd("\r\n set interval to %d Sec", syspara.agingInterval);
+            I2CPageWrite_Nbytes(ADDR_INTVL, LEN_INTVL, &syspara.agingInterval);
         }
         else
         {
@@ -660,7 +660,7 @@ void TermInspection(char rw)
         printd("\r\n 半通道     (HALF) : %d %s", valve.bHalfSeal, (0 == valve.bHalfSeal ? "关" : "开")); /* 半通道 */
         printd("\r\n 原点补偿   (FIXO) : %d (1度)", valveFix.fix.org);                                   /* 原点补偿 */
         printd("\r\n 方向补偿   (FIXG) : %d (0.1度)", valveFix.fix.dirGap);                              /* 方向补偿 */
-        printd("\r\n IO控制     (IOE)  : %d %s", bIoCtrl, (0 == bIoCtrl ? "关" : "开"));                 /* IO */
+        printd("\r\n IO控制     (IOE)  : %d %s", syspara.ioCtrl, (0 == syspara.ioCtrl ? "关" : "开"));                 /* IO */
         printd("\r\n 电流       (ISET) : %d", valve.iSet);                                               /* 电流设置 */
         printd("\r\n 切换次数   (MOVES): %d", syspara.totalCnt);                                         /* 切换次数 */
         printd("\r\n 回复方式   (REPLY): %d", syspara.replyMode);                                        /* 回复方式 */
