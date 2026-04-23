@@ -205,7 +205,7 @@ extern uint8_t Tx_Buffer[MODBUS_LENGTH];
 void mb_Init(void);
 void mb_TimesProcess(void);
 void mb_SendBuffer(uint8_t _length);
-void mb_Receive(uint8_t _recStr);
+extern void mb_Receive(uint8_t _recStr);
 void mb_Error(void);
 void mb_Poll(void);
 
