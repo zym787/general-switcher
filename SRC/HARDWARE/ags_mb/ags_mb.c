@@ -312,7 +312,8 @@ void ags_mbPresetSingleHoldingRegister(void)
                         }
                 } else if (0x01 == op_addr) /* 写地址 */
                 {
-                        if (AGS_ADDR_MIN <= ags_mbParam.rBuf[3] && AGS_ADDR_MAX >= ags_mbParam.rBuf[3] &&
+                        // if (AGS_ADDR_MIN <= ags_mbParam.rBuf[3] && AGS_ADDR_MAX >= ags_mbParam.rBuf[3] &&
+                        if (AGS_ADDR_MAX >= ags_mbParam.rBuf[3] &&
                             6 == ags_mbParam.rCnt) {
                                 ags_mbParam.mAddrs = ags_mbParam.rBuf[3];
                                 I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ags_mbParam.mAddrs);
@@ -332,7 +333,7 @@ void ags_mbPresetSingleHoldingRegister(void)
                 } else if (0x07 == op_addr) /* 写波特率 */
                 {
                         if (BAUD_MIN <= ags_mbParam.rBuf[3] && BAUD_MAX >= ags_mbParam.rBuf[3] && 6 == ags_mbParam.rCnt) {
-                                syspara.baudrate = ags_mbParam.rBuf[3];
+                                syspara.baudrate = (ags_mbParam.rBuf[3] == 2 ? BAUD_19200 : (ags_mbParam.rBuf[3] == 3 ? BAUD_38400 : BAUD_9600));
                                 I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
                         } else {
                                 ags_mbParam.sERR = ERR_MB_DATA; /* 操作数据无效 */
@@ -370,7 +371,8 @@ void ags_mbPresetSingleHoldingRegister(void)
                         }
                 } else if (0x0B == op_addr) /* 设置通道状态指令回复方式 */
                 {
-                        if (REPLYMODE_AGS <= ags_mbParam.rBuf[3] && REPLYMODE_CUSTOM_3 >= ags_mbParam.rBuf[3] &&
+                        // if (REPLYMODE_AGS <= ags_mbParam.rBuf[3] && REPLYMODE_CUSTOM_3 >= ags_mbParam.rBuf[3] &&
+                        if (REPLYMODE_CUSTOM_3 >= ags_mbParam.rBuf[3] &&
                             6 == ags_mbParam.rCnt) {
                                 syspara.replyMode = ags_mbParam.rBuf[3];
                                 I2CPageWrite_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);

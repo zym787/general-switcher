@@ -587,7 +587,8 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
         elog_debug(" Write Holding %02X(%d): %d", _regAddr, _regAddr, _value);
 #endif
         /* 控制指令寄存器 CTRL */
-        if (MB_RW_CTRL_SET_NORMAL <= _regAddr && MB_RW_CTRL_SET_GOD_MODE >= _regAddr) {
+        // if (MB_RW_CTRL_SET_NORMAL <= _regAddr && MB_RW_CTRL_SET_GOD_MODE >= _regAddr) {
+        if (MB_RW_CTRL_SET_GOD_MODE >= _regAddr) {
                 switch (_regAddr) {
                         case MB_RW_CTRL_SET_NORMAL:
                                 valve.portDes = _value; /* 更新目标通道 */

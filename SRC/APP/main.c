@@ -368,7 +368,7 @@ void ParameterInit(void)
                 valveFix.fix.portCnt = CHANNEL_DEF;
                 I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
                 /* 波特率 1 9600 */
-                syspara.baudrate = BAUD_DEF;
+                syspara.baudrate = BAUD_9600;
                 I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
                 /* 速度 20 */
                 valve.spd = INIT_SPD;

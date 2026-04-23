@@ -337,15 +337,15 @@ void TermBaud(char rw)
         }
         if(9600 == getInt)
         {
-            syspara.baudrate = 1;
+            syspara.baudrate = BAUD_9600;
         }
         else if(19200 == getInt)
         {
-            syspara.baudrate = 2;
+            syspara.baudrate = BAUD_19200;
         }
         else if(38400 == getInt)
         {
-            syspara.baudrate = 3;
+            syspara.baudrate = BAUD_38400;
         }
         else
         {
