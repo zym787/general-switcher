@@ -274,80 +274,121 @@ void bsp_ValveInit(void)
     找到一个通道点,位置加1,直到找到目标位置,激活急停
     如果超过一圈没有找到目标位置,启动重新初始化,重新初始化的次数超过3次,报错退出
 */
-void bsp_ValveProcess(void)
+/* 提前计算移动步数 */
+static void _calcMoveSteps(float *ftemp)
+{
+        *ftemp = (float)rdc.stepRound / valveFix.fix.portCnt; /* 单通道切换步数 */
+
+        if (valve.bNewInit && valve.bHalfSeal) /* 半通道补偿 */
+                *ftemp /= 2;
+
+        if (valve.portDes == POS_A) /* B->A / Half->A */
+        {
+                *ftemp *= 2;
+                valve.initStep = 4;
+        } else /* A->B / Half->B */
+        {
+                *ftemp += (float)valveFix.fix.dirGap * rdc.stepP01dgr; /* 方向补偿 */
+                *ftemp *= -1;
+        }
+}
+
+/* 执行电机移动 */
+static void _doAxisMove(float ftemp)
+{
+        if (valve.bNewInit) /* 刚复位完成,用相对移动 */
+        {
+                valve.bNewInit = 0;
+#if DIRECTION_SWITCH == 1
+                AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                dbg_printf("\r New Init Rel (%d) step%d", valve.initStep, -(int)ftemp);
+#else
+                AxisMoveRel(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                dbg_printf("\r New Init Rel (%d) step%d", valve.initStep, (int)ftemp);
+#endif
+        } else /* 否则绝对移动 */
+        {
+#if DIRECTION_SWITCH == 1
+                AxisMoveAbs(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                dbg_printf("\r No New Init Abs (%d) step%d", valve.initStep, -(int)ftemp);
+#else
+                AxisMoveAbs(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
+                dbg_printf("\r No New Init Abs (%d) step%d", valve.initStep, (int)ftemp);
+#endif
+        }
+}
+
+/**
+ * @brief    阀组空闲状态处理
+ */
+static void _handleValveIdle(void)
 {
         float ftemp = 0;
-        if ((!(valve.status & VALVE_INITING)) && (!MotionStatus[AXSV])) {
-                if (VALVE_RUN_END == valve.status) /* 阀组空闲状态 */
-                {
-                        if (valve.portCur != valve.portDes && (POS_A == valve.portDes || POS_B == valve.portDes)) {
-                                syspara.lastTime = 0; /* 清空切换时间 */
-                                syspara.bCountLastTime = true;
-                                ftemp = (float)rdc.stepRound / valveFix.fix.portCnt; /* 单通道切换步数 */
-                                if (valve.bNewInit) {
-                                        if (valve.bHalfSeal) /* 半通道 */
-                                                ftemp /= 2;
-                                }
-                                if (valve.portDes == POS_A) /* B->A / Half->A */
-                                {
-                                        ftemp *= 2;
-                                        valve.initStep = 4;
-                                } else /* A->B / Half->B */
-                                {
-                                        ftemp += (float)valveFix.fix.dirGap * rdc.stepP01dgr; /* 方向补偿 */
-                                        ftemp *= -1;
-                                }
-                                VALVE_ENA = ENABLE;
-                                if (valve.bNewInit) /* 刚复位完成,用相对移动 */
-                                {
-                                        valve.bNewInit = 0;
-#if DIRECTION_SWITCH == 1
-                                        AxisMoveRel(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
-                                        dbg_printf("\r New Init Rel (%d) step%d", valve.initStep, -(int)ftemp);
-#else
-                                        AxisMoveRel(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
-                                        dbg_printf("\r New Init Rel (%d) step%d", valve.initStep, (int)ftemp);
-#endif
-                                } else /* 否则绝对移动 */
-                                {
-#if DIRECTION_SWITCH == 1
-                                        AxisMoveAbs(AXSV, -(int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
-                                        dbg_printf("\r No New Init Abs (%d) step%d", valve.initStep, -(int)ftemp);
-#else
-                                        AxisMoveAbs(AXSV, (int)ftemp, accel[AXSV], decel[AXSV], speed[AXSV]);
-                                        dbg_printf("\r No New Init Abs (%d) step%d", valve.initStep, (int)ftemp);
-#endif
-                                }
-                                // 清空计数,避免数据暂留
-                                valve.status &= ~VALVE_RUN_END; /* 清除运行结束标志 */
-                                valve.status |= VALVE_RUNNING;  /* 置位运行标志 */
-                                valve.statusLast = VALVE_RUNNING;
-                                syspara.protectTimeOut = 0; /* 重新开始单次保护计时 */
-                                dbg_printf("\r\n %s initstep%d (%d) ststus%02x", __FUNCTION__, valve.initStep,
-                                           syspara.protectTimeOut, valve.status);
-                        }
-                } else if (VALVE_RUNNING == valve.statusLast) /* 阀组上次运行状态 */
-                {
-                        valve.statusLast = VALVE_NONE; /* 清空状态 */
-                        if (POS_A == valve.portDes && (OPT_GAP == VALVE_OPT)) {
-                                valve.portDes = POS_N;
-                                valve.status = VALVE_RUN_ERR;
-                                valve.ErrBlinkTime = ERROR_BLINK;
-                                VALVE_ENA = DISABLE;
-                                printd("\r\n signal err");
-                                return;
-                        }
-                        valve.portCur = valve.portDes;
-                        I2CPageWrite_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portCur);
-                        valve.portDes = POS_N;
-                        valve.retryTms = 0;
-                        valve.status = VALVE_RUN_END;
-                        ++syspara.totalCnt;             /* 切换次数+1 */
-                        syspara.bCountLastTime = false; /* 暂停切换时间计时 */
-                                                        //                ISET(I_05A);
-                        VALVE_ENA = DISABLE;
-                        printd("\r\n Transfer Time: %dms", syspara.lastTime);
-                }
+
+        /* 目标位置无效或未变化,跳过 */
+        if (valve.portCur == valve.portDes || (POS_A != valve.portDes && POS_B != valve.portDes)) {
+                return;
+        }
+
+        syspara.lastTime = 0;          /* 清空切换时间 */
+        syspara.bCountLastTime = true; /* 开始运行计时 */
+
+        _calcMoveSteps(&ftemp);
+
+        VALVE_ENA = ENABLE;
+        _doAxisMove(ftemp);
+
+        /* 清空计数,避免数据暂留 */
+        valve.status &= ~VALVE_RUN_END; /* 清除运行结束标志 */
+        valve.status |= VALVE_RUNNING;  /* 置位运行标志 */
+        valve.statusLast = VALVE_RUNNING;
+        syspara.protectTimeOut = 0; /* 重新开始单次保护计时 */
+        dbg_printf("\r\n %s initstep%d (%d) ststus%02x", __FUNCTION__, valve.initStep, syspara.protectTimeOut,
+                   valve.status);
+}
+
+/**
+ * @brief    阀组运行结束处理
+ */
+static void _handleValveRunDone(void)
+{
+        valve.statusLast = VALVE_NONE; /* 清空状态 */
+
+        /* 光耦信号异常检测 */
+        if (POS_A == valve.portDes && (OPT_GAP == VALVE_OPT)) {
+                valve.portDes = POS_N;
+                valve.status = VALVE_RUN_ERR;
+                valve.ErrBlinkTime = ERROR_BLINK;
+                VALVE_ENA = DISABLE;
+                printd("\r\n signal err");
+                return;
+        }
+
+        valve.portCur = valve.portDes;
+        I2CPageWrite_Nbytes(ADDR_NOW_POS, LEN_NOW_POS, &valve.portCur);
+        valve.portDes = POS_N;
+        valve.retryTms = 0;
+        valve.status = VALVE_RUN_END;
+        ++syspara.totalCnt;             /* 切换次数+1 */
+        syspara.bCountLastTime = false; /* 暂停切换时间计时 */
+        VALVE_ENA = DISABLE;
+        printd("\r\n 移动耗时: %dms", syspara.lastTime);
+}
+
+/**
+ * @brief    阀运行
+ */
+void bsp_ValveProcess(void)
+{
+        /* 正在初始化或电机运动中,直接返回 */
+        if ((valve.status & VALVE_INITING) || MotionStatus[AXSV]) {
+                return;
+        }
+
+        if (VALVE_RUN_END == valve.status) {
+                _handleValveIdle();/* 阀组空闲状态 */
+        } else if (VALVE_RUNNING == valve.statusLast) {
+                _handleValveRunDone();/* 阀组上次运行状态 */
         }
 }
 
