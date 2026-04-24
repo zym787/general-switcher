@@ -603,14 +603,8 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
                         //         break;
                         case MB_RW_CTRL_SET_FREE:
                                 valve.spd = MB_GET_HOLDING(MB_RW_OPERATE1_SPEED);     /* 速度 */
-                                speed[AXSV] = accel[AXSV] = 100;
-                                decel[AXSV] = 200;
-                                speed[AXSV] *= (valve.spd);
-                                speed[AXSV] *= (rdc.rate);
-                                accel[AXSV] *= (valve.spd);
-                                accel[AXSV] *= (rdc.rate);
-                                decel[AXSV] *= (valve.spd);
-                                decel[AXSV] *= (rdc.rate);
+                                /* 更新电机速度到设定值 */
+                                bsp_ValveUpdateSpeed(valve.spd);
                                 valve.portDes = _value; /* 更新目标通道 */
                                 break;
                         case MB_RW_CTRL_SET_ZERO:

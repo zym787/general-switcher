@@ -282,16 +282,8 @@ void ParameterInit(void)
                 param_Write();
         }
         /* 使用初始化速度找原点 20RPM */
-        speed[AXSV] = 100;
-        accel[AXSV] = 100;
-        decel[AXSV] = 200;
-        speed[AXSV] *= (INIT_SPD);
-        speed[AXSV] *= (rdc.rate);
-        accel[AXSV] *= (INIT_SPD);
-        accel[AXSV] *= (rdc.rate);
-        decel[AXSV] *= (INIT_SPD);
-        decel[AXSV] *= (rdc.rate);
-        printd("\r\n 初始化电机!   减速!  (%d) spd%d acc%d dec%d", INIT_SPD, speed[AXSV], accel[AXSV], decel[AXSV]);
+        printd("\r\n 初始化电机!  减速!");
+        bsp_ValveUpdateSpeed(INIT_SPD);
 
         valve.status = VALVE_INITING;
         valve.ErrBlinkTime = NORMAL_BLINK;

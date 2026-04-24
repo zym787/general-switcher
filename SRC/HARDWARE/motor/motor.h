@@ -223,6 +223,7 @@ typedef union
 } _12VALVE_FIX;
 PEXT _12VALVE_FIX valveFix;
 
+extern void bsp_ValveUpdateSpeed(uint8_t _spd);
 PEXT void bsp_ValveGpioInit(void);
 PEXT void bsp_ValveInit(void);
 PEXT void bsp_ValveProcess(void);
