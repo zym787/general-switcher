@@ -13,7 +13,7 @@ void TermVR(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(2, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(2, 0, RxBuf, &getInt);
         if(ret)
         {
             return;
@@ -38,7 +38,7 @@ void TermVR(char rw)
 //     }
 //     else
 //     {
-//         unsigned char ret = FetchChar(3, 0, rcvStr, *getChar);
+//         unsigned char ret = FetchChar(3, 0, RxBuf, *getChar);
 //         if(ret)
 //         {
 //             printd("\r\n Err code %d", ret);
@@ -78,7 +78,7 @@ void TermIIC(char rw)
     else
     {
 
-        unsigned char ret = FetchInt(3, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(3, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r\n ERR%d", ret);
@@ -131,7 +131,7 @@ void TermMotorX(char rw)
     int getInt;
     if(rw == WRITE_ACT)
     {
-        unsigned char ret = FetchInt(3, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(3, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r\n Err code %d", ret);
@@ -162,7 +162,7 @@ void TermFixO(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(4, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(4, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -189,7 +189,7 @@ void TermFixG(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(4, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(4, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -215,7 +215,7 @@ void TermAddr(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(4, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(4, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -252,7 +252,7 @@ void TermCnt(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(3, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(3, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -285,7 +285,7 @@ void TermPos(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(3, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(3, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -324,7 +324,7 @@ void TermBaud(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(3, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(3, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -370,7 +370,7 @@ void TermSpd(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(3, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(3, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -436,7 +436,7 @@ void TermIO(char rw)
         if (rw == READ_ACT) {
                 syspara.ioCtrl = !syspara.ioCtrl;
         } else {
-                unsigned char ret = FetchInt(2, 0, rcvStr, &getInt);
+                unsigned char ret = FetchInt(2, 0, RxBuf, &getInt);
                 if (ret) {
                         printd("\r Err code %d", ret);
                         return;
@@ -466,7 +466,7 @@ void TermInterval(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(3, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(3, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -504,7 +504,7 @@ void TermISet(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(4, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(4, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -544,7 +544,7 @@ void TermRDCR(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(4, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(4, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -578,7 +578,7 @@ void TermHalf(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(4, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(4, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -625,7 +625,7 @@ void TermMovesCnt(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(5, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(5, 0, RxBuf, &getInt);
         if(ret)
         {
             printd("\r Err code %d", ret);
@@ -684,7 +684,7 @@ void TermReply(char rw)
     }
     else
     {
-        unsigned char ret = FetchInt(5, 0, rcvStr, &getInt);
+        unsigned char ret = FetchInt(5, 0, RxBuf, &getInt);
         if (ret)
         {
             printd("\r Err code %d", ret);
@@ -720,7 +720,7 @@ void TermProtocal(char rw)
                         printd(" wrong type");
                 }
         } else {
-                unsigned char ret = FetchInt(5, 0, rcvStr, &getInt);
+                unsigned char ret = FetchInt(5, 0, RxBuf, &getInt);
                 if (ret) {
                         printd("\r\n Err code %d", ret);
                         return;
@@ -744,6 +744,37 @@ void TermProtocal(char rw)
                 }
                 I2CPageWrite_Nbytes(ADDR_PROTOCOL, LEN_PROTOCOL, &syspara.protocol_type);
         }
+}
+
+/*
+ * 老化次数
+ */
+void TermTestCnt(char rw)
+{
+    int getInt = 0;
+    uint32_t saveCnt = 0;
+    if (rw == READ_ACT)
+    {
+        I2CPageRead_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&saveCnt);
+        if(saveCnt <= syspara.burnCnt)
+        {
+            I2CPageWrite_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&syspara.burnCnt);
+            dbg_printf("Saved");
+        }
+        printd("\r\n 老化次数 %d", syspara.burnCnt);
+    }
+    else
+    {
+        unsigned char ret = FetchInt(5, 0, RxBuf, &getInt);
+        if (ret)
+        {
+            printd("\r Err code %d", ret);
+            return;
+        }
+        printd("\r\n 设置老化次数 %d", getInt);
+        syspara.burnCnt = getInt;
+        I2CPageWrite_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&syspara.burnCnt);
+    }
 }
 
 void TermList(char rw);
@@ -775,6 +806,7 @@ static _CMD_T cmds[] =
     {"INSP",    4,  TermInspection},
     {"REPLY",   5,  TermReply},
     {"PRTCL",   5,  TermProtocal},
+    {"TESTC",   5,  TermTestCnt},
 };
 
 static char* comment[] =

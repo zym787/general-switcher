@@ -36,10 +36,10 @@
 
 [region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00010000, 0x00008854 [memory type] 2 [memory ID] 3
+	[execution region] ER_IROM1, 0x08000000, 0x00010000, 0x00008930 [memory type] 2 [memory ID] 3
 
-	[execution region] RW_IRAM1, 0x20000000, 0x00005000, 0x00001A20 [memory type] 1 [memory ID] 2
-		[ZI block] addr: 0x200003A4, size: 0x0000167C (5756)
+	[execution region] RW_IRAM1, 0x20000000, 0x00005000, 0x00001A18 [memory type] 1 [memory ID] 2
+		[ZI block] addr: 0x200003A8, size: 0x00001670 (5744)
 
 
 [object name max length] 22
@@ -47,6 +47,7 @@
 
 [object in map file]
 [object name] ags_mb.o                [path] ..\SRC\HARDWARE\ags_mb\ags_mb.c
+[object name] bsp_io.o                [path] ..\SRC\HARDWARE\io\bsp_io.c
 [object name] delay.o                 [path] ..\SRC\SYSTEM\delay\delay.c
 [object name] eep24serial.o           [path] ..\SRC\HARDWARE\EEPROM\EEP24Serial.c
 [object name] elab_log.o              [path] ..\SRC\3rd\common\elab_log.c
@@ -75,6 +76,7 @@
 [old name] ags_mb.c                [type] 1   [path] ..\SRC\HARDWARE\ags_mb\ags_mb.c
 [old name] ModBusCrc16.c           [type] 1   [path] ..\SRC\HARDWARE\ags_mb\ModBusCrc16.c
 [old name] modbus.c                [type] 1   [path] ..\SRC\HARDWARE\modbus\modbus.c
+[old name] bsp_io.c                [type] 1   [path] ..\SRC\HARDWARE\io\bsp_io.c
 [old name] delay.c                 [type] 1   [path] ..\SRC\SYSTEM\delay\delay.c
 [old name] sys.c                   [type] 1   [path] ..\SRC\SYSTEM\sys\sys.c
 [old name] timer.c                 [type] 1   [path] ..\SRC\SYSTEM\timer\timer.c
@@ -85,22 +87,23 @@
 
 [record region info]
 [load region] LR_IROM1
-	[execution region] ER_IROM1, 0x08000000, 0x00010000, 0x00008850 [type] 2 [ID] 3
-	[execution region] RW_IRAM1, 0x20000000, 0x00005000, 0x00001A20 [type] 1 [ID] 2
+	[execution region] ER_IROM1, 0x08000000, 0x00010000, 0x00008930 [type] 2 [ID] 3
+	[execution region] RW_IRAM1, 0x20000000, 0x00005000, 0x00001A18 [type] 1 [ID] 2
 ---------------------------------------------------------------------------------------------------------------------
                             FILE(s)                           |         RAM (byte)       |       FLASH (byte)       |
 ---------------------------------------------------------------------------------------------------------------------
 ..\SRC\HARDWARE\ags_mb\ags_mb.c():                            |         796              |        2308              |
+..\SRC\HARDWARE\io\bsp_io.c():                                |           0              |         108              |
 ..\SRC\SYSTEM\delay\delay.c():                                |           4              |         128              |
 ..\SRC\HARDWARE\EEPROM\EEP24Serial.c():                       |           0              |        1262              |
 ..\SRC\3rd\common\elab_log.c():                               |         256              |         105              |
-..\SRC\APP\main.c():                                          |          33              |        2967  [+6]        |
+..\SRC\APP\main.c():                                          |          35              |        3051              |
 ..\SRC\HARDWARE\modbus\modbus.c():                            |         722              |        2519              |
 ..\SRC\HARDWARE\ags_mb\ModBusCrc16.c():                       |           0              |         568              |
-..\SRC\HARDWARE\motor\motor.c():                              |          81              |        2150              |
+..\SRC\HARDWARE\motor\motor.c():                              |          81              |        2182              |
 ..\SRC\CMSIS\DeviceSupport\StartUp\startup_stm32f10x_md.s():  |        1536              |         300              |
 ..\SRC\SYSTEM\sys\sys.c():                                    |           0              |         474              |
-..\SRC\SYSTEM\timer\timer.c():                                |          17              |         525              |
+..\SRC\SYSTEM\timer\timer.c():                                |          11              |         517              |
 ..\SRC\SYSTEM\usart\usart.c():                                |           8              |         904              |
 ..\SRC\HARDWARE\usinterface\usFunc.c():                       |         832              |        6833              |
 ..\SRC\HARDWARE\motor\Smotor.lib():                           |         485              |        2569              |
@@ -110,14 +113,14 @@
 LR_IROM1
         RAM 1             [0x20000000 | 0x00005000 (20480)]
                 [zi start] 2   [zi end] 16
-                RW_IRAM1  [0x20000000]|¡ö¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ__________________________________| (   6.5 KB /  20.0 KB )  32.7%  
+                RW_IRAM1  [0x20000000]|¡ö¡ö¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ__________________________________| (   6.5 KB /  20.0 KB )  32.6%  
  
         FLASH 1           [0x08000000 | 0x00010000 (65536)]
-                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö________________________| (  34.0 KB /  64.0 KB )  53.3%  [+4]
+                ER_IROM1  [0x08000000]|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö________________________| (  34.2 KB /  64.0 KB )  53.6%  
  
 [htm file path] e:\workdir\zym_new\general-switcher\OBJ\QHF.htm
 Maximum Stack Usage =        324 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)
  
 =============================================================================================================================
 
-run time: 0.093 s
+run time: 0.113 s

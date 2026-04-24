@@ -78,7 +78,7 @@ void USART1_IRQHandler(void)
     if(USART1->SR&(1<<5))//接收到数据
     {
         res=USART1->DR;
-        getSerialData(rcvStr, res);
+        getSerialData(RxBuf, res);
     }
 }
 

@@ -106,24 +106,6 @@
 //                  2026.04.09  统一波特率显示,优化下载口显示及点检模式
 //  v1.3.1-r27      2026.04.22  支援modbus,修复485串口无法接收,修复下载口读电流错误,优化代码
 
-
-#ifdef A12_901
-    #define IO_OUT          PAout(8)
-    #ifndef C_901
-        #define IO_IN           PBin(3)
-    #else
-        #define IO_IN           PBout(3)
-    #endif
-#endif
-#ifdef A12_909
-    #define IO_OUT          PBout(13)
-    #define IO_IN           PBin(5)
-#endif
-#ifdef A12_906
-    #define IO_OUT          PBout(13)
-    #define IO_IN           PBin(14)
-#endif
-
 //----EEPROM存储地址分配---//
 //------------------------------------------------------------------------------------------------------------
 #define ADDR_BOARD_ID           0
@@ -242,11 +224,6 @@ PEXT _SYS_T syspara;
 
 PEXT int main(void);
 PEXT void DebugOut(void);
-PEXT void dlyInTimer(void);
-PEXT uint8_t IntDly(uint16_t intMs);
-PEXT void EnableReceive(void);
-PEXT void DisableReceive(void);
 PEXT void ErrBlink(void);
-PEXT void ee_ReadTest(void);
 #undef PEXT
 #endif

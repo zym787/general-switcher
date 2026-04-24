@@ -1,7 +1,7 @@
 #define _MOTOR_GLOBALS_
 #include "common.h"
 
-void MotorCfg(void)
+void bsp_ValveGpioInit(void)
 {
         RCC->APB2ENR |= (RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC);
 #if (defined A12_901) || (defined A12_909)
@@ -54,13 +54,15 @@ void MotorCfg(void)
         delay_ms(10);
         VALVE_RST = 1;
 
+        /* 驱动库配置 */
         srd[AXXN].signalDIR = &VALVE_DIR;
         srd[AXXN].signalCLK = &VALVE_CLK;
         srd[AXXN].signalCCR1 = &TIM4->CCR1;
         srd[AXXN].signalARR = &TIM4->ARR;
         srd[AXXN].signalCR1 = &TIM4->CR1;
-        srd[AXXN].SearchOrg = ValveOrg;
+        srd[AXXN].SearchOrg = bsp_ValveOrigin;
         srd[AXXN].bEmgStop = &valve.bEmgStopV;
+
         /* 电流设置 906/909  0 最大 */
 #ifndef A12_901
         ISET(I_26A);
@@ -70,7 +72,7 @@ void MotorCfg(void)
 /*
  * 阀门初始化
  */
-void InitValve(void)
+void bsp_ValveInit(void)
 {
         float ftemp = 0.0;
 #ifdef DEBUG
@@ -272,7 +274,7 @@ void InitValve(void)
     找到一个通道点,位置加1,直到找到目标位置,激活急停
     如果超过一圈没有找到目标位置,启动重新初始化,重新初始化的次数超过3次,报错退出
 */
-void ProcessValve(void)
+void bsp_ValveProcess(void)
 {
         float ftemp = 0;
         if ((!(valve.status & VALVE_INITING)) && (!MotionStatus[AXSV])) {
@@ -344,7 +346,6 @@ void ProcessValve(void)
                         syspara.bCountLastTime = false; /* 暂停切换时间计时 */
                                                         //                ISET(I_05A);
                         VALVE_ENA = DISABLE;
-                        //                EnableReceive();
                         printd("\r\n Transfer Time: %dms", syspara.lastTime);
                 }
         }
@@ -353,7 +354,7 @@ void ProcessValve(void)
 /*
  *  原点与端口光耦的信号激时,分别激活急停功能,确保停止的位置够精确
  */
-void ValveOrg(void)
+void bsp_ValveOrigin(void)
 {
         if ((OPT_BLOCKER == VALVE_OPT) && OPT_BLOCKER == valve.optLast) {
                 valve.optLast = 0;
@@ -373,7 +374,7 @@ void ValveOrg(void)
 /*
  *  设置地址为64号的时候,模块会自动启动烧机测试模式
  */
-void TestBurn(void)
+void bsp_ValveAgingMode(void)
 {
         static uint8_t tmWait = 0; /* 老化间隔记时器 */
         static uint8_t bFirstEnter = 0;
@@ -390,73 +391,74 @@ void TestBurn(void)
                 printd("\r\n 进入烧机测试模式 开始循环切换!");
                 bFirstEnter = 1;
         }
-        if (timerPara.timeWaitMill > SEC) {
-                timerPara.timeWaitMill = 0;
-                if (++tmWait > syspara.agingInterval) {
-                        // 30秒间隔,启动模块运转到下一个通道
-                        tmWait = 0;
-                        if (valve.status == VALVE_RUN_END) {
-                                if (valve.portCur != POS_A) {
-                                        valve.initStep = 4;
-                                        valve.portDes = POS_A;
-                                } else
-                                        valve.portDes = POS_B;
-                                syspara.burnCnt++;
-                                if (0 == syspara.burnCnt % 10) {
-                                        printd("  老化次数:%d(断电保存)", syspara.burnCnt);
-                                        I2CPageWrite_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&syspara.burnCnt);
-                                }
+        if (timerPara.timeWaitMill < SEC) {
+                return;
+        }
+
+        timerPara.timeWaitMill = 0;
+        if (++tmWait > syspara.agingInterval) {
+                // 30秒间隔,启动模块运转到下一个通道
+                tmWait = 0;
+                if (valve.status == VALVE_RUN_END) {
+                        if (valve.portCur != POS_A) {
+                                valve.initStep = 4;
+                                valve.portDes = POS_A;
+                        } else
+                                valve.portDes = POS_B;
+                        syspara.burnCnt++;
+                        if (0 == syspara.burnCnt % 10) {
+                                printd("  老化次数:%d(断电保存)", syspara.burnCnt);
+                                I2CPageWrite_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&syspara.burnCnt);
                         }
                 }
         }
 #else
         static uint8_t dirFlag = 0; /* 方向标志位,0:正转,1:反转 */
-        if (MOTOR_AGING_ADDR == ags_mbParam.mAddrs) {
-                if (timerPara.timeWaitMill > SEC) {
-                        timerPara.timeWaitMill = 0;
-                        speed[AXSV] = 100;
-                        accel[AXSV] = 100;
-                        decel[AXSV] = 200;
-                        speed[AXSV] *= (valve.spd);
-                        speed[AXSV] *= (rdc.rate);
-                        accel[AXSV] *= (valve.spd);
-                        accel[AXSV] *= (rdc.rate);
-                        decel[AXSV] *= (valve.spd);
-                        decel[AXSV] *= (rdc.rate);
-                        if (++tmWait > syspara.agingInterval) {
-                                // n秒间隔,启动模块运转到下一个通道
-                                tmWait = 0;
-                                if (0 == dirFlag) {
-                                        /* 正转一圈 */
-                                        dirFlag = 1;
-                                        ++syspara.totalCnt;
+        if (MOTOR_AGING_ADDR != ags_mbParam.mAddrs) {
+                return;
+        }
+        if (timerPara.timeWaitMill < SEC) {
+                return;
+        }
+        timerPara.timeWaitMill = 0;
+        speed[AXSV] = 100;
+        accel[AXSV] = 100;
+        decel[AXSV] = 200;
+        speed[AXSV] *= (valve.spd);
+        speed[AXSV] *= (rdc.rate);
+        accel[AXSV] *= (valve.spd);
+        accel[AXSV] *= (rdc.rate);
+        decel[AXSV] *= (valve.spd);
+        decel[AXSV] *= (rdc.rate);
+        if (++tmWait > syspara.agingInterval) {
+                // n秒间隔,启动模块运转到下一个通道
+                tmWait = 0;
+                ++syspara.totalCnt;
+                if (0 == dirFlag) {
+                        /* 正转一圈 */
+                        dirFlag = 1;
 #if DIRECTION_SWITCH == 1
-                                        AxisMoveRel(AXSV, -rdc.stepRound, accel[AXSV], decel[AXSV],
-                                                    speed[AXSV]); /* 电机相对移动一圈 */
-                                        printd("\r\n - 反转1圈  CCW step%d", -rdc.stepRound);
+                        AxisMoveRel(AXSV, -rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]); /* 电机相对移动一圈 */
+                        printd("\r\n - 反转1圈  CCW step%d", -rdc.stepRound);
 #else
-                                        AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV],
-                                                    speed[AXSV]); /* 电机相对移动一圈 */
-                                        printd("\r\n + 正转1圈  CW step%d", rdc.stepRound);
+                        AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]); /* 电机相对移动一圈 */
+                        printd("\r\n + 正转1圈  CW step%d", rdc.stepRound);
 #endif
-                                        VALVE_ENA = ENABLE;
-                                } else if (1 == dirFlag) {
-                                        /* 反转一圈 */
-                                        dirFlag = 0;
-                                        ++syspara.totalCnt;
+                        VALVE_ENA = ENABLE;
+                } else if (1 == dirFlag) {
+                        /* 反转一圈 */
+                        dirFlag = 0;
 #if DIRECTION_SWITCH == 1
-                                        AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);
-                                        printd("\r\n + 正转1圈  CW step%d", rdc.stepRound);
+                        AxisMoveRel(AXSV, rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);
+                        printd("\r\n + 正转1圈  CW step%d", rdc.stepRound);
 #else
-                                        AxisMoveRel(AXSV, -rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);
-                                        printd("\r\n - 反转1圈  CCW step%d", -rdc.stepRound);
+                        AxisMoveRel(AXSV, -rdc.stepRound, accel[AXSV], decel[AXSV], speed[AXSV]);
+                        printd("\r\n - 反转1圈  CCW step%d", -rdc.stepRound);
 #endif
-                                        VALVE_ENA = ENABLE;
-                                }
-                                printd("  切换次数:%d", syspara.totalCnt);
-                                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8 *)&syspara.totalCnt);
-                        }
+                        VALVE_ENA = ENABLE;
                 }
+                printd("  切换次数:%d", syspara.totalCnt);
+                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8 *)&syspara.totalCnt);
         }
 #endif
 }

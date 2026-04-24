@@ -223,12 +223,11 @@ typedef union
 } _12VALVE_FIX;
 PEXT _12VALVE_FIX valveFix;
 
-PEXT void MotorCfg(void);
-PEXT void InitValve(void);
-PEXT void ValveProcess(void);
-PEXT void ProcessValve(void);
-PEXT void ValveOrg(void);
-PEXT void TestBurn(void);
+PEXT void bsp_ValveGpioInit(void);
+PEXT void bsp_ValveInit(void);
+PEXT void bsp_ValveProcess(void);
+PEXT void bsp_ValveOrigin(void);
+PEXT void bsp_ValveAgingMode(void);
 
 #undef PEXT
 #endif

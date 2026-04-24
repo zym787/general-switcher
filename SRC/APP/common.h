@@ -167,6 +167,7 @@ typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity    
 #include "modbus.h"
 #include "motor.h"
 #include "app.h"
+#include "bsp_io.h"
 
 #include "../3rd/common/elab_log.h"
 #include "../3rd/xfusion/xf_utils.h"

@@ -39,7 +39,7 @@
 
 #define FLASH_CHK           1                       //IIC-1 flash-0
 
-PEXT char rcvStr[USART_RCV_LEN];
+PEXT char RxBuf[USART_RCV_LEN];
 PEXT void TermList(char rw);
 PEXT void TermVR(char rw);
 PEXT void TermMap(char rw);
