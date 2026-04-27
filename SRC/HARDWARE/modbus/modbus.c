@@ -522,32 +522,82 @@ void mb_Poll(void)
  */
 void mb_ReadHolding(uint16_t _regAddr)
 {
+        /* 复位指令寄存器 */
+        if (MB_RW_CTRL_SET_ZERO == _regAddr) {
+                if (valve.status == VALVE_RUN_END) {
+                        MB_SET_HOLDING(MB_RW_CTRL_SET_ZERO, 0);
+                }
+        }
         /* 只读参数寄存器 STATUS */
-        if (MB_R_STATUS_CHANNEL_CUR <= _regAddr && MB_R_STATUS_COUNT_2 >= _regAddr) {
-                MB_SET_HOLDING(MB_R_STATUS_CHANNEL_CUR, valve.portCur);        /* 当前通道 */
-                MB_SET_HOLDING(MB_R_STATUS_CONTROL_STATE, valve.status);       /* 当前状态 */
-                MB_SET_HOLDING(MB_R_STATUS_MOVE_TIME, syspara.lastTime);       /* 上次运动耗时 */
-                MB_SET_HOLDING(MB_R_STATUS_SW_CODE, (SOFT_VER_NUM >> 16));     /* 软件代码*/
-                MB_SET_HOLDING(MB_R_STATUS_SW_VERSION, SOFT_REVISION);         /* 软件版本*/
-                MB_SET_HOLDING(MB_R_STATUS_COUNT_1, syspara.burnCnt >> 16);    /* 老化次数1 */
-                MB_SET_HOLDING(MB_R_STATUS_COUNT_2, syspara.burnCnt & 0xFFFF); /* 老化次数2 */
+        else if (MB_R_STATUS_CHANNEL_CUR <= _regAddr && MB_R_STATUS_COUNT_2 >= _regAddr) {
+                switch (_regAddr) {
+                        case MB_R_STATUS_CHANNEL_CUR:
+                                MB_SET_HOLDING(MB_R_STATUS_CHANNEL_CUR, valve.portCur);        /* 当前通道 */
+                                break;
+                        case MB_R_STATUS_CONTROL_STATE:
+                                MB_SET_HOLDING(MB_R_STATUS_CONTROL_STATE, valve.status);       /* 当前状态 */
+                                break;
+                        case MB_R_STATUS_MOVE_TIME:
+                                MB_SET_HOLDING(MB_R_STATUS_MOVE_TIME, syspara.lastTime);       /* 上次运动耗时 */
+                                break;
+                        case MB_R_STATUS_SW_CODE:
+                                MB_SET_HOLDING(MB_R_STATUS_SW_CODE, (SOFT_VER_NUM >> 16));     /* 软件代码*/
+                                break;
+                        case MB_R_STATUS_SW_VERSION:
+                                MB_SET_HOLDING(MB_R_STATUS_SW_VERSION, SOFT_REVISION);         /* 软件版本*/
+                                break;
+                        case MB_R_STATUS_COUNT_1:
+                                MB_SET_HOLDING(MB_R_STATUS_COUNT_1, syspara.burnCnt >> 16);    /* 老化次数1 */
+                                break;
+                        case MB_R_STATUS_COUNT_2:
+                                MB_SET_HOLDING(MB_R_STATUS_COUNT_2, syspara.burnCnt & 0xFFFF); /* 老化次数2 */
+                                break;
+                        default:
+                                break;
+                }
                 return;
         }
         /* 运行参数1寄存器 OPERATE1 */
         else if (MB_RW_OPERATE1_ADDRESS <= _regAddr && MB_RW_OPERATE1_MOVE_COUNT_2 >= _regAddr) {
-                MB_SET_HOLDING(MB_RW_OPERATE1_ADDRESS, ags_mbParam.mAddrs);             /* 地址 */
-                MB_SET_HOLDING(MB_RW_OPERATE1_SPEED, valve.spd);                        /* 速度 */
-                MB_SET_HOLDING(MB_RW_OPERATE1_DIRECTION, 0xFF);                         /* 方向始终为就近方向 */
-                MB_SET_HOLDING(MB_RW_OPERATE1_BAUDRATE, syspara.baudrate);              /* 波特率 */
-                MB_SET_HOLDING(MB_RW_OPERATE1_MOVE_COUNT_1, syspara.totalCnt >> 16);    /* 移动次数1 */
-                MB_SET_HOLDING(MB_RW_OPERATE1_MOVE_COUNT_2, syspara.totalCnt & 0xFFFF); /* 移动次数2 */
+                switch (_regAddr) {
+                        case MB_RW_OPERATE1_ADDRESS:
+                                MB_SET_HOLDING(MB_RW_OPERATE1_ADDRESS, ags_mbParam.mAddrs);             /* 地址 */
+                                break;
+                        case MB_RW_OPERATE1_SPEED:
+                                MB_SET_HOLDING(MB_RW_OPERATE1_SPEED, valve.spd);                        /* 速度 */
+                                break;
+                        case MB_RW_OPERATE1_DIRECTION:
+                                MB_SET_HOLDING(MB_RW_OPERATE1_DIRECTION, 0xFF);                         /* 方向始终为就近方向 */
+                                break;
+                        case MB_RW_OPERATE1_BAUDRATE:
+                                MB_SET_HOLDING(MB_RW_OPERATE1_BAUDRATE, syspara.baudrate);              /* 波特率 */
+                                break;
+                        case MB_RW_OPERATE1_MOVE_COUNT_1:
+                                MB_SET_HOLDING(MB_RW_OPERATE1_MOVE_COUNT_1, syspara.totalCnt >> 16);    /* 移动次数1 */
+                                break;
+                        case MB_RW_OPERATE1_MOVE_COUNT_2:
+                                MB_SET_HOLDING(MB_RW_OPERATE1_MOVE_COUNT_2, syspara.totalCnt & 0xFFFF); /* 移动次数2 */
+                                break;
+                        default:
+                                break;
+                }
                 return;
         }
         /* 序列号寄存器 USER */
         else if (MB_RW_USER_SN_1 <= _regAddr && MB_RW_USER_SN_3 >= _regAddr) {
-                MB_SET_HOLDING(MB_RW_USER_SN_1, valve.SnCode[0] << 8 | valve.SnCode[1]); /* 序列号 */
-                MB_SET_HOLDING(MB_RW_USER_SN_2, valve.SnCode[2] << 8 | valve.SnCode[3]); /* 序列号 */
-                MB_SET_HOLDING(MB_RW_USER_SN_3, valve.SnCode[4] << 8 | 0x00);                   /* 序列号 */
+                switch (_regAddr) {
+                        case MB_RW_USER_SN_1:
+                                MB_SET_HOLDING(MB_RW_USER_SN_1, valve.SnCode[0] << 8 | valve.SnCode[1]); /* 序列号 */
+                                break;
+                        case MB_RW_USER_SN_2:
+                                MB_SET_HOLDING(MB_RW_USER_SN_2, valve.SnCode[2] << 8 | valve.SnCode[3]); /* 序列号 */
+                                break;
+                        case MB_RW_USER_SN_3:
+                                MB_SET_HOLDING(MB_RW_USER_SN_3, valve.SnCode[4] << 8 | 0x00);                   /* 序列号 */
+                                break;
+                        default:
+                                break;
+                }
                 return;
         }
         /* 出厂参数1寄存器 FACTORY1 */
@@ -556,10 +606,22 @@ void mb_ReadHolding(uint16_t _regAddr)
         }
         /* 出厂参数2寄存器 FACTORY2 */
         else if (MB_RW_FACTORY2_VALVE_TYPE <= _regAddr && MB_RW_FACTORY2_COMPEN_CCW >= _regAddr) {
-                MB_SET_HOLDING(MB_RW_FACTORY2_CHANNEL_NUM, valveFix.fix.portCnt); /* 通道数 */
-                MB_SET_HOLDING(MB_RW_FACTORY2_HALF_MODE, valve.bHalfSeal);        /* 半通道 */
-                MB_SET_HOLDING(MB_RW_FACTORY2_COMPEN_ORG, valve.fixOrg);          /* 原点补偿 */
-                MB_SET_HOLDING(MB_RW_FACTORY2_COMPEN_DIR, valveFix.fix.org);      /* 方向补偿 */
+                switch (_regAddr) {
+                        case MB_RW_FACTORY2_CHANNEL_NUM:
+                                MB_SET_HOLDING(MB_RW_FACTORY2_CHANNEL_NUM, valveFix.fix.portCnt); /* 通道数 */
+                                return;
+                        case MB_RW_FACTORY2_HALF_MODE:
+                                MB_SET_HOLDING(MB_RW_FACTORY2_HALF_MODE, valve.bHalfSeal);        /* 半通道 */
+                                break;
+                        case MB_RW_FACTORY2_COMPEN_ORG:
+                                MB_SET_HOLDING(MB_RW_FACTORY2_COMPEN_ORG, valve.fixOrg);          /* 原点补偿 */
+                                break;
+                        case MB_RW_FACTORY2_COMPEN_DIR:
+                                MB_SET_HOLDING(MB_RW_FACTORY2_COMPEN_DIR, valveFix.fix.org);      /* 方向补偿 */
+                                break;
+                        default:
+                                break;
+                }
                 return;
         } else {
                 // MB_SET_HOLDING(_regAddr, 0); /* 其他寄存器暂时返回0 */
@@ -616,7 +678,7 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
                         case MB_RW_CTRL_SET_ZERO:
                                 valve.status = VALVE_INITING;
                                 valve.initStep = 0; /* 复位指令 */
-                                valve.bNewInit = 0xff;
+                                valve.retryTms = 0;
                                 valve.ErrBlinkTime = RETRY_TIME_OUT;
                                 break;
                         case MB_RW_CTRL_SET_GOD_MODE:
