@@ -7,6 +7,7 @@ import zipfile
 import sys
 import datetime
 import logging
+import re
 
 # ========================
 # 1. 配置区域 (只需修改这里)
@@ -67,8 +68,9 @@ def init_logger(log_file_path):
     console_handler.setFormatter(logging.Formatter("%(message)s"))
     logger.addHandler(console_handler)
 
-    # 文件处理器
-    file_handler = logging.FileHandler(log_file_path, encoding="utf-8")
+    # 文件处理器 (使用覆盖模式,每次运行清空旧日志)
+    file_handler = logging.FileHandler(
+        log_file_path, mode="w", encoding="utf-8")
     file_handler.setFormatter(logging.Formatter("%(message)s"))
     logger.addHandler(file_handler)
 
@@ -191,8 +193,82 @@ def zip_obj_folder(
     return zip_path
 
 
+def cleanup_old_builds(version_dir, output_dir):
+    """清理Version目录中上次编译遗留的产物，仅保留release_version.txt"""
+    release_log = "release_version.txt"
+
+    # 构建每个target的精确匹配前缀 (如 QHF_v1.3.1-r 或 QHF_v1.3.1A-r)
+    target_patterns = []
+    for target in TARGETS:
+        version_flag = TARGET_VERSION_MAP.get(target)
+        if version_flag:
+            flag_prefix = version_flag[0]  # "", "A", "B", "C"
+            board = version_flag[1]        # "901", "906", "909"
+            prefix = f"{SOFTWARE_NAME}{flag_prefix}-r"
+            target_patterns.append((prefix, board))
+
+    deleted_count = 0
+
+    # 清理 Version 根目录
+    if os.path.exists(version_dir):
+        for filename in os.listdir(version_dir):
+            filepath = os.path.join(version_dir, filename)
+            if not os.path.isfile(filepath):
+                continue
+            if filename == release_log:
+                continue
+            for prefix, board in target_patterns:
+                if filename.startswith(prefix) and f"_{board}_" in filename:
+                    try:
+                        os.remove(filepath)
+                        deleted_count += 1
+                        log_info(f"🗑️ 已删除旧产物: {filename}")
+                    except Exception as e:
+                        log_info(f"⚠️ 无法删除 {filename}: {e}")
+                    break
+
+    # 清理 output 子目录
+    if os.path.exists(output_dir):
+        for filename in os.listdir(output_dir):
+            filepath = os.path.join(output_dir, filename)
+            if not os.path.isfile(filepath):
+                continue
+            for prefix, board in target_patterns:
+                if filename.startswith(prefix) and f"_{board}_" in filename:
+                    try:
+                        os.remove(filepath)
+                        deleted_count += 1
+                        log_info(f"🗑️ 已删除旧产物: output/{filename}")
+                    except Exception as e:
+                        log_info(f"⚠️ 无法删除 output/{filename}: {e}")
+                    break
+
+    if deleted_count == 0:
+        log_info("✅ 未发现旧编译产物，无需清理")
+    else:
+        log_info(f"✅ 共清理 {deleted_count} 个旧编译产物")
+
+
+def count_warnings():
+    """从keil_compile_log.txt中解析编译警告数量"""
+    log_file = "keil_compile_log.txt"
+    if not os.path.exists(log_file):
+        return 0
+    try:
+        with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
+            lines = f.readlines()
+        # 从最后一行向上查找 Keil 汇总行: "xxx.axf" - 0 Error(s), N Warning(s).
+        for line in reversed(lines):
+            match = re.search(r'(\d+)\s+Warning\(s\)', line)
+            if match:
+                return int(match.group(1))
+        return 0
+    except Exception:
+        return 0
+
+
 def compile_target(keil_path, project_path, target):
-    """调用编译工具编译指定target"""
+    """调用编译工具编译指定target，返回(是否成功, 警告数)"""
     autopiler = "Keil-Autopiler.exe"
 
     # 使用统一日志接口记录
@@ -209,10 +285,15 @@ def compile_target(keil_path, project_path, target):
             text=True,
         )
         log_info(f"✅ 编译成功: {target}")
-        return result.stdout
+        warning_count = count_warnings()
+        return True, warning_count
     except subprocess.CalledProcessError as e:
         log_info(f"❌ 编译失败: {target} (错误代码: {e.returncode})")
-        return result.stdout
+        warning_count = count_warnings()
+        return False, warning_count
+    except Exception as e:
+        log_info(f"❌ 编译异常: {target} - {str(e)}")
+        return False, 0
 
 
 def main():
@@ -280,6 +361,12 @@ def main():
     log_info(f"日期: {current_date}")
     log_info(f"Targets: {', '.join(TARGETS)}\n")
 
+    # ========== 清理旧编译产物 ==========
+    cleanup_old_builds(version_path, DEFAULT_OUTPUT_PATH)
+
+    # 收集编译结果
+    build_results = []
+
     # ========== 处理每个target ==========
     for idx, target in enumerate(TARGETS):
         try:
@@ -296,8 +383,16 @@ def main():
             log_info(f"=========== 1 已清空OBJ目录: {OBJ_DIR}===========")
 
             # 2. 编译target
-            compile_target(keil_path, project_path, target)
-            log_info(f"=========== 2 已编译target: {target}===========")
+            success, warning_count = compile_target(
+                keil_path, project_path, target)
+            build_results.append((target, success, warning_count))
+
+            if not success:
+                log_info(f"⏭️ 跳过 {target} 后续步骤（编译失败）")
+                continue
+
+            log_info(
+                f"=========== 2 已编译target: {target} | 警告: {warning_count} 条===========")
 
             # 3. 复制编译日志文件
             rename_and_copy_keil_complie_log_file(
@@ -341,7 +436,33 @@ def main():
 
         except Exception as e:
             log_info(f"❌ 处理target {target} 失败: {str(e)}")
-            sys.exit(1)
+            build_results.append((target, False, 0))
+            continue
+
+    # ========== 编译结果汇总 ==========
+    total = len(build_results)
+    success_count = sum(1 for _, s, _ in build_results if s)
+    fail_count = total - success_count
+    total_warnings = sum(w for _, _, w in build_results)
+
+    log_info(f"\n{'='*60}")
+    log_info(f"📊 编译结果汇总")
+    log_info(f"{'='*60}")
+    log_info(f"   目标总数: {total}")
+    log_info(f"   ✅ 成功: {success_count}")
+    log_info(f"   ❌ 失败: {fail_count}")
+    log_info(f"   ⚠️  警告: {total_warnings} 条")
+    if fail_count > 0:
+        log_info(f"\n❌ 失败目标列表:")
+        for target, success, _ in build_results:
+            if not success:
+                log_info(f"   - {target}")
+    if total_warnings > 0:
+        log_info(f"\n⚠️  含警告的目标:")
+        for target, success, w in build_results:
+            if success and w > 0:
+                log_info(f"   - {target}: {w} 条警告")
+    log_info(f"{'='*60}")
 
     log_info(
         f"\n=== 编译日志结束 ({datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}) ==="

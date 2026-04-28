@@ -561,7 +561,7 @@ void mb_ReadHolding(uint16_t _regAddr)
         else if (MB_RW_OPERATE1_ADDRESS <= _regAddr && MB_RW_OPERATE1_MOVE_COUNT_2 >= _regAddr) {
                 switch (_regAddr) {
                         case MB_RW_OPERATE1_ADDRESS:
-                                MB_SET_HOLDING(MB_RW_OPERATE1_ADDRESS, ags_mbParam.mAddrs);             /* 地址 */
+                                MB_SET_HOLDING(MB_RW_OPERATE1_ADDRESS, modbus.Address);                 /* 地址 */
                                 break;
                         case MB_RW_OPERATE1_SPEED:
                                 MB_SET_HOLDING(MB_RW_OPERATE1_SPEED, valve.spd);                        /* 速度 */
@@ -614,10 +614,10 @@ void mb_ReadHolding(uint16_t _regAddr)
                                 MB_SET_HOLDING(MB_RW_FACTORY2_HALF_MODE, valve.bHalfSeal);        /* 半通道 */
                                 break;
                         case MB_RW_FACTORY2_COMPEN_ORG:
-                                MB_SET_HOLDING(MB_RW_FACTORY2_COMPEN_ORG, valve.fixOrg);          /* 原点补偿 */
+                                MB_SET_HOLDING(MB_RW_FACTORY2_COMPEN_ORG, valveFix.fix.org);          /* 原点补偿 */
                                 break;
                         case MB_RW_FACTORY2_COMPEN_DIR:
-                                MB_SET_HOLDING(MB_RW_FACTORY2_COMPEN_DIR, valveFix.fix.org);      /* 方向补偿 */
+                                MB_SET_HOLDING(MB_RW_FACTORY2_COMPEN_DIR, valveFix.fix.dirGap);      /* 方向补偿 */
                                 break;
                         default:
                                 break;
@@ -653,6 +653,13 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
         if (MB_RW_CTRL_SET_GOD_MODE >= _regAddr) {
                 switch (_regAddr) {
                         case MB_RW_CTRL_SET_NORMAL:
+                                if (valve.status != VALVE_RUN_END) {
+                                        break;
+                                }
+                                if (POS_A != _value && POS_B != _value && POS_N != _value) {
+                                        modbus.ErrorState = MB_ERROR_DATA;
+                                        return;  /* 参数限幅 */
+                                }
                                 valve.portDes = _value; /* 更新目标通道 */
                                 break;
                         // case MB_RW_CTRL_SET_CW:
@@ -664,6 +671,13 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
                         //         valve.portDes = _value; /* 更新目标通道 */
                         //         break;
                         case MB_RW_CTRL_SET_FREE:
+                                if (valve.status != VALVE_RUN_END) {
+                                        break;
+                                }
+                                if (POS_A != _value && POS_B != _value && POS_N != _value) {
+                                        modbus.ErrorState = MB_ERROR_DATA;
+                                        return;  /* 参数限幅 */
+                                }
                                 valve.spd = MB_GET_HOLDING(MB_RW_OPERATE1_SPEED);     /* 速度 */
                                 speed[AXSV] = accel[AXSV] = 100;
                                 decel[AXSV] = 200;
@@ -676,6 +690,13 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
                                 valve.portDes = _value; /* 更新目标通道 */
                                 break;
                         case MB_RW_CTRL_SET_ZERO:
+                                if (1 != _value && 0 != _value) {
+                                        modbus.ErrorState = MB_ERROR_DATA;
+                                        return;  /* 参数限幅 */
+                                }
+                                if (0 == _value) {
+                                        break;
+                                }
                                 valve.status = VALVE_INITING;
                                 valve.initStep = 0; /* 复位指令 */
                                 valve.retryTms = 0;
@@ -691,6 +712,7 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
                                         syspara.burnCnt = 0;         /* 老化次数清零 */
                                         I2CPageWrite_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&syspara.burnCnt);
                                 } else {
+                                        modbus.ErrorState = MB_ERROR_DATA;
                                         syspara.GodMode = GD_NORMAL;
                                 }
                                 I2CPageWrite_Nbytes(ADDR_GOD_MODE, LEN_GOD_MODE, &syspara.GodMode);
@@ -703,10 +725,19 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
         if (MB_RW_OPERATE1_ADDRESS <= _regAddr && MB_RW_OPERATE1_MOVE_COUNT_2 >= _regAddr) {
                 switch (_regAddr) {
                         case MB_RW_OPERATE1_ADDRESS:
-                                ags_mbParam.mAddrs = _value;
-                                I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ags_mbParam.mAddrs);
+                                if (_value == 0) {
+                                        modbus.ErrorState = MB_ERROR_DATA;
+                                        return;
+                                }
+                                modbus.Address = _value;
+                                ags_mbParam.mAddrs = modbus.Address;
+                                I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &modbus.Address);
                                 break;
                         case MB_RW_OPERATE1_SPEED:
+                                if (SPD_MIN > _value || SPD_MAX < _value) {
+                                        modbus.ErrorState = MB_ERROR_DATA;
+                                        return;  /* 参数限幅 */
+                                }
                                 valve.spd = _value;
                                 I2CPageWrite_Nbytes(ADDR_SPD, LEN_SPD, &valve.spd);
                                 break;
@@ -714,15 +745,19 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
                         //         valve.dir = _value;
                         //         break;
                         case MB_RW_OPERATE1_BAUDRATE:
+                                if (BAUD_MIN > _value || _value > BAUD_MAX) {
+                                        modbus.ErrorState = MB_ERROR_DATA;
+                                        return;  /* 参数限幅 */
+                                }
                                 syspara.baudrate = (_value == 2 ? BAUD_19200 : (_value == 3 ? BAUD_38400 : BAUD_9600));
                                 I2CPageWrite_Nbytes(ADDR_BAUD, LEN_BAUD, &syspara.baudrate);
                                 break;
                         case MB_RW_OPERATE1_MOVE_COUNT_1:
-                                syspara.totalCnt |= _value << 16; /* 移动次数1 */
+                                syspara.totalCnt = (syspara.totalCnt & 0x0000FFFF) | ((uint32_t)_value << 16); /* 移动次数1 */
                                 I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8_t *)&syspara.totalCnt);
                                 break;
                         case MB_RW_OPERATE1_MOVE_COUNT_2:
-                                syspara.totalCnt |= _value; /* 移动次数2 */
+                                syspara.totalCnt = (syspara.totalCnt & 0xFFFF0000) | _value; /* 移动次数2 */
                                 I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8_t *)&syspara.totalCnt);
                                 break;
                         default:
@@ -792,20 +827,29 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
                         case MB_RW_FACTORY2_CTRL_MODE:
                                 break;
                         case MB_RW_FACTORY2_CHANNEL_NUM:
+                                if (CHANNEL_MIN > _value || CHANNEL_MAX < _value) {
+                                        modbus.ErrorState = MB_ERROR_DATA;
+                                        return;  /* 参数限幅 */
+                                }
                                 valveFix.fix.portCnt = _value;
                                 I2CPageWrite_Nbytes(ADDR_PORT_CNT, LEN_PORT_CNT, &valveFix.fix.portCnt);
                                 break;
                         case MB_RW_FACTORY2_HALF_MODE:
+                                if (1 != _value && 0 != _value) {
+                                        modbus.ErrorState = MB_ERROR_DATA;
+                                        return;  /* 参数限幅 */
+                                }
                                 valve.bHalfSeal = _value;
                                 I2CPageWrite_Nbytes(ADDR_HALF_SEAL, LEN_HALF_SEAL, &valve.bHalfSeal);
                                 break;
                         case MB_RW_FACTORY2_REPLY_MODE:
                                 break;
                         case MB_RW_FACTORY2_COMPEN_ORG:
-                                valve.fixOrg = _value;
-                                I2CPageWrite_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &valve.fixOrg);
+                                valveFix.fix.org = _value;
+                                I2CPageWrite_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &valveFix.fix.org);
                                 break;
                         case MB_RW_FACTORY2_COMPEN_DIR:
+                                valveFix.fix.dirGap = _value;
                                 I2CPageWrite_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &valveFix.fix.dirGap);
                                 break;
                         case MB_RW_FACTORY2_COMPEN_CW:

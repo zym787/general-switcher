@@ -232,6 +232,7 @@ void TermAddr(char rw)
             ags_mbParam.mAddrs = AGS_ADDR_DEF;
             printd("\r\n Use default Address %d", ags_mbParam.mAddrs);
         }
+        modbus.Address = ags_mbParam.mAddrs;
         I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ags_mbParam.mAddrs);
     }
 }

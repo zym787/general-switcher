@@ -10,8 +10,8 @@
 // clang-format off
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0028    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r28"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0029    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r29"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #ifndef C_901
@@ -106,6 +106,7 @@
 //                  2026.04.09  统一波特率显示,优化下载口显示及点检模式
 //  v1.3.1-r27      2026.04.22  支援modbus,修复485串口无法接收,修复下载口读电流错误,优化代码
 //  v1.3.1-r28      2026.04.27  修复modbus复位功能错误,优化modbus性能
+//  v1.3.1-r29      2026.04.28  修复modbus地址功能错误,modbus参数增加范围限制
 
 
 #ifdef A12_901

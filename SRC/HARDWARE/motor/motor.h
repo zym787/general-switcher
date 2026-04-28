@@ -169,8 +169,6 @@ typedef struct
     uint8_t direct;           //通阀目标位置编号
     uint8_t portLast;         // 上一个位置
     uint8_t iSet;             // 上一个位置
-    uint8_t lastIO;             // 上一个状态
-    uint8_t fixOrg;           // 原点补偿
 
     uint8_t dirLast;          //
     uint8_t statusLast;       //

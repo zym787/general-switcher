@@ -197,8 +197,8 @@ void ags_mbReadHoldingRegisters(void)
                         ags_mbParam.tBuf[4] = valve.portCur;        /* 当前通道 */
                         ags_mbParam.tBuf[5] = ags_mbParam.mAddrs;    /* 模块地址 */
                         ags_mbParam.tBuf[6] = valveFix.fix.portCnt; /* 模块通道数 */
-                        ags_mbParam.tBuf[7] = valve.fixOrg;         /* 原点补偿值 */
-                        ags_mbParam.tBuf[8] = valveFix.fix.org;     /* 方向补偿值 */
+                        ags_mbParam.tBuf[7] = valveFix.fix.org;         /* 原点补偿值 */
+                        ags_mbParam.tBuf[8] = valveFix.fix.dirGap;     /* 方向补偿值 */
                         ags_mbParam.tBuf[9] = valve.spd;               /* 速度 */
                         byteCount = 10;
                 } else if (0x01 == op_addr) /* 读当前通道 */
@@ -316,6 +316,7 @@ void ags_mbPresetSingleHoldingRegister(void)
                         if (AGS_ADDR_MAX >= ags_mbParam.rBuf[3] &&
                             6 == ags_mbParam.rCnt) {
                                 ags_mbParam.mAddrs = ags_mbParam.rBuf[3];
+                                modbus.Address = ags_mbParam.mAddrs;
                                 I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ags_mbParam.mAddrs);
                         } else {
                                 ags_mbParam.sERR = ERR_MB_DATA; /* 操作数据无效 */
