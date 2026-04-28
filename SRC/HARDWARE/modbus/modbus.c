@@ -535,7 +535,7 @@ void mb_ReadHolding(uint16_t _regAddr)
         }
         /* 运行参数1寄存器 OPERATE1 */
         else if (MB_RW_OPERATE1_ADDRESS <= _regAddr && MB_RW_OPERATE1_MOVE_COUNT_2 >= _regAddr) {
-                MB_SET_HOLDING(MB_RW_OPERATE1_ADDRESS, ags_mbParam.mAddrs);             /* 地址 */
+                MB_SET_HOLDING(MB_RW_OPERATE1_ADDRESS, modbus.Address);                 /* 地址 */
                 MB_SET_HOLDING(MB_RW_OPERATE1_SPEED, valve.spd);                        /* 速度 */
                 MB_SET_HOLDING(MB_RW_OPERATE1_DIRECTION, 0xFF);                         /* 方向始终为就近方向 */
                 MB_SET_HOLDING(MB_RW_OPERATE1_BAUDRATE, syspara.baudrate);              /* 波特率 */
@@ -635,8 +635,9 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
         if (MB_RW_OPERATE1_ADDRESS <= _regAddr && MB_RW_OPERATE1_MOVE_COUNT_2 >= _regAddr) {
                 switch (_regAddr) {
                         case MB_RW_OPERATE1_ADDRESS:
-                                ags_mbParam.mAddrs = _value;
-                                I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ags_mbParam.mAddrs);
+                                modbus.Address = _value;
+                                ags_mbParam.mAddrs = modbus.Address;
+                                I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &modbus.Address);
                                 break;
                         case MB_RW_OPERATE1_SPEED:
                                 valve.spd = _value;

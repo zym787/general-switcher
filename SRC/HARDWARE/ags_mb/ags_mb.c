@@ -316,6 +316,7 @@ void ags_mbPresetSingleHoldingRegister(void)
                         if (AGS_ADDR_MAX >= ags_mbParam.rBuf[3] &&
                             6 == ags_mbParam.rCnt) {
                                 ags_mbParam.mAddrs = ags_mbParam.rBuf[3];
+                                modbus.Address = ags_mbParam.mAddrs;
                                 I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ags_mbParam.mAddrs);
                         } else {
                                 ags_mbParam.sERR = ERR_MB_DATA; /* 操作数据无效 */

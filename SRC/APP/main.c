@@ -82,6 +82,7 @@ void param_Read(void)
         printd("\r 读取系统保存参数");
         /* 地址 */
         I2CPageRead_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ags_mbParam.mAddrs);
+        modbus.Address = ags_mbParam.mAddrs;
         printd("\r 地址:%d", ags_mbParam.mAddrs);
         /* 原点补偿 */
         I2CPageRead_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &valveFix.fix.org);
@@ -213,6 +214,7 @@ void param_Write(void)
         I2CPageWrite_Nbytes(ADDR_BOARD_ID, LEN_BOARD_ID, ReadBuf);
         /* 地址 1 */
         ags_mbParam.mAddrs = AGS_ADDR_DEF;
+        modbus.Address = ags_mbParam.mAddrs;
         I2CPageWrite_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, &ags_mbParam.mAddrs);
         /* 原点补偿 5度 */
         valveFix.fix.org = valveFixDflt;
