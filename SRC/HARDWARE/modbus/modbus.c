@@ -474,6 +474,12 @@ void mb_Poll(void)
 // #if (DEBUG_MODBUS != 0)
 //                         XF_LOG_BUFFER_HEX(Rx_Buffer, modbus.ReciveCount);
 // #endif
+                        /* 先确认数据长度 8 读保持/写单保持 */
+                        if (modbus.ReciveCount != 8) {
+                                modbus.ReciveCount = 0;
+                                return;
+                        }
+                        /* CRC校验 */
                         if (0 == ModbusCRC16(&Rx_Buffer[0], modbus.ReciveCount)) {
                                 /* 第2字节 功能码 */
                                 /* 确认模块存在并且工作正常 */
