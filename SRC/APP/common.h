@@ -1,10 +1,6 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
-typedef unsigned char  uint8;                    /* Unsigned  8 bit quantity                           */
-typedef unsigned short uint16;                   /* Unsigned 16 bit quantity                           */
-typedef unsigned int   uint32;                   /* Unsigned 32 bit quantity                           */
-
 // typedef enum
 // {
 //     false,

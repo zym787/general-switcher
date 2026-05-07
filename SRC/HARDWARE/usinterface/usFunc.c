@@ -210,7 +210,7 @@ void TermAddr(char rw)
     int getInt=0;
     if(rw == READ_ACT)
     {
-        I2CPageRead_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, (uint8*)&getInt);
+        I2CPageRead_Nbytes(ADDR_MODULE_NUM, LEN_MODULE_NUM, (uint8_t*)&getInt);
         printd("\r Addr:%d", getInt);
     }
     else
@@ -621,7 +621,7 @@ void TermMovesCnt(char rw)
     printd("\r\n func %s", __func__);
     if(rw == READ_ACT)
     {
-        I2CPageRead_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8*)&syspara.totalCnt));
+        I2CPageRead_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8_t*)&syspara.totalCnt));
         printd("\r 切换次数:%d", syspara.totalCnt);
     }
     else
@@ -634,7 +634,7 @@ void TermMovesCnt(char rw)
         }
         syspara.totalCnt = getInt;
         printd("\r 写入切换次数:%d", syspara.totalCnt);
-        I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8*)&syspara.totalCnt);
+        I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8_t*)&syspara.totalCnt);
     }
 }
 

@@ -36,7 +36,7 @@ void task_Cycle_1Sec(void)
                 if (syspara.totalCnt != syspara.totalCntLst) /* 保存切换次数 */
                 {
                         syspara.totalCntLst = syspara.totalCnt;
-                        I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8 *)&syspara.totalCnt);
+                        I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8_t *)&syspara.totalCnt);
                 }
         }
 
@@ -190,10 +190,10 @@ void param_Read(void)
         printd("\r 半通道:%d %s", valve.bHalfSeal, (0 == valve.bHalfSeal ? "关" : "开"));
         /* 补偿 */
         // printd("\r Fix:");
-        // for(uint32 i=0; i<valveFix.fix.portCnt; i++)
+        // for(uint32_t i=0; i<valveFix.fix.portCnt; i++)
         //     printd(" %d", valveFix.array[i]);
         /* 切换次数 */
-        I2CPageRead_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8 *)&syspara.totalCnt));
+        I2CPageRead_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8_t *)&syspara.totalCnt));
         printd("\r\n 切换次数:%d", syspara.totalCnt);
         /// 回复方式
         I2CPageRead_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);

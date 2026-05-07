@@ -538,7 +538,7 @@ void bsp_ValveAgingMode(void)
                         VALVE_ENA = ENABLE;
                 }
                 printd("  ÇÐ»»´ÎÊý:%d", syspara.totalCnt);
-                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8 *)&syspara.totalCnt);
+                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8_t *)&syspara.totalCnt);
         }
 #endif
 }

@@ -235,12 +235,12 @@ void ags_mbReadHoldingRegisters(void)
                         byteCount = 4;
                 } else if (0x0A == op_addr) /* 读切换次数 */
                 {
-                        ags_mbParam.tBuf[3] = ((uint8*)&syspara.totalCnt)[3];
-                        ags_mbParam.tBuf[4] = ((uint8*)&syspara.totalCnt)[2];
-                        ags_mbParam.tBuf[5] = ((uint8*)&syspara.totalCnt)[1];
-                        ags_mbParam.tBuf[6] = ((uint8*)&syspara.totalCnt)[0];
+                        ags_mbParam.tBuf[3] = ((uint8_t*)&syspara.totalCnt)[3];
+                        ags_mbParam.tBuf[4] = ((uint8_t*)&syspara.totalCnt)[2];
+                        ags_mbParam.tBuf[5] = ((uint8_t*)&syspara.totalCnt)[1];
+                        ags_mbParam.tBuf[6] = ((uint8_t*)&syspara.totalCnt)[0];
                         if (syspara.totalCnt != syspara.totalCntLst) {
-                                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8*)&syspara.totalCnt));
+                                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, ((uint8_t*)&syspara.totalCnt));
                                 syspara.totalCntLst = syspara.totalCnt;
                         }
                         byteCount = 7;
@@ -276,7 +276,7 @@ void ags_mbReadHoldingRegisters(void)
                 }
 #ifdef DEBUG_AGS_MB
                 printd("\r s:");
-                for (uint8 i = 0; i < byteCount; i++)
+                for (uint8_t i = 0; i < byteCount; i++)
                         printd(" %02x", ags_mbParam.tBuf[i]);
 #endif
         } else {
@@ -362,11 +362,11 @@ void ags_mbPresetSingleHoldingRegister(void)
                 } else if (0x0A == op_addr) /* 写切换次数 */
                 {
                         if (9 == ags_mbParam.rCnt) {
-                                ((uint8*)&syspara.totalCnt)[0] = ags_mbParam.rBuf[6];
-                                ((uint8*)&syspara.totalCnt)[1] = ags_mbParam.rBuf[5];
-                                ((uint8*)&syspara.totalCnt)[2] = ags_mbParam.rBuf[4];
-                                ((uint8*)&syspara.totalCnt)[3] = ags_mbParam.rBuf[3];
-                                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8*)&syspara.totalCnt);
+                                ((uint8_t*)&syspara.totalCnt)[0] = ags_mbParam.rBuf[6];
+                                ((uint8_t*)&syspara.totalCnt)[1] = ags_mbParam.rBuf[5];
+                                ((uint8_t*)&syspara.totalCnt)[2] = ags_mbParam.rBuf[4];
+                                ((uint8_t*)&syspara.totalCnt)[3] = ags_mbParam.rBuf[3];
+                                I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8_t*)&syspara.totalCnt);
                         } else {
                                 ags_mbParam.sERR = ERR_MB_DATA; /* 操作数据无效 */
                         }
@@ -415,7 +415,7 @@ void ags_mbPresetSingleHoldingRegister(void)
                 }
 #ifdef DEBUG_AGS_MB
                 printd("\r s:");
-                for (uint8 i = 0; i < byteCount; i++)
+                for (uint8_t i = 0; i < byteCount; i++)
                         printd(" %02x", ags_mbParam.tBuf[i]);
 #endif
         } else {
