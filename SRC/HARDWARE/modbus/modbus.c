@@ -96,9 +96,9 @@ void mb_TimesProcess(void)
  */
 void mb_SendBuffer(uint8_t _length)
 {
-// #if (DEBUG_MODBUS != 0)
-//         XF_LOG_BUFFER_HEX(Tx_Buffer, _length);
-// #endif
+        // #if (DEBUG_MODBUS != 0)
+        //         XF_LOG_BUFFER_HEX(Tx_Buffer, _length);
+        // #endif
         // elog_debug("%s(): L%d", __FUNCTION__, _length);
         TX_EN();
         if (_length) {
@@ -333,7 +333,7 @@ static void mb_06H(void)
         mb_WriteHolding(recRegAddr, regValve);
 
         /* 返回保持寄存器内的数据 */
-        Tx_Buffer[4] = MB_GET_HOLDING(recRegAddr) >> 8; /* 第5个字节 寄存器值高字节 */
+        Tx_Buffer[4] = MB_GET_HOLDING(recRegAddr) >> 8;   /* 第5个字节 寄存器值高字节 */
         Tx_Buffer[5] = MB_GET_HOLDING(recRegAddr) & 0xFF; /* 第6个字节 寄存器值低字节 */
 #if (DEBUG_MODBUS != 0)
         elog_debug(" R%d|Write%02X(%d): %d", 0, recRegAddr, recRegAddr, regValve);
@@ -471,9 +471,9 @@ void mb_Poll(void)
         if (MB_RECIVE_END == modbus.RunState) {
                 if (LEAST_RCV_CNT < modbus.ReciveCount) {
                         LED_WORK = !LED_WORK;
-// #if (DEBUG_MODBUS != 0)
-//                         XF_LOG_BUFFER_HEX(Rx_Buffer, modbus.ReciveCount);
-// #endif
+                        // #if (DEBUG_MODBUS != 0)
+                        //                         XF_LOG_BUFFER_HEX(Rx_Buffer, modbus.ReciveCount);
+                        // #endif
                         if (0 == ModbusCRC16(&Rx_Buffer[0], modbus.ReciveCount)) {
                                 /* 第2字节 功能码 */
                                 /* 确认模块存在并且工作正常 */
@@ -503,7 +503,7 @@ void mb_Poll(void)
                                 elog_error("CRC Error %d", modbus.ErrorState);
                         }
                         modbus.ReciveCount = 0;
-                        
+
                 } else {
                         /* 数据长度不足 即无效数据 */
                         modbus.ReciveCount = 0;
@@ -547,7 +547,7 @@ void mb_ReadHolding(uint16_t _regAddr)
         else if (MB_RW_USER_SN_1 <= _regAddr && MB_RW_USER_SN_3 >= _regAddr) {
                 MB_SET_HOLDING(MB_RW_USER_SN_1, valve.SnCode[0] << 8 | valve.SnCode[1]); /* 序列号 */
                 MB_SET_HOLDING(MB_RW_USER_SN_2, valve.SnCode[2] << 8 | valve.SnCode[3]); /* 序列号 */
-                MB_SET_HOLDING(MB_RW_USER_SN_3, valve.SnCode[4] << 8 | 0x00);                   /* 序列号 */
+                MB_SET_HOLDING(MB_RW_USER_SN_3, valve.SnCode[4] << 8 | 0x00);            /* 序列号 */
                 return;
         }
         /* 出厂参数1寄存器 FACTORY1 */
@@ -602,7 +602,7 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
                         //         valve.portDes = _value; /* 更新目标通道 */
                         //         break;
                         case MB_RW_CTRL_SET_FREE:
-                                valve.spd = MB_GET_HOLDING(MB_RW_OPERATE1_SPEED);     /* 速度 */
+                                valve.spd = MB_GET_HOLDING(MB_RW_OPERATE1_SPEED); /* 速度 */
                                 /* 更新电机速度到设定值 */
                                 bsp_ValveUpdateSpeed(valve.spd);
                                 valve.portDes = _value; /* 更新目标通道 */

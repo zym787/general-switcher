@@ -18,16 +18,15 @@ void IOconfig(void)
         GPIOB->CRL &= (GPIO_Crl_P1);
         GPIOB->CRL |= (GPIO_Mode_Out_PP_50MHz_P1);
         RX_EN();  // 开机为接收模式
-
 }
 
 /* 检测任务 */
 #define SINGLE_RUN_TIMEOUT    5   // 运行5秒超时
 #define SINGLE_INITING_TIMOUT 14  // 转一圈差不多3秒,复位单次是两圈
-void task_Cycle_1Sec(void) {
+void task_Cycle_1Sec(void)
+{
         /* 超时检测任务 (1s) */
-        if (SEC > timerPara.sec) 
-        {
+        if (SEC > timerPara.sec) {
                 return;
         }
         timerPara.sec = 0;
@@ -37,13 +36,13 @@ void task_Cycle_1Sec(void) {
                 if (syspara.totalCnt != syspara.totalCntLst) /* 保存切换次数 */
                 {
                         syspara.totalCntLst = syspara.totalCnt;
-                        I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8*)&syspara.totalCnt);
+                        I2CPageWrite_Nbytes(ADDR_TOTAL_CNT, LEN_TOTAL_CNT, (uint8 *)&syspara.totalCnt);
                 }
         }
 
         /* 单通道间做5秒的超时处理,避免长时间堵转烧坏电路 */
         if ((valve.status == VALVE_RUNNING && syspara.protectTimeOut > SINGLE_RUN_TIMEOUT * SEC) ||
-                (valve.status & VALVE_INITING && syspara.protectTimeOut > SINGLE_INITING_TIMOUT * SEC)) {
+            (valve.status & VALVE_INITING && syspara.protectTimeOut > SINGLE_INITING_TIMOUT * SEC)) {
                 if (!(valve.status & VALVE_RUN_ERR)) {
                         valve.portDes = 0;
                         valve.status = VALVE_RUN_ERR; /* 超时报错 */
@@ -58,11 +57,10 @@ void task_Cycle_1Sec(void) {
         if (syspara.protectTimeOut > (SINGLE_INITING_TIMOUT + 1) * SEC) {
                 valve.status = VALVE_RUN_ERR; /* 超时报错 */
                 VALVE_ENA = DISABLE;
-                printd("\r\n %d Timeout protection! (initstep%d,%dms)", SINGLE_INITING_TIMOUT + 1,
-                        valve.initStep, syspara.protectTimeOut);
+                printd("\r\n %d Timeout protection! (initstep%d,%dms)", SINGLE_INITING_TIMOUT + 1, valve.initStep,
+                       syspara.protectTimeOut);
                 valve.ErrBlinkTime = ERROR_BLINK;
         }
-        
 }
 
 void task_Scheduler(void)
@@ -329,7 +327,7 @@ int main(void)
         if (syspara.protocol_type == AGS_MODBUS) {
                 ags_mbInit(); /* AGS协议 */
         } else if (syspara.protocol_type == MODBUS) {
-                    mb_Init(); /* 初始化Modbus协议 */
+                mb_Init(); /* 初始化Modbus协议 */
         }
         ParameterInit();
         UsrCmdInit();
