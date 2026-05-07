@@ -453,6 +453,11 @@
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -850,7 +855,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,O_901</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\io</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -963,6 +968,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1361,7 +1371,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,O_906</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\io</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1474,6 +1484,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1872,7 +1887,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,O_909</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\io</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1985,6 +2000,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2383,7 +2403,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,A_901</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\io;..\SRC\3rd\common;..\SRC\3rd\xfusion\xf_common;..\SRC\3rd\xfusion\xf_utils_log</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2496,6 +2516,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2894,7 +2919,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,A_906</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb;..\SRC\3rd\common;..\SRC\3rd\xfusion\xf_common;..\SRC\3rd\xfusion\xf_utils_log;..\SRC\3rd\xfusion</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb;..\SRC\3rd\common;..\SRC\3rd\xfusion\xf_common;..\SRC\3rd\xfusion\xf_utils_log;..\SRC\3rd\xfusion;..\SRC\HARDWARE\io</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -3007,6 +3032,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3405,7 +3435,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,A_909</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb;..\SRC\3rd\xfusion\xf_common;..\SRC\3rd\xfusion\xf_utils_log;..\SRC\3rd\common;..\SRC\HARDWARE\io</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -3518,6 +3548,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3916,7 +3951,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,B_901</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\io;..\SRC\3rd\common;..\SRC\3rd\xfusion\xf_common;..\SRC\3rd\xfusion\xf_utils_log</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -4029,6 +4064,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4427,7 +4467,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,B_906</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\io;..\SRC\3rd\common;..\SRC\3rd\xfusion\xf_common;..\SRC\3rd\xfusion\xf_utils_log</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -4540,6 +4580,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4938,7 +4983,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,C_901</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\Modbus</IncludePath>
+              <IncludePath>..\SRC\APP;..\SRC\HARDWARE\stmFlash;..\SRC\HARDWARE\usinterface;..\SRC\SYSTEM\delay;..\SRC\SYSTEM\sys;..\SRC\SYSTEM\timer;..\SRC\SYSTEM\usart;..\SRC\CMSIS\CoreSupport;..\SRC\CMSIS\DeviceSupport;..\SRC\HARDWARE\motor;..\SRC\HARDWARE\EEPROM;..\SRC\HARDWARE\ags_mb;..\SRC\HARDWARE\Modbus;..\SRC\HARDWARE\io;..\SRC\3rd\common;..\SRC\3rd\xfusion\xf_common;..\SRC\3rd\xfusion\xf_utils_log</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -5051,6 +5096,11 @@
               <FileName>modbus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\HARDWARE\modbus\modbus.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRC\HARDWARE\io\bsp_io.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -7,18 +7,13 @@
 #define PEXT extern
 #endif
 
-
-
 typedef struct
 {
     unsigned short timeDbg;
-    unsigned short timeCmd;
     unsigned short timeMilli;
     unsigned short timeWaitMill;
     unsigned short timeOut;
-    unsigned short intDelay;
     unsigned short sec;
-    uint8_t timeLedDetect;
 }_TIMER_T;
 
 PEXT _TIMER_T timerPara;
@@ -38,32 +33,5 @@ PEXT void TIM7_Init(u16 arr,u16 psc);
 PEXT void EXTI_Init(void);
 #endif
 
-
-
-
-
-
 #undef PEXT
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

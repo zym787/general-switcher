@@ -110,24 +110,6 @@
 //  v1.3.1-r30      2026.04.29  新增modbus长度校验
 
 
-
-#ifdef A12_901
-    #define IO_OUT          PAout(8)
-    #ifndef C_901
-        #define IO_IN           PBin(3)
-    #else
-        #define IO_IN           PBout(3)
-    #endif
-#endif
-#ifdef A12_909
-    #define IO_OUT          PBout(13)
-    #define IO_IN           PBin(5)
-#endif
-#ifdef A12_906
-    #define IO_OUT          PBout(13)
-    #define IO_IN           PBin(14)
-#endif
-
 //----EEPROM存储地址分配---//
 //------------------------------------------------------------------------------------------------------------
 #define ADDR_BOARD_ID           0
@@ -196,8 +178,6 @@
 #define RETRY_TIME_OUT          1100       // 重试的闪烁间隔
 #define ERROR_BLINK             400
 
-PEXT uint8_t bdrate, bIoCtrl, intCtrl, spdVx2;
-
 /**
  * @brief     : 控制协议枚举
  */
@@ -241,16 +221,13 @@ typedef struct {                  /* 系统参数 */
         uint32_t protectTimeOut; /* 超时保护时间 */
         uint8_t replyMode;       /* 回复方式 */
         GodMode_T GodMode;       /* 当前模式 */
+        bool ioCtrl;             /* IO控制位 */
+        uint8_t agingInterval;   /* 老化间隔 */
 } _SYS_T;
 PEXT _SYS_T syspara;
 
 PEXT int main(void);
 PEXT void DebugOut(void);
-PEXT void dlyInTimer(void);
-PEXT uint8_t IntDly(uint16_t intMs);
-PEXT void EnableReceive(void);
-PEXT void DisableReceive(void);
 PEXT void ErrBlink(void);
-PEXT void ee_ReadTest(void);
 #undef PEXT
 #endif

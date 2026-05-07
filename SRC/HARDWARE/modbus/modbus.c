@@ -96,9 +96,9 @@ void mb_TimesProcess(void)
  */
 void mb_SendBuffer(uint8_t _length)
 {
-// #if (DEBUG_MODBUS != 0)
-//         XF_LOG_BUFFER_HEX(Tx_Buffer, _length);
-// #endif
+        // #if (DEBUG_MODBUS != 0)
+        //         XF_LOG_BUFFER_HEX(Tx_Buffer, _length);
+        // #endif
         // elog_debug("%s(): L%d", __FUNCTION__, _length);
         TX_EN();
         if (_length) {
@@ -333,7 +333,7 @@ static void mb_06H(void)
         mb_WriteHolding(recRegAddr, regValve);
 
         /* 返回保持寄存器内的数据 */
-        Tx_Buffer[4] = MB_GET_HOLDING(recRegAddr) >> 8; /* 第5个字节 寄存器值高字节 */
+        Tx_Buffer[4] = MB_GET_HOLDING(recRegAddr) >> 8;   /* 第5个字节 寄存器值高字节 */
         Tx_Buffer[5] = MB_GET_HOLDING(recRegAddr) & 0xFF; /* 第6个字节 寄存器值低字节 */
 #if (DEBUG_MODBUS != 0)
         elog_debug(" R%d|Write%02X(%d): %d", 0, recRegAddr, recRegAddr, regValve);
@@ -509,7 +509,7 @@ void mb_Poll(void)
                                 elog_error("CRC Error %d", modbus.ErrorState);
                         }
                         modbus.ReciveCount = 0;
-                        
+
                 } else {
                         /* 数据长度不足 即无效数据 */
                         modbus.ReciveCount = 0;
@@ -684,15 +684,9 @@ void mb_WriteHolding(uint16_t _regAddr, uint16_t _value)
                                         modbus.ErrorState = MB_ERROR_DATA;
                                         return;  /* 参数限幅 */
                                 }
-                                valve.spd = MB_GET_HOLDING(MB_RW_OPERATE1_SPEED);     /* 速度 */
-                                speed[AXSV] = accel[AXSV] = 100;
-                                decel[AXSV] = 200;
-                                speed[AXSV] *= (valve.spd);
-                                speed[AXSV] *= (rdc.rate);
-                                accel[AXSV] *= (valve.spd);
-                                accel[AXSV] *= (rdc.rate);
-                                decel[AXSV] *= (valve.spd);
-                                decel[AXSV] *= (rdc.rate);
+                                valve.spd = MB_GET_HOLDING(MB_RW_OPERATE1_SPEED); /* 速度 */
+                                /* 更新电机速度到设定值 */
+                                bsp_ValveUpdateSpeed(valve.spd);
                                 valve.portDes = _value; /* 更新目标通道 */
                                 break;
                         case MB_RW_CTRL_SET_ZERO:
