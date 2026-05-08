@@ -15,14 +15,17 @@
 - [main.h](file://SRC/APP/main.h)
 - [app.h](file://SRC/APP/app.h)
 - [elab_common.h](file://SRC/3rd/common/elab_common.h)
+- [motor.h](file://SRC/HARDWARE/motor/motor.h)
+- [main.c](file://SRC/APP/main.c)
 </cite>
 
 ## 更新摘要
 **所做更改**
-- 新增详细的Modbus通信协议说明书文档，提供完整的协议规范和寄存器映射
-- 更新地址管理系统实现，修复地址同步问题和参数初始化机制
-- 增强参数持久化机制，完善EEPROM写入和读取流程
-- 优化系统可靠性，改进参数范围验证和异常处理
+- 更新参数范围验证规则：地址范围从0-63调整为1-247，速度范围从1-200调整为1-100，通道数范围从3-16调整为2-16
+- 增强长度验证机制：防止畸形数据传输，通过LEAST_RCV_CNT常量确保最小接收字节数
+- 优化代码结构：使用switch-case结构替代if-else链，提升代码可维护性
+- 修正补偿值计算：原点补偿从valve.fixOrg改为valveFix.fix.org，方向补偿从valveFix.fix.org改为valveFix.fix.dirGap
+- 完善参数范围验证：在所有写操作中增加严格的参数范围检查
 
 ## 目录
 1. [简介](#简介)
@@ -30,13 +33,17 @@
 3. [核心组件](#核心组件)
 4. [架构总览](#架构总览)
 5. [详细组件分析](#详细组件分析)
-6. [地址管理系统改进](#地址管理系统改进)
-7. [参数持久化机制](#参数持久化机制)
-8. [依赖关系分析](#依赖关系分析)
-9. [性能考量](#性能考量)
-10. [故障排查指南](#故障排查指南)
-11. [结论](#结论)
-12. [附录](#附录)
+6. [参数范围验证增强](#参数范围验证增强)
+7. [补偿值计算修正](#补偿值计算修正)
+8. [长度验证与畸形数据防护](#长度验证与畸形数据防护)
+9. [代码结构优化](#代码结构优化)
+10. [地址管理系统改进](#地址管理系统改进)
+11. [参数持久化机制](#参数持久化机制)
+12. [依赖关系分析](#依赖关系分析)
+13. [性能考量](#性能考量)
+14. [故障排查指南](#故障排查指南)
+15. [结论](#结论)
+16. [附录](#附录)
 
 ## 简介
 本文件面向通用开关器项目的Modbus协议实现，系统性梳理了Modbus RTU在项目中的支持情况、实现细节与扩展路径。基于最新的应用变更，重点覆盖：
@@ -44,6 +51,10 @@
 - 数据帧格式、寄存器映射与地址分配规则，基于完整的Modbus通信协议说明书。
 - CRC16校验算法的实现与应用。
 - 与AGS协议的对比与兼容处理、协议切换机制。
+- 参数范围验证增强，包括地址、速度、波特率、通道数的严格范围控制。
+- 长度验证机制，防止畸形数据传输。
+- 代码结构优化，使用switch-case结构替代if-else链提升可维护性。
+- 补偿值计算修正，确保原点和方向补偿的正确性。
 - 地址管理系统的改进，包括修复地址同步问题和增强参数初始化。
 - 参数持久化机制的优化，完善EEPROM写入和读取流程。
 - 调试方法与常见问题解决方案。
@@ -88,7 +99,7 @@ STD --> EEPROM
 ```
 
 **图表来源**
-- [ags_mb.c:7-473](file://SRC/HARDWARE/ags_mb/ags_mb.c#L7-L473)
+- [ags_mb.c:7-475](file://SRC/HARDWARE/ags_mb/ags_mb.c#L7-L475)
 - [modbus.c:35-67](file://SRC/HARDWARE/modbus/modbus.c#L35-L67)
 - [ModBusCrc16.c:62-74](file://SRC/HARDWARE/ags_mb/ModBusCrc16.c#L62-L74)
 - [usInterface.c:15-106](file://SRC/HARDWARE/usinterface/usInterface.c#L15-L106)
@@ -155,8 +166,8 @@ UI->>STD : "协议切换/参数配置命令"
 ```
 
 **图表来源**
-- [ags_mb.c:426-473](file://SRC/HARDWARE/ags_mb/ags_mb.c#L426-L473)
-- [modbus.c:469-517](file://SRC/HARDWARE/modbus/modbus.c#L469-L517)
+- [ags_mb.c:426-475](file://SRC/HARDWARE/ags_mb/ags_mb.c#L426-L475)
+- [modbus.c:469-523](file://SRC/HARDWARE/modbus/modbus.c#L469-L523)
 - [ModBusCrc16.c:62-74](file://SRC/HARDWARE/ags_mb/ModBusCrc16.c#L62-L74)
 - [usFunc.c:707-747](file://SRC/HARDWARE/usinterface/usFunc.c#L707-L747)
 - [EEP24Serial.c:202-313](file://SRC/HARDWARE/EEPROM/EEP24Serial.c#L202-L313)
@@ -198,7 +209,7 @@ SendErr --> End
 ```
 
 **图表来源**
-- [ags_mb.c:426-473](file://SRC/HARDWARE/ags_mb/ags_mb.c#L426-L473)
+- [ags_mb.c:426-475](file://SRC/HARDWARE/ags_mb/ags_mb.c#L426-L475)
 - [ags_mb.c:181-285](file://SRC/HARDWARE/ags_mb/ags_mb.c#L181-L285)
 - [ags_mb.c:287-423](file://SRC/HARDWARE/ags_mb/ags_mb.c#L287-L423)
 
@@ -256,14 +267,14 @@ MOD-->>UART : "发送06H响应"
 
 **图表来源**
 - [modbus.c:191-366](file://SRC/HARDWARE/modbus/modbus.c#L191-L366)
-- [modbus.c:469-517](file://SRC/HARDWARE/modbus/modbus.c#L469-L517)
+- [modbus.c:469-523](file://SRC/HARDWARE/modbus/modbus.c#L469-L523)
 - [modbus.h:71-198](file://SRC/HARDWARE/modbus/modbus.h#L71-L198)
 - [EEP24Serial.c:95-200](file://SRC/HARDWARE/EEPROM/EEP24Serial.c#L95-L200)
 
 **章节来源**
 - [modbus.h:1-213](file://SRC/HARDWARE/modbus/modbus.h#L1-L213)
 - [modbus.c:191-366](file://SRC/HARDWARE/modbus/modbus.c#L191-L366)
-- [modbus.c:523-765](file://SRC/HARDWARE/modbus/modbus.c#L523-L765)
+- [modbus.c:523-882](file://SRC/HARDWARE/modbus/modbus.c#L523-L882)
 
 ### CRC16校验算法
 - 实现方式
@@ -289,16 +300,145 @@ MOD-->>UART : "发送06H响应"
 - [ags_mb.c:181-423](file://SRC/HARDWARE/ags_mb/ags_mb.c#L181-L423)
 - [modbus.c:191-366](file://SRC/HARDWARE/modbus/modbus.c#L191-L366)
 
+## 参数范围验证增强
+
+### 更新的参数范围定义
+基于最新的应用变更，参数范围验证规则已进行重大调整：
+
+- **设备地址范围**
+  - 新范围：1-247（原0-63）
+  - 说明：排除广播地址0和特殊保留地址248-255，确保标准Modbus地址范围
+  - 验证逻辑：在写地址操作中增加范围检查，超出范围设置MB_ERROR_DATA
+
+- **速度参数范围**
+  - 新范围：1-100（原1-200）
+  - 说明：降低最大速度限制，提高系统安全性
+  - 验证逻辑：在写速度操作中增加严格的范围检查
+
+- **波特率参数范围**
+  - 范围：1-3（对应9600/19200/38400 bps）
+  - 说明：保持原有波特率选项，但增加范围验证
+  - 验证逻辑：在写波特率操作中增加范围检查
+
+- **通道数范围**
+  - 新范围：2-16（原3-16）
+  - 说明：降低最小通道数限制，支持更灵活的配置
+  - 验证逻辑：在写通道数操作中增加范围检查
+
+- **参数验证实现**
+  - 所有写操作均包含参数范围验证
+  - 超出范围时设置MB_ERROR_DATA异常状态
+  - 使用统一的SPD_MIN、SPD_MAX、CHANNEL_MIN、CHANNEL_MAX等宏定义
+
+**章节来源**
+- [motor.h:82-92](file://SRC/HARDWARE/motor/motor.h#L82-L92)
+- [modbus.c:736-753](file://SRC/HARDWARE/modbus/modbus.c#L736-L753)
+- [modbus.c:829-833](file://SRC/HARDWARE/modbus/modbus.c#L829-L833)
+- [ags_mb.c:335-399](file://SRC/HARDWARE/ags_mb/ags_mb.c#L335-L399)
+
+## 补偿值计算修正
+
+### 补偿参数结构修正
+基于最新的应用变更，补偿值计算的参数结构已进行重要修正：
+
+- **原点补偿修正**
+  - 旧结构：valve.fixOrg
+  - 新结构：valveFix.fix.org
+  - 说明：从简单的valve.fixOrg改为结构化的valveFix.fix.org，支持更精确的补偿控制
+
+- **方向补偿修正**
+  - 旧结构：valveFix.fix.org
+  - 新结构：valveFix.fix.dirGap
+  - 说明：将原点补偿字段名修正为dirGap，明确表示方向补偿的含义
+
+- **补偿参数读取**
+  - 原点补偿读取：I2CPageRead_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &valveFix.fix.org)
+  - 方向补偿读取：I2CPageRead_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &valveFix.fix.dirGap)
+
+- **补偿参数写入**
+  - 原点补偿写入：I2CPageWrite_Nbytes(ADDR_VALVE_FIX, LEN_VALVE_FIX, &valveFix.fix.org)
+  - 方向补偿写入：I2CPageWrite_Nbytes(ADDR_DIR_FIX, LEN_DIR_FIX, &valveFix.fix.dirGap)
+
+- **补偿参数初始化**
+  - 默认原点补偿：valveFixDflt（5度）
+  - 默认方向补偿：valveFixDir（0度）
+
+**章节来源**
+- [main.c:85-96](file://SRC/APP/main.c#L85-L96)
+- [main.c:217-222](file://SRC/APP/main.c#L217-L222)
+- [modbus.c:622-626](file://SRC/HARDWARE/modbus/modbus.c#L622-L626)
+- [modbus.c:847-853](file://SRC/HARDWARE/modbus/modbus.c#L847-L853)
+- [ags_mb.c:199-200](file://SRC/HARDWARE/ags_mb/ags_mb.c#L199-L200)
+
+## 长度验证与畸形数据防护
+
+### 长度验证机制
+基于最新的应用变更，系统增加了严格的长度验证机制来防止畸形数据传输：
+
+- **LEAST_RCV_CNT常量**
+  - 定义：#define LEAST_RCV_CNT 3（最小接收字节数）
+  - 作用：确保接收的数据帧至少包含设备地址、功能码和CRC等基本字段
+
+- **长度验证流程**
+  - 接收端首先检查modbus.ReciveCount是否大于LEAST_RCV_CNT
+  - 如果小于等于最小值，直接丢弃数据并重置接收计数
+  - 通过usFunc.c中的LEAST_RCV_CNT常量实现AGS协议的长度验证
+
+- **畸形数据防护**
+  - 防止超短帧攻击：确保至少包含基本的Modbus帧结构
+  - 防止缓冲区溢出：通过最小长度检查保护接收缓冲区
+  - 提高系统稳定性：及时识别并丢弃异常数据
+
+- **长度验证实现**
+  - AGS协议：ags_mb.c第429行，检查LEAST_RCV_CNT < ags_mbParam.rCnt
+  - 标准Modbus：modbus.c第472行，检查LEAST_RCV_CNT < modbus.ReciveCount
+
+**章节来源**
+- [ags_mb.h:68](file://SRC/HARDWARE/ags_mb/ags_mb.h#L68)
+- [ags_mb.c:429](file://SRC/HARDWARE/ags_mb/ags_mb.c#L429)
+- [modbus.c:472](file://SRC/HARDWARE/modbus/modbus.c#L472)
+
+## 代码结构优化
+
+### switch-case结构替代if-else链
+基于最新的应用变更，系统采用了更清晰的switch-case结构来替代复杂的if-else链：
+
+- **功能码处理优化**
+  - 03H功能码：mb_03H()函数专门处理读保持寄存器
+  - 06H功能码：mb_06H()函数专门处理写单个保持寄存器
+  - 10H功能码：mb_10H()函数专门处理写多个保持寄存器
+
+- **switch-case实现**
+  - 在mb_Poll()函数中使用switch语句根据功能码调用相应处理函数
+  - 提升代码可读性和维护性
+  - 便于添加新的功能码支持
+
+- **静态函数设计**
+  - mb_03H()、mb_06H()、mb_10H()均为静态函数，避免外部引用
+  - 每个函数职责单一，便于单元测试和调试
+
+- **功能码处理流程**
+  - 解析设备地址、寄存器地址和数据
+  - 执行相应的寄存器读写操作
+  - 生成响应帧并发送
+
+**章节来源**
+- [modbus.c:17-25](file://SRC/HARDWARE/modbus/modbus.c#L17-L25)
+- [modbus.c:191-279](file://SRC/HARDWARE/modbus/modbus.c#L191-L279)
+- [modbus.c:284-367](file://SRC/HARDWARE/modbus/modbus.c#L284-L367)
+- [modbus.c:372-467](file://SRC/HARDWARE/modbus/modbus.c#L372-L467)
+- [modbus.c:486-505](file://SRC/HARDWARE/modbus/modbus.c#L486-L505)
+
 ## 地址管理系统改进
 
 ### 地址定义与参数范围
 地址管理系统经过重大改进，提供了完整的参数地址定义和严格的范围验证：
 
 - **基础参数地址**
-  - 地址范围：0-63，支持设备地址设置
+  - 地址范围：1-247，支持设备地址设置（更新自0-63）
   - 波特率范围：1-3，对应9600/19200/38400 bps
-  - 速度范围：20-200，支持电机速度调节
-  - 通道数范围：3-16，支持多通道控制
+  - 速度范围：1-100，支持电机速度调节（更新自1-200）
+  - 通道数范围：2-16，支持多通道控制（更新自3-16）
 
 - **序列号管理**
   - 序列号长度：5字节（SnCode[0]-SnCode[4]）
@@ -426,7 +566,7 @@ EEPROM --> I2C["I2C接口"]
 
 **图表来源**
 - [ModBusCrc16.c:62-74](file://SRC/HARDWARE/ags_mb/ModBusCrc16.c#L62-L74)
-- [ags_mb.c:7-473](file://SRC/HARDWARE/ags_mb/ags_mb.c#L7-L473)
+- [ags_mb.c:7-475](file://SRC/HARDWARE/ags_mb/ags_mb.c#L7-L475)
 - [modbus.c:35-67](file://SRC/HARDWARE/modbus/modbus.c#L35-L67)
 - [usFunc.c:707-747](file://SRC/HARDWARE/usinterface/usFunc.c#L707-L747)
 - [EEP24Serial.c:35-60](file://SRC/HARDWARE/EEPROM/EEP24Serial.c#L35-L60)
@@ -468,6 +608,12 @@ EEPROM --> I2C["I2C接口"]
 - 地址同步问题
   - 现象：参数写入后读取值不正确。
   - 排查：检查地址管理系统的参数同步机制；确认内存缓冲区与EEPROM的一致性。
+- 参数范围错误
+  - 现象：写操作返回数据异常错误。
+  - 排查：检查参数是否在新的范围内（地址1-247、速度1-100、通道2-16）；确认参数格式正确。
+- 补偿值计算错误
+  - 现象：阀门定位不准确。
+  - 排查：检查补偿参数结构是否正确（valveFix.fix.org和valveFix.fix.dirGap）；确认补偿值写入EEPROM。
 
 **章节来源**
 - [ags_mb.c:159-179](file://SRC/HARDWARE/ags_mb/ags_mb.c#L159-L179)
@@ -479,6 +625,10 @@ EEPROM --> I2C["I2C接口"]
 
 - **协议规范完善**：基于详细的Modbus通信协议说明书，提供了完整的协议规范和寄存器映射。
 - **地址管理增强**：修复了地址同步问题，改进了参数初始化和持久化机制，增强了系统可靠性。
+- **参数范围验证优化**：更新了参数范围定义（地址1-247、速度1-100、通道2-16），提高了系统安全性。
+- **补偿值计算修正**：修正了补偿参数结构，确保原点和方向补偿的正确性。
+- **长度验证机制**：增加了LEAST_RCV_CNT常量，有效防止畸形数据传输。
+- **代码结构优化**：采用switch-case结构替代if-else链，提升了代码可维护性。
 - **参数持久化优化**：基于I2C的EEPROM接口提供了可靠的参数持久化能力，支持页面写入和错误处理。
 - **异常处理改进**：增强了参数范围验证和异常处理机制，提高了系统的健壮性。
 
@@ -496,12 +646,16 @@ EEPROM --> I2C["I2C接口"]
   - PRTCL：切换协议类型（AGS/HX/MODBUS）
   - ADDR/BDR/SPD/CNT等：读写设备参数，便于现场配置与诊断。
 - 参数范围限制
-  - 地址：0-63
+  - 地址：1-247（更新）
   - 波特率：1-3（9600/19200/38400）
-  - 速度：20-200
-  - 通道数：3-16
+  - 速度：1-100（更新）
+  - 通道数：2-16（更新）
 - EEPROM特性
   - 页面大小：256字节
   - 写入延迟：约5毫秒
   - 读取时序：支持随机读取
   - 错误处理：ACK检测和重试机制
+- 补偿参数结构
+  - 原点补偿：valveFix.fix.org（度）
+  - 方向补偿：valveFix.fix.dirGap（0.1度）
+  - 默认值：原点5度，方向0度

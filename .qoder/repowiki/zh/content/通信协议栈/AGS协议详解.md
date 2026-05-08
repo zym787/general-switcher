@@ -13,7 +13,15 @@
 - [main.c](file://SRC/APP/main.c)
 - [motor.h](file://SRC/HARDWARE/motor/motor.h)
 - [elab_def.h](file://SRC/3rd/common/elab_def.h)
+- [app.h](file://SRC/APP/app.h)
 </cite>
+
+## 更新摘要
+**变更内容**
+- 修正了AGS协议补偿值计算的错误实现
+- 更新了原点补偿和方向补偿的分离计算机制
+- 完善了补偿值在协议栈中的读写处理逻辑
+- 修正了补偿值在电机控制中的应用方式
 
 ## 目录
 1. [简介](#简介)
@@ -30,6 +38,8 @@
 ## 简介
 本文件面向通用开关器项目的AGS协议技术文档，系统性阐述AGS协议的设计理念、数据帧格式与通信机制，明确地址分配、功能码与操作码规范，对比AGS与标准Modbus协议的差异与优势（如中文指令支持、自定义功能），并深入解析协议栈实现细节（初始化流程、数据收发处理、CRC校验与错误处理）。同时提供完整的寄存器映射表、协议扩展与定制化开发指南，帮助开发者快速实现AGS协议的完整参考与最佳实践。
 
+**更新** 本次更新重点修正了补偿值计算的实现细节，确保原点补偿和方向补偿的分离计算得到正确实现。
+
 ## 项目结构
 本项目采用分层架构组织，核心协议位于硬件抽象层（HARDWARE）下的AGS与Modbus子模块，应用入口位于APP层，硬件控制与电机参数定义位于HARDWARE子目录，第三方通用工具位于3rd目录。
 
@@ -37,6 +47,7 @@
 graph TB
 subgraph "应用层(APP)"
 MAIN["main.c<br/>系统初始化与主循环"]
+APP_H["app.h<br/>应用层常量定义"]
 end
 subgraph "硬件抽象层(HARDWARE)"
 AGS["ags_mb.c/.h<br/>AGS协议栈"]
@@ -57,7 +68,9 @@ MAIN --> USI
 USI --> USF
 AGS --> MTR
 MB --> MTR
-MAIN --> ELAB
+MAIN --> APP_H
+APP_H --> AGS
+APP_H --> MB
 ```
 
 **图表来源**
@@ -68,11 +81,13 @@ MAIN --> ELAB
 - [usFunc.c:707-747](file://SRC/HARDWARE/usinterface/usFunc.c#L707-L747)
 - [motor.h:1-237](file://SRC/HARDWARE/motor/motor.h#L1-L237)
 - [elab_def.h:12-48](file://SRC/3rd/common/elab_def.h#L12-L48)
+- [app.h:1-37](file://SRC/APP/app.h#L1-L37)
 
 **章节来源**
 - [main.c:433-494](file://SRC/APP/main.c#L433-L494)
 - [ags_mb.h:1-163](file://SRC/HARDWARE/ags_mb/ags_mb.h#L1-L163)
 - [modbus.h:1-213](file://SRC/HARDWARE/modbus/modbus.h#L1-L213)
+- [app.h:1-37](file://SRC/APP/app.h#L1-L37)
 
 ## 核心组件
 - AGS协议栈：负责AGS协议的数据帧解析、功能码处理、CRC校验与错误响应，支持读保持寄存器与预置单个保持寄存器两类功能码。
@@ -239,8 +254,8 @@ AGS-->>AGS : 异常码封装与发送
   - 1：当前通道
   - 2：模块地址
   - 3：通道数
-  - 4：原点补偿值
-  - 5：方向补偿值
+  - 4：原点补偿值（分离计算）
+  - 5：方向补偿值（分离计算）
   - 6：速度
 - 配置寄存器（06H写入类操作码）：
   - 0x00：写通道（A/B）
@@ -254,10 +269,13 @@ AGS-->>AGS : 异常码封装与发送
   - 0x0D：写半通道（0/1）
   - 0x99：写通道数（3~16）
 
+**更新** 补偿值现在采用分离计算机制，原点补偿和方向补偿分别存储在不同的寄存器中，提高了补偿精度和灵活性。
+
 **章节来源**
 - [ags_mb.c:194-264](file://SRC/HARDWARE/ags_mb/ags_mb.c#L194-L264)
 - [ags_mb.c:299-399](file://SRC/HARDWARE/ags_mb/ags_mb.c#L299-L399)
 - [motor.h:77-92](file://SRC/HARDWARE/motor/motor.h#L77-L92)
+- [motor.h:217-218](file://SRC/HARDWARE/motor/motor.h#L217-L218)
 
 ### 协议扩展与定制化开发指南
 - 新增功能码：在AGS协议栈中新增对应处理函数，完善功能码分发与异常处理。
@@ -269,6 +287,56 @@ AGS-->>AGS : 异常码封装与发送
 **章节来源**
 - [ags_mb.c:426-474](file://SRC/HARDWARE/ags_mb/ags_mb.c#L426-L474)
 - [usFunc.c:676-705](file://SRC/HARDWARE/usinterface/usFunc.c#L676-L705)
+
+### 补偿值计算修正详解
+**更新** 本次更新重点修正了补偿值计算的实现，解决了原代码中使用valve.fixOrg进行原点和方向补偿计算的问题。
+
+#### 修正前的问题
+原代码中存在以下问题：
+- 使用单一的valve.fixOrg变量同时处理原点补偿和方向补偿
+- 无法区分原点补偿和方向补偿的不同计算逻辑
+- 导致补偿精度下降和控制误差增大
+
+#### 修正后的实现
+现在采用分离计算机制：
+
+1. **数据结构分离**
+   - 原点补偿：`valveFix.fix.org`（单位：度）
+   - 方向补偿：`valveFix.fix.dirGap`（单位：0.1度）
+
+2. **协议栈中的分离处理**
+   - 读状态操作码0x00中，原点补偿和方向补偿分别作为独立字节返回
+   - 写补偿操作码中，原点补偿和方向补偿分别写入对应的寄存器
+
+3. **电机控制中的应用**
+   - 原点补偿：`position[AXSV] = -rdc.stepP1dgr * valveFix.fix.org`
+   - 方向补偿：`*_ftemp += (float)valveFix.fix.dirGap * rdc.stepP01dgr`
+
+4. **EEPROM持久化**
+   - 原点补偿：写入地址ADDR_VALVE_FIX
+   - 方向补偿：写入地址ADDR_DIR_FIX
+
+```mermaid
+flowchart TD
+Compensation["补偿值计算"] --> OrgComp["原点补偿计算"]
+Compensation --> DirComp["方向补偿计算"]
+OrgComp --> OrgCalc["position = -stepP1dgr * org"]
+DirComp --> DirCalc["offset = dirGap * stepP01dgr"]
+OrgCalc --> Motor["电机控制应用"]
+DirCalc --> Motor
+Motor --> Result["精确位置控制"]
+```
+
+**图表来源**
+- [main.c:85-96](file://SRC/APP/main.c#L85-L96)
+- [motor.c:334-337](file://SRC/HARDWARE/motor/motor.c#L334-L337)
+- [motor.c:446-447](file://SRC/HARDWARE/motor/motor.c#L446-L447)
+
+**章节来源**
+- [main.c:85-96](file://SRC/APP/main.c#L85-L96)
+- [motor.c:334-337](file://SRC/HARDWARE/motor/motor.c#L334-L337)
+- [motor.c:446-447](file://SRC/HARDWARE/motor/motor.c#L446-L447)
+- [modbus.c:847-853](file://SRC/HARDWARE/modbus/modbus.c#L847-L853)
 
 ## 依赖关系分析
 - AGS协议栈依赖CRC16实现与电机参数定义；与标准Modbus协议栈互斥选择，由系统参数决定启用哪一套。
@@ -285,6 +353,9 @@ MAIN --> USI["usInterface.c/.h"]
 USI --> USF["usFunc.c"]
 AGS --> MTR["motor.h"]
 MB --> MTR
+MAIN --> APP_H["app.h"]
+APP_H --> AGS
+APP_H --> MB
 ```
 
 **图表来源**
@@ -294,11 +365,13 @@ MB --> MTR
 - [usInterface.c:15-106](file://SRC/HARDWARE/usinterface/usInterface.c#L15-L106)
 - [usFunc.c:753-800](file://SRC/HARDWARE/usinterface/usFunc.c#L753-L800)
 - [motor.h:150-186](file://SRC/HARDWARE/motor/motor.h#L150-L186)
+- [app.h:1-37](file://SRC/APP/app.h#L1-L37)
 
 **章节来源**
 - [main.c:468-494](file://SRC/APP/main.c#L468-L494)
 - [ags_mb.h:142-146](file://SRC/HARDWARE/ags_mb/ags_mb.h#L142-L146)
 - [modbus.h:200-202](file://SRC/HARDWARE/modbus/modbus.h#L200-L202)
+- [app.h:1-37](file://SRC/APP/app.h#L1-L37)
 
 ## 性能考虑
 - 串口波特率：支持9600/19200/38400bps，不同波特率对应不同的帧间隔与时序要求，需在初始化时正确配置。
@@ -306,13 +379,12 @@ MB --> MTR
 - 超时检测：通过定时器中断累加times字段，结合BUS_IDLE_TIME与FRAME_ERR_TIME阈值，避免阻塞与资源浪费。
 - 帧长度限制：AGS协议帧长度较小，适合短帧高频通信场景；标准Modbus在批量读写时可能带来额外开销。
 
-[本节为通用性能讨论，无需具体文件分析]
-
 ## 故障排除指南
 - CRC校验失败：检查串口波特率设置、线缆质量与终端电阻；确认CRC计算顺序（低字节在前）。
 - 非法功能码/地址：核对功能码与操作码范围，确保在允许范围内；检查设备地址与广播地址使用规则。
 - 设备忙/异常确认：在执行写入操作前检查设备状态，避免在运行中进行地址变更等敏感操作。
 - 通信超时：检查帧间隔时间、波特率与定时器配置，确保times计数与阈值设置合理。
+- 补偿值异常：检查原点补偿和方向补偿的分离计算是否正确，确认EEPROM写入和读取操作正常。
 
 **章节来源**
 - [ags_mb.c:159-179](file://SRC/HARDWARE/ags_mb/ags_mb.c#L159-L179)
@@ -320,9 +392,9 @@ MB --> MTR
 - [ModBusCrc16.c:62-74](file://SRC/HARDWARE/ags_mb/ModBusCrc16.c#L62-L74)
 
 ## 结论
-AGS协议以简洁的功能码与丰富的操作码为核心，结合CRC16校验与完善的错误处理机制，在专用设备与定制化场景中提供了高效稳定的通信方案。通过串口调试接口与EEPROM参数持久化，开发者能够快速完成参数配置与现场调试。相较标准Modbus，AGS在易用性与扩展性方面具有优势，但在通用兼容性方面略显不足。建议在需要广泛兼容的工业环境中优先考虑标准Modbus。
+AGS协议以简洁的功能码与丰富的操作码为核心，结合CRC16校验与完善的错误处理机制，在专用设备与定制化场景中提供了高效稳定的通信方案。通过串口调试接口与EEPROM参数持久化，开发者能够快速完成参数配置与现场调试。相较标准Modbus，AGS在易用性与扩展性方面具有优势，但在通用兼容性方面略显不足。
 
-[本节为总结性内容，无需具体文件分析]
+**更新** 本次补偿值计算修正进一步提升了AGS协议的精度和可靠性，分离的原点补偿和方向补偿机制确保了更精确的位置控制和更灵活的参数调整能力。
 
 ## 附录
 
@@ -347,3 +419,28 @@ AGS协议以简洁的功能码与丰富的操作码为核心，结合CRC16校验
 **章节来源**
 - [motor.h:77-92](file://SRC/HARDWARE/motor/motor.h#L77-L92)
 - [motor.h:87-89](file://SRC/HARDWARE/motor/motor.h#L87-L89)
+
+### 补偿值计算修正详情
+**更新** 新增补偿值计算修正的技术细节：
+
+- **原点补偿**：`valveFix.fix.org`（单位：度）
+  - 用于确定阀门的机械原点位置
+  - 计算公式：`position = -rdc.stepP1dgr * org`
+  - EEPROM地址：ADDR_VALVE_FIX
+
+- **方向补偿**：`valveFix.fix.dirGap`（单位：0.1度）
+  - 用于补偿电机转向误差
+  - 计算公式：`offset = dirGap * stepP01dgr`
+  - EEPROM地址：ADDR_DIR_FIX
+
+- **分离计算优势**：
+  - 提高补偿精度（方向补偿精度提升至0.1度）
+  - 灵活调整原点和方向补偿参数
+  - 减少补偿相互影响
+
+**章节来源**
+- [main.c:85-96](file://SRC/APP/main.c#L85-L96)
+- [motor.h:217-218](file://SRC/HARDWARE/motor/motor.h#L217-L218)
+- [motor.c:334-337](file://SRC/HARDWARE/motor/motor.c#L334-L337)
+- [motor.c:446-447](file://SRC/HARDWARE/motor/motor.c#L446-L447)
+- [modbus.c:847-853](file://SRC/HARDWARE/modbus/modbus.c#L847-L853)
