@@ -198,6 +198,18 @@ void param_Read(void)
         /// 回复方式
         I2CPageRead_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);
         printd("\r 回复方式:%d", syspara.replyMode);
+        /* 模式 */
+        I2CPageRead_Nbytes(ADDR_GOD_MODE, LEN_GOD_MODE, &syspara.GodMode);
+        if (GD_NORMAL != syspara.GodMode) {
+                printd("\r 模式: %d %s", syspara.GodMode,
+                       (syspara.GodMode) == GD_AGING     ? "老化模式"
+                       : (syspara.GodMode) == GD_FACTORY ? "工厂模式"
+                                                         : "Normal模式");
+        } else if (syspara.GodMode == GD_AGING) {
+                I2CPageRead_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&syspara.burnCnt);
+                printd("\r 老化次数: %d", syspara.burnCnt);
+                printd("\r 老化间隔: %d 秒", syspara.agingInterval);
+        }
 }
 
 /**
@@ -263,6 +275,9 @@ void param_Write(void)
         /// 回复方式
         syspara.replyMode = REPLYMODE_AGS; /* 默认AGS标准回复方式 */
         I2CPageWrite_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);
+        /// 模式 0 正常模式
+        syspara.GodMode = GD_NORMAL;
+        I2CPageWrite_Nbytes(ADDR_GOD_MODE, LEN_GOD_MODE, &syspara.GodMode);
 
         /* 写入参数后 锁定驱动? */
         VALVE_ENA = DISABLE;
@@ -281,6 +296,7 @@ void ParameterInit(void)
         else {
                 param_Write();
         }
+        /* 开机读写参数后的统一操作 */
         /* 使用初始化速度找原点 20RPM */
         printd("\r\n 初始化电机!  减速!");
         bsp_ValveUpdateSpeed(INIT_SPD);
@@ -296,7 +312,7 @@ int main(void)
 #if 0
     JTAG_Set(JTAG_SWD_DISABLE);
 #else
-        JTAG_Set(JTAG_SWD_ENABLE);
+        JTAG_Set(SWD_ENABLE);
 #endif
         delay_ms(100);
         Usart1_Init(72, 115200); /* 串口初始化为115200 */

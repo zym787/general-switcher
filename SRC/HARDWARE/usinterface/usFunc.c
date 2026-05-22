@@ -726,7 +726,7 @@ void TermProtocal(char rw)
                         printd("\r\n Err code %d", ret);
                         return;
                 }
-
+#if (defined O_901) || (defined O_906) || (defined O_909)
                 switch (getInt) {
                         default:
                                 printd("\r\n wrong type set default AGS");
@@ -743,6 +743,10 @@ void TermProtocal(char rw)
                                 printd("\r\n set protocal to MODBUS");
                                 break;
                 }
+#else
+                printd("\r\n ½öÖ§³ÖAGS");
+                syspara.protocol_type = AGS_MODBUS;
+#endif
                 I2CPageWrite_Nbytes(ADDR_PROTOCOL, LEN_PROTOCOL, &syspara.protocol_type);
         }
 }
