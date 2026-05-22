@@ -489,9 +489,9 @@
           <GroupName>Doc</GroupName>
           <Files>
             <File>
-              <FileName>ValveX2_v1.3.1修改说明.md</FileName>
+              <FileName>QHF_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+              <FilePath>..\Doc\QHF_v1.3.1修改说明.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -517,16 +517,6 @@
               <FileName>elab_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Board</GroupName>
-          <Files>
-            <File>
-              <FileName>board_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SRC\Board\board_config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1015,9 +1005,9 @@
           <GroupName>Doc</GroupName>
           <Files>
             <File>
-              <FileName>ValveX2_v1.3.1修改说明.md</FileName>
+              <FileName>QHF_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+              <FilePath>..\Doc\QHF_v1.3.1修改说明.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -1043,16 +1033,6 @@
               <FileName>elab_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Board</GroupName>
-          <Files>
-            <File>
-              <FileName>board_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SRC\Board\board_config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1541,9 +1521,9 @@
           <GroupName>Doc</GroupName>
           <Files>
             <File>
-              <FileName>ValveX2_v1.3.1修改说明.md</FileName>
+              <FileName>QHF_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+              <FilePath>..\Doc\QHF_v1.3.1修改说明.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -1569,16 +1549,6 @@
               <FileName>elab_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Board</GroupName>
-          <Files>
-            <File>
-              <FileName>board_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SRC\Board\board_config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2067,9 +2037,9 @@
           <GroupName>Doc</GroupName>
           <Files>
             <File>
-              <FileName>ValveX2_v1.3.1修改说明.md</FileName>
+              <FileName>QHF_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+              <FilePath>..\Doc\QHF_v1.3.1修改说明.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -2095,16 +2065,6 @@
               <FileName>elab_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Board</GroupName>
-          <Files>
-            <File>
-              <FileName>board_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SRC\Board\board_config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2593,9 +2553,9 @@
           <GroupName>Doc</GroupName>
           <Files>
             <File>
-              <FileName>ValveX2_v1.3.1修改说明.md</FileName>
+              <FileName>QHF_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+              <FilePath>..\Doc\QHF_v1.3.1修改说明.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -2621,16 +2581,6 @@
               <FileName>elab_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Board</GroupName>
-          <Files>
-            <File>
-              <FileName>board_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SRC\Board\board_config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3119,9 +3069,9 @@
           <GroupName>Doc</GroupName>
           <Files>
             <File>
-              <FileName>ValveX2_v1.3.1修改说明.md</FileName>
+              <FileName>QHF_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+              <FilePath>..\Doc\QHF_v1.3.1修改说明.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -3147,16 +3097,6 @@
               <FileName>elab_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Board</GroupName>
-          <Files>
-            <File>
-              <FileName>board_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SRC\Board\board_config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3645,9 +3585,9 @@
           <GroupName>Doc</GroupName>
           <Files>
             <File>
-              <FileName>ValveX2_v1.3.1修改说明.md</FileName>
+              <FileName>QHF_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+              <FilePath>..\Doc\QHF_v1.3.1修改说明.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -3673,16 +3613,6 @@
               <FileName>elab_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Board</GroupName>
-          <Files>
-            <File>
-              <FileName>board_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SRC\Board\board_config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4171,9 +4101,9 @@
           <GroupName>Doc</GroupName>
           <Files>
             <File>
-              <FileName>ValveX2_v1.3.1修改说明.md</FileName>
+              <FileName>QHF_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+              <FilePath>..\Doc\QHF_v1.3.1修改说明.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -4199,16 +4129,6 @@
               <FileName>elab_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Board</GroupName>
-          <Files>
-            <File>
-              <FileName>board_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SRC\Board\board_config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4697,9 +4617,9 @@
           <GroupName>Doc</GroupName>
           <Files>
             <File>
-              <FileName>ValveX2_v1.3.1修改说明.md</FileName>
+              <FileName>QHF_v1.3.1修改说明.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Doc\ValveX2_v1.3.1修改说明.md</FilePath>
+              <FilePath>..\Doc\QHF_v1.3.1修改说明.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -4725,16 +4645,6 @@
               <FileName>elab_common.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SRC\3rd\common\elab_common.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Board</GroupName>
-          <Files>
-            <File>
-              <FileName>board_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SRC\Board\board_config.h</FilePath>
             </File>
           </Files>
         </Group>

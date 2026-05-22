@@ -319,6 +319,7 @@
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\ags_mb",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\Modbus",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\HARDWARE\\io",
+                "e:\\workdir\\zym_new\\general-switcher\\SRC\\Board",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include",
                 "D:\\toolchain\\Keil_v5\\ARM\\ARMCC\\include\\rw",
                 "e:\\workdir\\zym_new\\general-switcher\\SRC\\CMSIS\\DeviceSupport\\StartUp",
