@@ -10,8 +10,8 @@
 // clang-format off
 
 #define DESCRIPTION         "Switch Valve"
-#define SOFT_REVISION       (uint16_t)0x0031    /* 软件修改版次 */
-#define SOFTWARE_VERSION    "r31"                /* 软件修改版次 */
+#define SOFT_REVISION       (uint16_t)0x0032    /* 软件修改版次 */
+#define SOFTWARE_VERSION    "r32"                /* 软件修改版次 */
 #ifdef RS232_485_CONTROL
   #define CONTROL     "Only 232/485 AGS"
   #ifndef C_901
@@ -110,6 +110,8 @@
 //  v1.3.1-r30      2026.04.29  新增modbus长度校验
 //  v1.3.1-r31      2026.05.22  modbus修复模式无法保持问题,新增70号寄存器老化间隔
 //                              新增仅232/485版本可切换协议:AGS,Modbus,HX
+//  v1.3.1-r32      2026.06.03  修复Modbus模式下模式显示问题
+
 
 //----EEPROM存储地址分配---//
 //------------------------------------------------------------------------------------------------------------

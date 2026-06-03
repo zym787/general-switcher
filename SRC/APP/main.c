@@ -198,17 +198,27 @@ void param_Read(void)
         /// 回复方式
         I2CPageRead_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);
         printd("\r 回复方式:%d", syspara.replyMode);
+        /// 老化次数
+        I2CPageRead_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&syspara.burnCnt);
         /* 模式 */
-        I2CPageRead_Nbytes(ADDR_GOD_MODE, LEN_GOD_MODE, &syspara.GodMode);
-        if (GD_NORMAL != syspara.GodMode) {
-                printd("\r 模式: %d %s", syspara.GodMode,
-                       (syspara.GodMode) == GD_AGING     ? "老化模式"
-                       : (syspara.GodMode) == GD_FACTORY ? "工厂模式"
-                                                         : "Normal模式");
-        } else if (syspara.GodMode == GD_AGING) {
-                I2CPageRead_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&syspara.burnCnt);
-                printd("\r 老化次数: %d", syspara.burnCnt);
-                printd("\r 老化间隔: %d 秒", syspara.agingInterval);
+        if (MODBUS == syspara.protocol_type) {
+                I2CPageRead_Nbytes(ADDR_GOD_MODE, LEN_GOD_MODE, &syspara.GodMode);
+                switch (syspara.GodMode) {
+                        case GD_AGING:
+                                printd("\r 模式: %d 老化模式  完成后请切换回正常模式!!!", syspara.GodMode);
+                                break;
+                        case GD_FACTORY:
+                                printd("\r 模式: %d 工厂模式  完成后请切换回正常模式!!!", syspara.GodMode);
+                                break;
+                        case GD_NORMAL:
+                        default:
+                                syspara.GodMode = GD_NORMAL;
+                                break;
+                }
+                /* 老化模式下显示老化次数 */
+                if (syspara.GodMode == GD_AGING) {
+                        printd("\r 老化次数: %d", syspara.burnCnt);
+                }
         }
 }
 
@@ -275,6 +285,9 @@ void param_Write(void)
         /// 回复方式
         syspara.replyMode = REPLYMODE_AGS; /* 默认AGS标准回复方式 */
         I2CPageWrite_Nbytes(ADDR_REPLY_MODE, LEN_REPLY_MODE, &syspara.replyMode);
+        /// 老化次数
+        syspara.burnCnt = 0;
+        I2CPageWrite_Nbytes(ADDR_BURN_CNT, LEN_BURN_CNT, (uint8_t *)&syspara.burnCnt);
         /// 模式 0 正常模式
         syspara.GodMode = GD_NORMAL;
         I2CPageWrite_Nbytes(ADDR_GOD_MODE, LEN_GOD_MODE, &syspara.GodMode);
